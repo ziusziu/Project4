@@ -12,9 +12,8 @@ public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "TRANSIT"};
 
-    public InputTabsFragmentPagerAdapter(FragmentManager fm, String[] tabTitles) {
+    public InputTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
-        tabTitles = tabTitles;
     }
 
     @Override

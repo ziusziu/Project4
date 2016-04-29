@@ -34,7 +34,7 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
-        TextView textView = (TextView) view;
+        TextView textView = (TextView) view.findViewById(R.id.input_flight_editText);
         textView.setText("Fragment #" + mPage);
         return view;
     }

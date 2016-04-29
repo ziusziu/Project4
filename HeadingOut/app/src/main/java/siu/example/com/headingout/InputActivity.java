@@ -17,7 +17,7 @@ public class InputActivity extends AppCompatActivity {
         setContentView(R.layout.activity_input);
 
         mViewPager = (ViewPager)findViewById(R.id.input_viewPager);
-        mViewPager.setAdapter();
+        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getSupportFragmentManager()));
 
         mTabLayout = (TabLayout)findViewById(R.id.input_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
