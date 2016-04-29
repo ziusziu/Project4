@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -14,6 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -37,6 +41,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void recyclerViewSetup(){
+        List<Trip> tripList = new ArrayList<>();
+
+        // Dummy Data
+        Trip trip = new Trip("San Francisco");
+        Trip trip1 = new Trip("San Francisco");
+        Trip trip2 = new Trip("San Francisco");
+        Trip trip3 = new Trip("San Francisco");
+        Trip trip4 = new Trip("San Francisco");
+        Trip trip5 = new Trip("San Francisco");
+        Trip trip6 = new Trip("San Francisco");
+        tripList.add(trip);
+        tripList.add(trip2);
+        tripList.add(trip3);
+        tripList.add(trip4);
+        tripList.add(trip5);
+        tripList.add(trip6);
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mTripRecyclerView.setLayoutManager(linearLayoutManager);
+        mTripRecyclerView.setHasFixedSize(true);
+        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(tripList);
+        mTripRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
@@ -61,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mToolBar = (Toolbar)findViewById(R.id.main_toolBar);
         mLocEditText = (EditText)findViewById(R.id.main_locationInput_edittext);
         mAddButton = (Button)findViewById(R.id.main_addLocation_button);
+        mTripRecyclerView = (RecyclerView)findViewById(R.id.main_recyclerView);
     }
 
     private void initNavDrawer(){
