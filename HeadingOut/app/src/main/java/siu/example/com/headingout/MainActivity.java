@@ -1,5 +1,6 @@
 package siu.example.com.headingout;
 
+import android.content.Intent;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,10 +10,15 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static Toolbar mToolBar;
+    private static EditText mLocEditText;
+    private static Button mAddButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +28,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initializeViews();
         setSupportActionBar(mToolBar);
         initNavDrawer();
+        setAddButtonListener();
+
 
     }
 
@@ -31,8 +39,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    private void setAddButtonListener(){
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent input = new Intent();  //TODO NEED TO SEND TO INPUT ACTIVITY, LATER
+                startActivity(input);
+            }
+        });
+    }
+
+
     private void initializeViews(){
         mToolBar = (Toolbar)findViewById(R.id.main_toolBar);
+        mLocEditText = (EditText)findViewById(R.id.main_locationInput_edittext);
+        mAddButton = (Button)findViewById(R.id.main_addLocation_button);
     }
 
     private void initNavDrawer(){
