@@ -7,6 +7,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static Toolbar mToolBar;
     private static EditText mLocEditText;
     private static Button mAddButton;
+    private static RecyclerView mTripRecyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initNavDrawer();
         setAddButtonListener();
 
+        recyclerViewSetup();
+
+    }
+
+    private void recyclerViewSetup(){
 
     }
 
@@ -43,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent input = new Intent();  //TODO NEED TO SEND TO INPUT ACTIVITY, LATER
+                Intent input = new Intent(MainActivity.this, InputActivity.class);  //TODO NEED TO SEND TO INPUT ACTIVITY, LATER
                 startActivity(input);
             }
         });
