@@ -26,15 +26,6 @@
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/input_continue_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:baselineAlignBottom="true"
-        android:layout_margin="16dp"
-        app:layout_anchorGravity="bottom|right|end"
-        app:fabSize="mini"/>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/input_tab_hotel_fragment_recyclerView"
         android:layout_width="match_parent"
