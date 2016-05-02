@@ -23,7 +23,14 @@ public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return InputFlightTabFragment.newInstance(position + 1);
+        switch(position){
+            case 0:
+                return InputFlightTabFragment.newInstance(position + 1);
+            case 1:
+                return InputHotelTabFragment.newInstance(position + 1);
+            default:
+                return InputFlightTabFragment.newInstance(position + 1);
+        }
     }
 
     @Override
