@@ -27,8 +27,8 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
 
 
         mToolBar = (Toolbar)findViewById(R.id.input_toolBar);
-
         setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Input");
         initNavDrawer();
 
         mViewPager = (ViewPager)findViewById(R.id.input_viewPager);

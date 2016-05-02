@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Trip trip5 = new Trip("San Francisco");
         Trip trip6 = new Trip("San Francisco");
         tripList.add(trip);
+        tripList.add(trip1);
         tripList.add(trip2);
         tripList.add(trip3);
         tripList.add(trip4);
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mTripRecyclerView.setLayoutManager(linearLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
-        RecyclerViewAdapter recyclerViewAdapter = new RecyclerViewAdapter(tripList);
+        MainRecyclerViewAdapter recyclerViewAdapter = new MainRecyclerViewAdapter(tripList);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
 
     }

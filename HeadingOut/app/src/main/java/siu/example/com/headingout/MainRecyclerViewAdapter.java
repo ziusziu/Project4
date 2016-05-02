@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by samsiu on 4/29/16.
  */
-public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.TripViewHolder>{
+public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.TripViewHolder>{
 
     List<Trip> tripList;
 
@@ -28,7 +28,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     }
 
-    public RecyclerViewAdapter(List<Trip> tripList){
+    public MainRecyclerViewAdapter(List<Trip> tripList){
         this.tripList = tripList;
     }
 

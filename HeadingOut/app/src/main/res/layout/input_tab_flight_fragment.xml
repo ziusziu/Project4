@@ -35,5 +35,10 @@
         app:layout_anchorGravity="bottom|right|end"
         app:fabSize="mini"/>
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/input_tab_flight_fragment_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 
 </LinearLayout>
