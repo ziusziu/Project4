@@ -22,7 +22,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         FlightViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragmentcardView);
+            cardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
             flightNameTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_textView);
         }
     }
