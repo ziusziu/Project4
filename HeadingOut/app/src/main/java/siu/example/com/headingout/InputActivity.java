@@ -8,9 +8,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class InputActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -18,6 +23,7 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
     public static String POSITION = "POSITION";
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +63,8 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+
 
     private void initNavDrawer(){
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.input_drawer_layout);
