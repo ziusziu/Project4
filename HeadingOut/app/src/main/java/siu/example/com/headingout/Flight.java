@@ -6,11 +6,19 @@ package siu.example.com.headingout;
 public class Flight {
 
     String name;
-    String Depart;
+    String airlineName;
+    String departureCity;
+    String departureTerminal;
+    String arrivalCity;
+    String arrivalTerminal;
 
-    public Flight(String name, String depart) {
+    public Flight(String name, String airlineName, String departureCity, String departureTerminal, String arrivalCity, String arrivalTerminal) {
         this.name = name;
-        Depart = depart;
+        this.airlineName = airlineName;
+        this.departureCity = departureCity;
+        this.departureTerminal = departureTerminal;
+        this.arrivalCity = arrivalCity;
+        this.arrivalTerminal = arrivalTerminal;
     }
 
     public String getName() {
@@ -21,11 +29,43 @@ public class Flight {
         this.name = name;
     }
 
-    public String getDepart() {
-        return Depart;
+    public String getAirlineName() {
+        return airlineName;
     }
 
-    public void setDepart(String depart) {
-        Depart = depart;
+    public void setAirlineName(String airlineName) {
+        this.airlineName = airlineName;
+    }
+
+    public String getDepartureCity() {
+        return departureCity;
+    }
+
+    public void setDepartureCity(String departureCity) {
+        this.departureCity = departureCity;
+    }
+
+    public String getDepartureTerminal() {
+        return departureTerminal;
+    }
+
+    public void setDepartureTerminal(String departureTerminal) {
+        this.departureTerminal = departureTerminal;
+    }
+
+    public String getArrivalCity() {
+        return arrivalCity;
+    }
+
+    public void setArrivalCity(String arrivalCity) {
+        this.arrivalCity = arrivalCity;
+    }
+
+    public String getArrivalTerminal() {
+        return arrivalTerminal;
+    }
+
+    public void setArrivalTerminal(String arrivalTerminal) {
+        this.arrivalTerminal = arrivalTerminal;
     }
 }
