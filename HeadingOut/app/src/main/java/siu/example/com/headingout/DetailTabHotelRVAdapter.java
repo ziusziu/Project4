@@ -54,10 +54,10 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
     @Override
     public void onBindViewHolder(HotelViewHolder holder, int position) {
         holder.hotelNameTextView.setText("Name: "+hotelList.get(position).getName());
-        holder.hotelNameTextView.setText("City: "+hotelList.get(position).getCity());
-        holder.hotelNameTextView.setText("State: "+hotelList.get(position).getState());
-        holder.hotelNameTextView.setText("Country: "+hotelList.get(position).getCountry());
-        holder.hotelNameTextView.setText("Rating: "+hotelList.get(position).getRating());
+        holder.hotelCityTextView.setText("City: "+hotelList.get(position).getCity());
+        holder.hotelStateTextView.setText("State: "+hotelList.get(position).getState());
+        holder.hotelCountryTextView.setText("Country: "+hotelList.get(position).getCountry());
+        holder.hotelRatingTextView.setText("Rating: "+hotelList.get(position).getRating());
     }
 
     @Override
