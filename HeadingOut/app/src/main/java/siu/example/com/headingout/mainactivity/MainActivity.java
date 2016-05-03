@@ -23,6 +23,7 @@ import java.util.List;
 import siu.example.com.headingout.inputactivity.InputActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.Trip;
+import siu.example.com.headingout.util.Utilities;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        // Hide keyboard after activity loads
+        Utilities.hideKeyboard(MainActivity.this);
 
         initializeViews();
         setSupportActionBar(mToolBar);
@@ -45,7 +47,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setAddButtonListener();
 
         recyclerViewSetup();
-       // Log.d(TAG, "onCreate: ----->>>" + BuildConfig.GOOGLE_MAPS_API_KEY);
 
     }
 
@@ -74,9 +75,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
 
-
-
-
     }
 
     @Override
@@ -89,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent input = new Intent(MainActivity.this, InputActivity.class);  //TODO NEED TO SEND TO INPUT ACTIVITY, LATER
+                Intent input = new Intent(MainActivity.this, InputActivity.class);
                 startActivity(input);
             }
         });

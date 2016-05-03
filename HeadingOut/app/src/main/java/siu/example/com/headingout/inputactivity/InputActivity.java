@@ -21,6 +21,7 @@ import android.widget.EditText;
 
 import siu.example.com.headingout.detailactivity.DetailActivity;
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.util.Utilities;
 
 public class InputActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,27 +41,40 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
 
-        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        Utilities.hideKeyboard(InputActivity.this);
 
-        mFlightEditText = (EditText)findViewById(R.id.input_flight_editText);
 
-        mToolBar = (Toolbar)findViewById(R.id.input_toolBar);
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Input");
+
+        initializeViews();
+        initToolBar();
         initNavDrawer();
-
-        mViewPager = (ViewPager)findViewById(R.id.input_viewPager);
-        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getSupportFragmentManager()));
-
-        mTabLayout = (TabLayout)findViewById(R.id.input_tabLayout);
-        mTabLayout.setupWithViewPager(mViewPager);
+        initViewPager();
 
 
-        mInputContinueFabButton = (FloatingActionButton)findViewById(R.id.input_continue_fab);
         setFabIconColor(mInputContinueFabButton, FAB_BUTTON_COLOR);
         onFabContinueButtonClick();
 
     }
+
+    private void initializeViews(){
+        mFlightEditText = (EditText)findViewById(R.id.input_flight_editText);
+        mToolBar = (Toolbar)findViewById(R.id.input_toolBar);
+        mInputContinueFabButton = (FloatingActionButton)findViewById(R.id.input_continue_fab);
+    }
+
+    private void initToolBar(){
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Input");
+    }
+
+    private void initViewPager(){
+        mViewPager = (ViewPager)findViewById(R.id.input_viewPager);
+        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getSupportFragmentManager()));
+        mTabLayout = (TabLayout)findViewById(R.id.input_tabLayout);
+        mTabLayout.setupWithViewPager(mViewPager);
+    }
+
+
 
     // Save and restore last known tab position
     @Override
