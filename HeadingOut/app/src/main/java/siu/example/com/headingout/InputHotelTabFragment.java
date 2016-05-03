@@ -55,11 +55,11 @@ public class InputHotelTabFragment extends Fragment {
         List<Hotel> hotelList = new ArrayList<>();
 
         // Dummy Data
-        Hotel hotel = new Hotel("Hilton");
-        Hotel hotel1 = new Hotel("Hilton");
-        Hotel hotel2 = new Hotel("Hilton");
-        Hotel hotel3 = new Hotel("Hilton");
-        Hotel hotel4 = new Hotel("Hilton");
+        Hotel hotel = new Hotel("Hilton", "SF", "CA", "US", "5");
+        Hotel hotel1 = new Hotel("Hilton", "SF", "CA", "US", "5");
+        Hotel hotel2 = new Hotel("Hilton", "SF", "CA", "US", "5");
+        Hotel hotel3 = new Hotel("Hilton", "SF", "CA", "US", "5");
+        Hotel hotel4 = new Hotel("Hilton", "SF", "CA", "US", "5");
         hotelList.add(hotel);
         hotelList.add(hotel1);
         hotelList.add(hotel2);

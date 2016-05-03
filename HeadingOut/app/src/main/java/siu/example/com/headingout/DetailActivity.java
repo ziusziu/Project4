@@ -25,7 +25,7 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mViewPager = (ViewPager)findViewById(R.id.detail_viewPager);
-        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getSupportFragmentManager()));
+        mViewPager.setAdapter(new DetailTabsFragmentPagerAdapter(getSupportFragmentManager()));
 
         mTabLayout = (TabLayout)findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
