@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,7 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
+    private static String TAG = MainActivity.class.getCanonicalName();
     private static Toolbar mToolBar;
     private static EditText mLocEditText;
     private static Button mAddButton;
@@ -37,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setAddButtonListener();
 
         recyclerViewSetup();
+        Log.d(TAG, "onCreate: ----->>>" + BuildConfig.GOOGLE_MAPS_API_KEY);
 
     }
 

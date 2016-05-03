@@ -1,10 +1,12 @@
 package siu.example.com.headingout;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -23,6 +25,7 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
         TextView hotelStateTextView;
         TextView hotelCountryTextView;
         TextView hotelRatingTextView;
+        Button shareButton;
 
         HotelViewHolder(View itemView) {
             super(itemView);
@@ -32,6 +35,7 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
             hotelStateTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_state_textView);
             hotelCountryTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_country_textView);
             hotelRatingTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_rating_textView);
+            shareButton = (Button)itemView.findViewById(R.id.detail_tab_hotel_share_button);
         }
     }
 
@@ -58,6 +62,25 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
         holder.hotelStateTextView.setText("State: "+hotelList.get(position).getState());
         holder.hotelCountryTextView.setText("Country: "+hotelList.get(position).getCountry());
         holder.hotelRatingTextView.setText("Rating: "+hotelList.get(position).getRating());
+
+        setShareButtonListener(holder);
+    }
+
+    private void setShareButtonListener(HotelViewHolder holder){
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String description = "Description";
+                String title = "Title";
+                String location = "Location";
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, description);
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title + ": " + location);
+
+                v.getContext().startActivity(Intent.createChooser(intent, "Share to"));
+            }
+        });
     }
 
     @Override

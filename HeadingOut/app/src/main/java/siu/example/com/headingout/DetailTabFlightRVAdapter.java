@@ -1,10 +1,12 @@
 package siu.example.com.headingout;
 
+import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,6 +23,7 @@ public class DetailTabFlightRVAdapter extends RecyclerView.Adapter<DetailTabFlig
         TextView flightNameTextView;
         TextView flightDepartCityTextView;
         TextView flightArrivalCityTextView;
+        Button shareButton;
 
         FlightViewHolder(View itemView) {
             super(itemView);
@@ -28,6 +31,7 @@ public class DetailTabFlightRVAdapter extends RecyclerView.Adapter<DetailTabFlig
             flightNameTextView = (TextView) itemView.findViewById(R.id.detail_tab_flight_textView);
             flightDepartCityTextView = (TextView)itemView.findViewById(R.id.detail_tab_departueCity_textView);
             flightArrivalCityTextView = (TextView)itemView.findViewById(R.id.detail_tab_arrivalCity_textView);
+            shareButton = (Button)itemView.findViewById(R.id.detail_tab_flight_share_button);
         }
     }
 
@@ -50,8 +54,27 @@ public class DetailTabFlightRVAdapter extends RecyclerView.Adapter<DetailTabFlig
     @Override
     public void onBindViewHolder(FlightViewHolder holder, int position) {
         holder.flightNameTextView.setText("Name: "+flightList.get(position).getName());
-        holder.flightDepartCityTextView.setText("Depart City: "+flightList.get(position).getDepartureCity());
-        holder.flightArrivalCityTextView.setText("Arrival City: "+flightList.get(position).getArrivalCity());
+        holder.flightDepartCityTextView.setText("Depart City: " + flightList.get(position).getDepartureCity());
+        holder.flightArrivalCityTextView.setText("Arrival City: " + flightList.get(position).getArrivalCity());
+        setShareButtonListener(holder);
+
+    }
+
+    private void setShareButtonListener(FlightViewHolder holder){
+        holder.shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String description = "Description";
+                String title = "Title";
+                String location = "Location";
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, description);
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title + ": " + location);
+
+                v.getContext().startActivity(Intent.createChooser(intent, "Share to"));
+            }
+        });
     }
 
     @Override
