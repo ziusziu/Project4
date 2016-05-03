@@ -27,7 +27,7 @@ public class DetailTabsFragmentPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return DetailFlightTabFragment.newInstance(position + 1);
             case 1:
-                return DetailFlightTabFragment.newInstance(position + 1);
+                return DetailHotelTabFragment.newInstance(position + 1);
             default:
                 return DetailFlightTabFragment.newInstance(position + 1);
         }
