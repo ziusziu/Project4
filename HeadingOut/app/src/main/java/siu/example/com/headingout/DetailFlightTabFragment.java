@@ -52,11 +52,11 @@ public class DetailFlightTabFragment extends Fragment {
         List<Flight> flightList = new ArrayList<>();
 
         // Dummy Data
-        Flight flight = new Flight("AA", "American Airlines", "SFO" , "14", "NYC", "12");
-        Flight flight1 = new Flight("AA", "American Airlines", "SFO" , "14", "NYC", "12");
-        Flight flight2 = new Flight("AA", "American Airlines", "SFO" , "14", "NYC", "12");
-        Flight flight3 = new Flight("AA", "American Airlines", "SFO" , "14", "NYC", "12");
-        Flight flight4 = new Flight("AA", "American Airlines", "SFO" , "14", "NYC", "12");
+        Flight flight = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        Flight flight1 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        Flight flight2 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        Flight flight3 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        Flight flight4 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
         flightList.add(flight);
         flightList.add(flight1);
         flightList.add(flight2);
@@ -67,7 +67,7 @@ public class DetailFlightTabFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mFlightRecyclerView.setLayoutManager(linearLayoutManager);
         mFlightRecyclerView.setHasFixedSize(true);
-        InputTabFlightRVAdapter recyclerViewAdapter = new InputTabFlightRVAdapter(flightList);
+        DetailTabFlightRVAdapter recyclerViewAdapter = new DetailTabFlightRVAdapter(flightList);
         mFlightRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
