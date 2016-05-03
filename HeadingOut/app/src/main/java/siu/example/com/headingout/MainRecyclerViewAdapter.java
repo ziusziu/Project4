@@ -53,4 +53,6 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
     public int getItemCount() {
         return tripList.size();
     }
+
+    
 }

@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setAddButtonListener();
 
         recyclerViewSetup();
-        Log.d(TAG, "onCreate: ----->>>" + BuildConfig.GOOGLE_MAPS_API_KEY);
+       // Log.d(TAG, "onCreate: ----->>>" + BuildConfig.GOOGLE_MAPS_API_KEY);
 
     }
 
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mTripRecyclerView.setHasFixedSize(true);
         MainRecyclerViewAdapter recyclerViewAdapter = new MainRecyclerViewAdapter(tripList);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
+
+
+
 
     }
 
@@ -132,4 +136,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
+
 }
