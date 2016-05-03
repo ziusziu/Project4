@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.detailactivity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,10 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.detailactivity.rvadapter.DetailTabFlightRVAdapter;
+import siu.example.com.headingout.model.Flight;
 
 /**
  * Created by samsiu on 4/29/16.

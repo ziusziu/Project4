@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.mainactivity;
 
 import android.content.Intent;
 import android.support.design.widget.NavigationView;
@@ -10,20 +10,23 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import siu.example.com.headingout.inputactivity.InputActivity;
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.model.Trip;
+
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
-    private static String TAG = MainActivity.class.getCanonicalName();
+    private static String TAG = MainActivity.class.getSimpleName();
     private static Toolbar mToolBar;
     private static EditText mLocEditText;
     private static Button mAddButton;
@@ -33,6 +36,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         initializeViews();
         setSupportActionBar(mToolBar);
@@ -66,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mTripRecyclerView.setLayoutManager(linearLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
-        MainRecyclerViewAdapter recyclerViewAdapter = new MainRecyclerViewAdapter(tripList);
+        MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
 
 

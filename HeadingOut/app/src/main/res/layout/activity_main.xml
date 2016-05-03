@@ -7,7 +7,7 @@
     android:id="@+id/drawer_layout"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context="siu.example.com.headingout.MainActivity">
+    tools:context=".mainactivity.MainActivity">
 
     <include
         layout="@layout/main_app_bar"

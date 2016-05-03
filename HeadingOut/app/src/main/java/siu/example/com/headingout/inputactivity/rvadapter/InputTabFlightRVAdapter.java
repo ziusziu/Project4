@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.inputactivity.rvadapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +8,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.List;
+
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.model.Flight;
 
 /**
  * Created by samsiu on 5/2/16.

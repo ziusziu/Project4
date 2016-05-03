@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.detailactivity.rvadapter;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;
@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.List;
+
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.model.Hotel;
 
 /**
  * Created by samsiu on 5/2/16.

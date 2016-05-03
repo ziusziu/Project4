@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.mainactivity;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -9,10 +9,13 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.model.Trip;
+
 /**
  * Created by samsiu on 4/29/16.
  */
-public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerViewAdapter.TripViewHolder>{
+public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
     List<Trip> tripList;
 
@@ -28,7 +31,7 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
 
     }
 
-    public MainRecyclerViewAdapter(List<Trip> tripList){
+    public MainTripRVAdapter(List<Trip> tripList){
         this.tripList = tripList;
     }
 
@@ -54,5 +57,5 @@ public class MainRecyclerViewAdapter extends RecyclerView.Adapter<MainRecyclerVi
         return tripList.size();
     }
 
-    
+
 }

@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.detailactivity;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -10,9 +10,11 @@ import android.view.Menu;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.detailactivity.DetailTabsFragmentPagerAdapter;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -39,7 +41,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         mTabLayout = (TabLayout)findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
 
-        initGoogleMaps();
+       // initGoogleMaps();
 
     }
 
@@ -62,12 +64,12 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
-    private void initGoogleMaps(){
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
-
-    }
+//    private void initGoogleMaps(){
+//        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+//                .findFragmentById(R.id.map);
+//        mapFragment.getMapAsync(this);
+//
+//    }
 
     /**
      * Manipulates the map once available.

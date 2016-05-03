@@ -1,8 +1,11 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.detailactivity;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import siu.example.com.headingout.detailactivity.fragment.DetailFlightTabFragment;
+import siu.example.com.headingout.detailactivity.fragment.DetailHotelTabFragment;
 
 /**
  * Created by samsiu on 4/29/16.

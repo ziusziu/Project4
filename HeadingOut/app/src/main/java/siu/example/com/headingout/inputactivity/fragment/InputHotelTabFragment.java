@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.inputactivity.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputactivity.rvadapter.InputTabHotelRVAdapter;
+import siu.example.com.headingout.model.Hotel;
 
 /**
  * Created by samsiu on 4/29/16.

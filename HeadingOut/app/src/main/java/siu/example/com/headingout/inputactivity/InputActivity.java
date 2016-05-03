@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.inputactivity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -12,16 +12,15 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-import java.util.List;
+import siu.example.com.headingout.detailactivity.DetailActivity;
+import siu.example.com.headingout.R;
 
 public class InputActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -40,6 +39,8 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_input);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         mFlightEditText = (EditText)findViewById(R.id.input_flight_editText);
 

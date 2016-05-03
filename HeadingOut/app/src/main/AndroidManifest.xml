@@ -17,7 +17,7 @@
             android:value="@string/google_maps_api_key" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".mainactivity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,12 +26,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".InputActivity"
+            android:name=".inputactivity.InputActivity"
             android:theme="@style/AppTheme.NoActionBar" />
 
-        <activity android:name=".DetailActivity"
+        <activity android:name=".detailactivity.DetailActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".InputActivity"></activity>
+            android:parentActivityName=".inputactivity.InputActivity"></activity>
     </application>
 
 </manifest>

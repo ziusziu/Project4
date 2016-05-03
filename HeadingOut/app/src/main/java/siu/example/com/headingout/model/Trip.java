@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.model;
 
 /**
  * Created by samsiu on 4/29/16.
