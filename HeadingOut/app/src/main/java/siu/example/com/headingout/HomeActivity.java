@@ -10,27 +10,27 @@ public class HomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+
     }
 
     @Override
     protected int getLayoutResource() {
-        return 0;
+        return R.layout.activity_home;
     }
 
     @Override
     protected int getDrawerLayoutResource() {
-        return 0;
+        return R.id.home_drawer_layout;
     }
 
     @Override
     protected int getToolBarResource() {
-        return 0;
+        return R.id.home_toolBar;
     }
 
     @Override
     protected int getNavViewResource() {
-        return 0;
+        return R.id.home_nav_view;
     }
 
     @Override
