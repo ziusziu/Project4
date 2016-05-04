@@ -78,6 +78,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (id == R.id.nav_share) {
+            DetailFragment detailFragment = new DetailFragment();
+            fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
+            fragmentTransaction.commit();
 
         } else if (id == R.id.nav_send) {
             Log.d(TAG, "onNavigationItemSelected: ==>>> Drawer Send Clicked");

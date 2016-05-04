@@ -47,6 +47,7 @@ public class InputFragment extends Fragment {
         return view;
     }
 
+
     private void initializeViews(View view){
         mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
         mInputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
