@@ -1,7 +1,7 @@
 package siu.example.com.headingout;
 
-import android.content.Intent;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -13,14 +13,17 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import siu.example.com.headingout.mainactivity.MainActivity;
 import siu.example.com.headingout.util.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "BaseActivity";
     private static Toolbar mToolBar;
+    private static FragmentManager fragmentManager;
+    private static MainFragment mainFragment;
+    private static InputFragment inputFragment;
+    private static DetailFragment detailFragment;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,9 +32,18 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         Utilities.hideKeyboard(this);
 
+        mainFragment = new MainFragment();
+        inputFragment = new InputFragment();
+        detailFragment = new DetailFragment();
+
+        fragmentManager = getSupportFragmentManager();
+        
         mToolBar = (Toolbar)findViewById(getToolBarResource());
         setSupportActionBar(mToolBar);
         initNavDrawer();
+
+
+
     }
 
     protected abstract int getLayoutResource();
@@ -63,10 +75,30 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
+
+        Log.d(TAG, "onBackPressed: ===>> BACKPRESSED" );
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
+        Log.d(TAG, "onBackPressed: ====>>>"+fragment.getClass().getSimpleName());
+
+        String fragmentName = fragment.getClass().getSimpleName();
+
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
-        }else{
+        } else if(fragmentName.equals("MainFragment")){
+            Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
             super.onBackPressed();
+        }else if(fragmentName.equals("InputFragment")){
+            Log.d(TAG, "onCreate:==== INPUT FRAGMENT");
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
+            fragmentTransaction.commit();
+        }else if(fragmentName.equals("DetailFragment")){
+            Log.d(TAG, "onCreate:==== DETAIL FRAGMENT");
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+            fragmentTransaction.commit();
+        }else{
+            //super.onBackPressed();
         }
     }
 
@@ -74,23 +106,22 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
         // TODO: Ask about fragmentManager one manager okay? Never close?
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (id == R.id.nav_share) {
-            DetailFragment detailFragment = new DetailFragment();
+            Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Share Clicked");
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_send) {
             Log.d(TAG, "onNavigationItemSelected: ==>>> Drawer Send Clicked");
-            InputFragment inputFragment = new InputFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
             fragmentTransaction.commit();
 
         }else if (id == R.id.nav_home){
             Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Home Clicked");
-            MainFragment mainFragment = new MainFragment();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
             fragmentTransaction.commit();
         }
@@ -99,8 +130,5 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
-
-
 
 }

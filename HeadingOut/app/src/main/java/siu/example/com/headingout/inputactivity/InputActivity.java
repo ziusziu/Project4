@@ -91,6 +91,8 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
         outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
 
+
+
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);

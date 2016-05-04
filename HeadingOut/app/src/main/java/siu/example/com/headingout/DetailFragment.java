@@ -5,8 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import siu.example.com.headingout.detailactivity.DetailTabsFragmentPagerAdapter;
+import siu.example.com.headingout.util.Utilities;
 
 /**
  * Created by samsiu on 5/4/16.
@@ -35,8 +34,11 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            int tabPagePosition = savedInstanceState.getInt(Utilities.POSITION);
+            mViewPager.setCurrentItem(tabPagePosition);
+        }
         View view = inflater.inflate(R.layout.detail_content, container, false);
-
       //  initToolBar(view);
         initViewPager(view);
         // initGoogleMaps();
@@ -44,6 +46,11 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
+    }
 
 //    private void initToolBar(View view){
 //        mToolBar = (Toolbar)view.findViewById(R.id.detail_toolBar);

@@ -1,6 +1,5 @@
 package siu.example.com.headingout;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -12,12 +11,12 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import siu.example.com.headingout.detailactivity.DetailActivity;
 import siu.example.com.headingout.inputactivity.InputTabsFragmentPagerAdapter;
 import siu.example.com.headingout.util.Utilities;
 
@@ -38,8 +37,11 @@ public class InputFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if(savedInstanceState != null){
+            int tabPagePosition = savedInstanceState.getInt(Utilities.POSITION);
+            mViewPager.setCurrentItem(tabPagePosition);
+        }
         View view = inflater.inflate(R.layout.input_content, container, false);
-
         initializeViews(view);
         initViewPager(view);
         initFab();
@@ -49,6 +51,11 @@ public class InputFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
+    }
 
     private void initializeViews(View view){
         mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
@@ -60,6 +67,8 @@ public class InputFragment extends Fragment {
         mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
         mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
+
+        // adapter.setMyValue()
     }
 
     private void initFab(){
