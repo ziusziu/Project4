@@ -8,6 +8,8 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
@@ -83,9 +85,11 @@ public class InputFragment extends Fragment {
                         .putString(Utilities.SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
                         .apply();
 
-                Intent mFlightResultsIntent = new Intent(getActivity(), DetailActivity.class);
-                mFlightResultsIntent.putExtra(Utilities.INTENT_FLIGHT_KEY, searchTerms);
-                startActivity(mFlightResultsIntent);
+                DetailFragment detailFragment = new DetailFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
+                fragmentTransaction.commit();
             }
         });
     }

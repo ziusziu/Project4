@@ -76,8 +76,11 @@ public class MainFragment extends Fragment{
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent input = new Intent(getActivity(), InputActivity.class);
-                startActivity(input);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                InputFragment inputFragment = new InputFragment();
+                fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                fragmentTransaction.commit();
             }
         });
     }
