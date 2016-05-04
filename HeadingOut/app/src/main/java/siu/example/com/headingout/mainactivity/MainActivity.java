@@ -20,12 +20,13 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import siu.example.com.headingout.BaseActivity;
 import siu.example.com.headingout.inputactivity.InputActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.Trip;
 import siu.example.com.headingout.util.Utilities;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
     private static Toolbar mToolBar;
@@ -34,12 +35,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static RecyclerView mTripRecyclerView;
 
     @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_main;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         // Hide keyboard after activity loads
-        Utilities.hideKeyboard(MainActivity.this);
+
 
         initializeViews();
         setSupportActionBar(mToolBar);
@@ -132,7 +137,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_send) {
 
         }else if (id == R.id.nav_home){
-
+            Intent home = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(home);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

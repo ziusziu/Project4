@@ -17,7 +17,7 @@ import siu.example.com.headingout.model.Trip;
  */
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
-    List<Trip> tripList;
+    private final List<Trip> tripList;
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;

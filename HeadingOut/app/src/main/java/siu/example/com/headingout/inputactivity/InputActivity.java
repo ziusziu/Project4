@@ -1,5 +1,6 @@
 package siu.example.com.headingout.inputactivity;
 
+
 import android.content.Intent;
 import android.graphics.Color;
 import android.preference.PreferenceManager;
@@ -19,41 +20,43 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 
+
+import siu.example.com.headingout.BaseActivity;
 import siu.example.com.headingout.detailactivity.DetailActivity;
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.mainactivity.MainActivity;
 import siu.example.com.headingout.util.Utilities;
 
-public class InputActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class InputActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = InputActivity.class.getSimpleName();
     private static Toolbar mToolBar;
-    public static String POSITION = "POSITION";
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
     private FloatingActionButton mInputContinueFabButton;
-    protected static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
-    protected static final String INTENT_FLIGHT_KEY = "location_terms";
-    protected static final String SHARED_PREFERENCES_FLIGHTTERM = "shared_pref_location_term";
     private static EditText mFlightEditText;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_input);
+        setContentView(getLayoutResource());
 
         Utilities.hideKeyboard(InputActivity.this);
-
-
 
         initializeViews();
         initToolBar();
         initNavDrawer();
         initViewPager();
+        initFab();
 
-
-        setFabIconColor(mInputContinueFabButton, FAB_BUTTON_COLOR);
         onFabContinueButtonClick();
 
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_input;
     }
 
     private void initializeViews(){
@@ -74,19 +77,22 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
         mTabLayout.setupWithViewPager(mViewPager);
     }
 
+    private void initFab(){
+        setFabIconColor(mInputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
+    }
 
 
     // Save and restore last known tab position
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(POSITION, mTabLayout.getSelectedTabPosition());
+        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mViewPager.setCurrentItem(savedInstanceState.getInt(POSITION));
+        mViewPager.setCurrentItem(savedInstanceState.getInt(Utilities.POSITION));
     }
 
     @Override
@@ -94,8 +100,6 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
-
-
 
     private void initNavDrawer(){
         DrawerLayout drawer = (DrawerLayout)findViewById(R.id.input_drawer_layout);
@@ -128,7 +132,8 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
         } else if (id == R.id.nav_send) {
 
         }else if (id == R.id.nav_home){
-
+            Intent home = new Intent(InputActivity.this, MainActivity.class); //
+            startActivity(home);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.input_drawer_layout);
@@ -152,11 +157,11 @@ public class InputActivity extends AppCompatActivity implements NavigationView.O
 
                 PreferenceManager.getDefaultSharedPreferences(InputActivity.this)
                         .edit()
-                        .putString(SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
+                        .putString(Utilities.SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
                         .apply();
 
                 Intent mFlightResultsIntent = new Intent(InputActivity.this,DetailActivity.class);
-                mFlightResultsIntent.putExtra(INTENT_FLIGHT_KEY, searchTerms);
+                mFlightResultsIntent.putExtra(Utilities.INTENT_FLIGHT_KEY, searchTerms);
                 startActivity(mFlightResultsIntent);
             }
         });

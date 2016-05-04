@@ -13,49 +13,63 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import okhttp3.internal.Util;
+import siu.example.com.headingout.BaseActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailactivity.DetailTabsFragmentPagerAdapter;
+import siu.example.com.headingout.util.Utilities;
 
-public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DetailActivity extends BaseActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
+    private static final String TAG = DetailActivity.class.getSimpleName();
     private static Toolbar mToolBar;
-    public static String POSITION = "POSITION";
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_detail);
+        setContentView(getLayoutResource());
 
+        initToolBar();
+        initViewPager();
+       // initGoogleMaps();
+
+    }
+
+    @Override
+    protected int getLayoutResource() {
+        return R.layout.activity_detail;
+    }
+
+    private void initToolBar(){
         mToolBar = (Toolbar)findViewById(R.id.detail_toolBar);
         setSupportActionBar(mToolBar);
         getSupportActionBar().setTitle("Detail");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
 
+    private void initViewPager(){
         mViewPager = (ViewPager)findViewById(R.id.detail_viewPager);
         mViewPager.setAdapter(new DetailTabsFragmentPagerAdapter(getSupportFragmentManager()));
 
         mTabLayout = (TabLayout)findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
-
-       // initGoogleMaps();
-
     }
 
     // Save and restore last known tab position
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(POSITION, mTabLayout.getSelectedTabPosition());
+        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
-        mViewPager.setCurrentItem(savedInstanceState.getInt(POSITION));
+        mViewPager.setCurrentItem(savedInstanceState.getInt(Utilities.POSITION));
     }
 
     @Override
