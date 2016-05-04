@@ -34,9 +34,9 @@ public class MainFragment extends Fragment{
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_main, container, false);
+        View view = inflater.inflate(R.layout.main_content, container, false);
 
-        initializeViews();
+        initializeViews(view);
         setAddButtonListener();
         recyclerViewSetup();
 
@@ -80,9 +80,9 @@ public class MainFragment extends Fragment{
         });
     }
 
-    private void initializeViews(){
-        mLocEditText = (EditText)getActivity().findViewById(R.id.main_locationInput_edittext);
-        mAddButton = (Button)getActivity().findViewById(R.id.main_addLocation_button);
-        mTripRecyclerView = (RecyclerView)getActivity().findViewById(R.id.main_recyclerView);
+    private void initializeViews(View view){
+        mLocEditText = (EditText)view.findViewById(R.id.main_locationInput_edittext);
+        mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
+        mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
     }
 }
