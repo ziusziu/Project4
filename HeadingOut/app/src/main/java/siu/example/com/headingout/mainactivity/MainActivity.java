@@ -26,10 +26,9 @@ import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.Trip;
 import siu.example.com.headingout.util.Utilities;
 
-public class MainActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener{
+public class MainActivity extends BaseActivity {
 
     private static String TAG = MainActivity.class.getSimpleName();
-    private static Toolbar mToolBar;
     private static EditText mLocEditText;
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
@@ -44,13 +43,8 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         super.onCreate(savedInstanceState);
 
         // Hide keyboard after activity loads
-
-
         initializeViews();
-        setSupportActionBar(mToolBar);
-        initNavDrawer();
         setAddButtonListener();
-
         recyclerViewSetup();
 
     }
@@ -82,12 +76,6 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
-
     private void setAddButtonListener(){
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -98,53 +86,10 @@ public class MainActivity extends BaseActivity implements NavigationView.OnNavig
         });
     }
 
-
     private void initializeViews(){
-        mToolBar = (Toolbar)findViewById(R.id.main_toolBar);
         mLocEditText = (EditText)findViewById(R.id.main_locationInput_edittext);
         mAddButton = (Button)findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)findViewById(R.id.main_recyclerView);
     }
-
-    private void initNavDrawer(){
-        DrawerLayout drawer = (DrawerLayout)findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer,
-                mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        drawer.removeDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView)findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-    }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if(drawer.isDrawerOpen(GravityCompat.START)){
-            drawer.closeDrawer(GravityCompat.START);
-        }else{
-            super.onBackPressed();
-        }
-    }
-
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.nav_share) {
-
-        } else if (id == R.id.nav_send) {
-
-        }else if (id == R.id.nav_home){
-            Intent home = new Intent(MainActivity.this, MainActivity.class);
-            startActivity(home);
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
 
 }
