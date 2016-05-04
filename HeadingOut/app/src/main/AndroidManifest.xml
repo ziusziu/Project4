@@ -31,7 +31,8 @@
             android:name=".detailactivity.DetailActivity"
             android:parentActivityName=".inputactivity.InputActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".BaseActivity"></activity>
+        <activity android:name=".BaseActivity" />
+        <activity android:name=".HomeActivity"></activity>
     </application>
 
 </manifest>

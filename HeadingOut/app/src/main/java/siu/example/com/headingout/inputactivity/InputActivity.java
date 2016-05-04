@@ -38,12 +38,10 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
 
         Utilities.hideKeyboard(InputActivity.this);
 
         initializeViews();
-        initToolBar();
         initViewPager();
         initFab();
 
@@ -73,13 +71,7 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
 
     private void initializeViews(){
         mFlightEditText = (EditText)findViewById(R.id.input_flight_editText);
-        mToolBar = (Toolbar)findViewById(R.id.input_toolBar);
         mInputContinueFabButton = (FloatingActionButton)findViewById(R.id.input_continue_fab);
-    }
-
-    private void initToolBar(){
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Input");
     }
 
     private void initViewPager(){
