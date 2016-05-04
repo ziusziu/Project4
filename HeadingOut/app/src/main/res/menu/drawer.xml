@@ -7,10 +7,10 @@
             android:title="Home"/>
         <item
             android:id="@+id/nav_share"
-            android:title="Calendar" />
+            android:title="Share" />
         <item
             android:id="@+id/nav_send"
-            android:title="Settings" />
+            android:title="Send" />
     </group>
 
 </menu>

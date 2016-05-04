@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -18,6 +19,7 @@ import siu.example.com.headingout.util.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "BaseActivity";
     private static Toolbar mToolBar;
 
     @Override
@@ -71,15 +73,21 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        // TODO: Ask about fragmentManager one manager okay? Never close?
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         if (id == R.id.nav_share) {
 
         } else if (id == R.id.nav_send) {
+            Log.d(TAG, "onNavigationItemSelected: ==>>> Drawer Send Clicked");
+            InputFragment inputFragment = new InputFragment();
+            fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+            fragmentTransaction.commit();
 
         }else if (id == R.id.nav_home){
+            Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Home Clicked");
             MainFragment mainFragment = new MainFragment();
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
             fragmentTransaction.commit();
         }
