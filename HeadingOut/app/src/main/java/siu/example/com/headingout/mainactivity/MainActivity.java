@@ -39,6 +39,21 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected int getDrawerLayoutResource() {
+        return R.id.main_drawer_layout;
+    }
+
+    @Override
+    protected int getToolBarResource() {
+        return R.id.main_toolBar;
+    }
+
+    @Override
+    protected int getNavViewResource() {
+        return R.id.main_nav_view;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

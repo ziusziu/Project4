@@ -2,8 +2,8 @@ package siu.example.com.headingout.detailactivity;
 
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
@@ -13,13 +13,11 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import okhttp3.internal.Util;
 import siu.example.com.headingout.BaseActivity;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.detailactivity.DetailTabsFragmentPagerAdapter;
 import siu.example.com.headingout.util.Utilities;
 
-public class DetailActivity extends BaseActivity implements OnMapReadyCallback {
+public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -31,17 +29,12 @@ public class DetailActivity extends BaseActivity implements OnMapReadyCallback {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getLayoutResource());
+        setContentView(R.layout.activity_detail);
 
         initToolBar();
         initViewPager();
        // initGoogleMaps();
 
-    }
-
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_detail;
     }
 
     private void initToolBar(){
@@ -74,7 +67,7 @@ public class DetailActivity extends BaseActivity implements OnMapReadyCallback {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
