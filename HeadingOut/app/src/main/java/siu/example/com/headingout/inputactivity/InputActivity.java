@@ -39,8 +39,6 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Utilities.hideKeyboard(InputActivity.this);
-
         initializeViews();
         initViewPager();
         initFab();
