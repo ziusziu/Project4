@@ -1,9 +1,13 @@
 package siu.example.com.headingout;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -39,14 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Utilities.hideKeyboard(this);
 
-        mainFragment = new MainFragment();
-        inputFragment = new InputFragment();
-        detailFragment = new DetailFragment();
-
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
-        fragmentTransaction.commit();
+        createFragments();
+        loadMainFragment();
 
         mToolBar = (Toolbar)findViewById(getToolBarResource());
         setSupportActionBar(mToolBar);
@@ -54,14 +52,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initNavDrawer();
 
 
-//  Check check current fragment
+        setActionBarIcon(R.drawable.ic_arrow_back_24dp);
+
 //        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
+//        Log.d(TAG, "onCreate: ++++>>>> about ot load fragment");
 //        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
 //        if(fragment.getClass().getSimpleName().equals("DetailFragment")){
 //            initToolBar();
 //        }
 
     }
+
+    private void createFragments(){
+        mainFragment = new MainFragment();
+        inputFragment = new InputFragment();
+        detailFragment = new DetailFragment();
+    }
+
+    private void loadMainFragment(){
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
+        fragmentTransaction.commit();
+    }
+
 
     private void initToolBar(){
         mToolBar = (Toolbar)findViewById(R.id.detail_toolBar);
@@ -169,4 +183,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
         return fragment.getClass().getSimpleName();
     }
+
+    protected void setActionBarIcon(int iconResource){
+        int color = Color.parseColor("#FFFFFF");
+        Drawable iconDrawable = ResourcesCompat.getDrawable(getResources(), iconResource, null);
+        iconDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        mToolBar.setNavigationIcon(iconDrawable);
+    }
+
 }
