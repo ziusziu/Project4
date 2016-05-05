@@ -13,7 +13,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import siu.example.com.headingout.BaseActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.util.Utilities;
 

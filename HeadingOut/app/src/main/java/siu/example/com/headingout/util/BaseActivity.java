@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.util;
 
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -13,6 +13,11 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import siu.example.com.headingout.DetailFragment;
+import siu.example.com.headingout.InputFragment;
+import siu.example.com.headingout.MainFragment;
+import siu.example.com.headingout.R;
 import siu.example.com.headingout.util.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
