@@ -1,4 +1,4 @@
-package siu.example.com.headingout.mainactivity;
+package siu.example.com.headingout.mainfragment;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

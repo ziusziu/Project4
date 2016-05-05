@@ -7,7 +7,7 @@
     android:id="@+id/input_drawer_layout"
     android:fitsSystemWindows="true"
     tools:openDrawer="start"
-    tools:context=".inputactivity.InputActivity">
+    tools:context=".inputfragment.InputActivity">
 
     <include
         layout="@layout/input_app_bar"

@@ -1,11 +1,10 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.detailfragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import siu.example.com.headingout.detailactivity.DetailTabsFragmentPagerAdapter;
+import siu.example.com.headingout.R;
 import siu.example.com.headingout.util.Utilities;
 
 /**

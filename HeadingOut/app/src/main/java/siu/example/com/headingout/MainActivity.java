@@ -13,11 +13,13 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
+import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.inputfragment.InputFragment;
+import siu.example.com.headingout.mainfragment.MainFragment;
 import siu.example.com.headingout.util.Utilities;
 
-public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "BaseActivity";
     private static Toolbar mToolBar;

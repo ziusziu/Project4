@@ -1,21 +1,21 @@
-package siu.example.com.headingout.inputactivity;
+package siu.example.com.headingout.detailfragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import siu.example.com.headingout.inputactivity.tabfragment.InputFlightTabFragment;
-import siu.example.com.headingout.inputactivity.tabfragment.InputHotelTabFragment;
+import siu.example.com.headingout.detailfragment.tabfragment.DetailFlightTabFragment;
+import siu.example.com.headingout.detailfragment.tabfragment.DetailHotelTabFragment;
 
 /**
  * Created by samsiu on 4/29/16.
  */
-public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
+public class DetailTabsFragmentPagerAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "TRANSIT"};
 
-    public InputTabsFragmentPagerAdapter(FragmentManager fm) {
+    public DetailTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
 
@@ -28,11 +28,11 @@ public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch(position){
             case 0:
-                return InputFlightTabFragment.newInstance(position + 1);
+                return DetailFlightTabFragment.newInstance(position + 1);
             case 1:
-                return InputHotelTabFragment.newInstance(position + 1);
+                return DetailHotelTabFragment.newInstance(position + 1);
             default:
-                return InputFlightTabFragment.newInstance(position + 1);
+                return DetailFlightTabFragment.newInstance(position + 1);
         }
     }
 

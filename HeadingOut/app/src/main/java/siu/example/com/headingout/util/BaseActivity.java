@@ -14,11 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import siu.example.com.headingout.DetailFragment;
-import siu.example.com.headingout.InputFragment;
-import siu.example.com.headingout.MainFragment;
+import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.inputfragment.InputFragment;
+import siu.example.com.headingout.mainfragment.MainFragment;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.util.Utilities;
 
 public abstract class BaseActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 

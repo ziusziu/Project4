@@ -16,19 +16,19 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".mainactivity.MainActivity"
+            android:name=".mainfragment.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
 
         </activity>
         <activity
-            android:name=".inputactivity.InputActivity"
+            android:name=".inputfragment.InputActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".detailactivity.DetailActivity"
-            android:parentActivityName=".inputactivity.InputActivity"
+            android:name=".detailfragment.DetailActivity"
+            android:parentActivityName=".inputfragment.InputActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".util.BaseActivity" />
-        <activity android:name=".HomeActivity"
+        <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

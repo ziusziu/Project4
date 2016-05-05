@@ -1,4 +1,4 @@
-package siu.example.com.headingout.detailactivity.tabfragment;
+package siu.example.com.headingout.inputfragment.tabfragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,27 +8,28 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.detailactivity.rvadapter.DetailTabHotelRVAdapter;
+import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import siu.example.com.headingout.model.Hotel;
 
 /**
  * Created by samsiu on 4/29/16.
  */
-public class DetailHotelTabFragment extends Fragment {
+public class InputHotelTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
     private static RecyclerView mHotelRecyclerView;
 
-    public static DetailHotelTabFragment newInstance(int page){
+    public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        DetailHotelTabFragment fragment = new DetailHotelTabFragment();
+        InputHotelTabFragment fragment = new InputHotelTabFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -43,9 +44,11 @@ public class DetailHotelTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.detail_tab_hotel_fragment, container, false);
+        View view = inflater.inflate(R.layout.input_tab_hotel_fragment, container, false);
+        TextView textView = (TextView) view.findViewById(R.id.input_hotel_editText);
+        textView.setText("Fragment #" + mPage);
 
-        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.detail_tab_hotel_fragment_recyclerView);
+        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
 
         recyclerViewSetup();
 
@@ -71,7 +74,7 @@ public class DetailHotelTabFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mHotelRecyclerView.setLayoutManager(linearLayoutManager);
         mHotelRecyclerView.setHasFixedSize(true);
-        DetailTabHotelRVAdapter recyclerViewAdapter = new DetailTabHotelRVAdapter(hotelList);
+        InputTabHotelRVAdapter recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
         mHotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }

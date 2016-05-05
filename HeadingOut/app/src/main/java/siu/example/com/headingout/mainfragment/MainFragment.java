@@ -1,62 +1,46 @@
-package siu.example.com.headingout.mainactivity;
+package siu.example.com.headingout.mainfragment;
 
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import siu.example.com.headingout.util.BaseActivity;
-import siu.example.com.headingout.inputactivity.InputActivity;
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.model.Trip;
 
-public class MainActivity extends BaseActivity {
+/**
+ * Created by samsiu on 5/3/16.
+ */
+public class MainFragment extends Fragment{
 
-    private static String TAG = MainActivity.class.getSimpleName();
+    private static String TAG = MainFragment.class.getSimpleName();
     private static EditText mLocEditText;
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
 
-    @Override
-    protected int getLayoutResource() {
-        return R.layout.activity_main;
-    }
 
+    @Nullable
     @Override
-    protected int getDrawerLayoutResource() {
-        return R.id.main_drawer_layout;
-    }
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.main_content, container, false);
 
-    @Override
-    protected int getToolBarResource() {
-        return R.id.main_toolBar;
-    }
-
-    @Override
-    protected int getNavViewResource() {
-        return R.id.main_nav_view;
-    }
-
-    @Override
-    protected String getToolBarTitle() {
-        return "MainActivity";
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Hide keyboard after activity loads
-        initializeViews();
+        initializeViews(view);
         setAddButtonListener();
         recyclerViewSetup();
 
+        return view;
     }
 
     private void recyclerViewSetup(){
@@ -78,7 +62,7 @@ public class MainActivity extends BaseActivity {
         tripList.add(trip5);
         tripList.add(trip6);
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mTripRecyclerView.setLayoutManager(linearLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
         MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList);
@@ -90,16 +74,18 @@ public class MainActivity extends BaseActivity {
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent input = new Intent(MainActivity.this, InputActivity.class);
-                startActivity(input);
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                InputFragment inputFragment = new InputFragment();
+                fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                fragmentTransaction.commit();
             }
         });
     }
 
-    private void initializeViews(){
-        mLocEditText = (EditText)findViewById(R.id.main_locationInput_edittext);
-        mAddButton = (Button)findViewById(R.id.main_addLocation_button);
-        mTripRecyclerView = (RecyclerView)findViewById(R.id.main_recyclerView);
+    private void initializeViews(View view){
+        mLocEditText = (EditText)view.findViewById(R.id.main_locationInput_edittext);
+        mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
+        mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
     }
-
 }

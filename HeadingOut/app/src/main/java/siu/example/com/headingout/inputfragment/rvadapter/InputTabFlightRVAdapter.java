@@ -1,4 +1,4 @@
-package siu.example.com.headingout.inputactivity.rvadapter;
+package siu.example.com.headingout.inputfragment.rvadapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;

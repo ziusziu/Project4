@@ -1,4 +1,4 @@
-package siu.example.com.headingout.detailactivity.rvadapter;
+package siu.example.com.headingout.detailfragment.rvadapter;
 
 import android.content.Intent;
 import android.support.v7.widget.CardView;

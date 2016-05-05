@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package siu.example.com.headingout.inputfragment;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,13 +11,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import siu.example.com.headingout.inputactivity.InputTabsFragmentPagerAdapter;
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.util.Utilities;
 
 /**
