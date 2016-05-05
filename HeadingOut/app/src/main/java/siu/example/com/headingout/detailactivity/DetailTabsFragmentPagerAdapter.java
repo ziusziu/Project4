@@ -4,8 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import siu.example.com.headingout.detailactivity.fragment.DetailFlightTabFragment;
-import siu.example.com.headingout.detailactivity.fragment.DetailHotelTabFragment;
+import siu.example.com.headingout.detailactivity.tabfragment.DetailFlightTabFragment;
+import siu.example.com.headingout.detailactivity.tabfragment.DetailHotelTabFragment;
 
 /**
  * Created by samsiu on 4/29/16.
