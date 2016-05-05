@@ -17,9 +17,11 @@ import android.widget.EditText;
 import java.util.ArrayList;
 import java.util.List;
 
+import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.model.Trip;
+import siu.example.com.headingout.util.FragmentUtil;
 
 /**
  * Created by samsiu on 5/3/16.
@@ -87,5 +89,12 @@ public class MainFragment extends Fragment{
         mLocEditText = (EditText)view.findViewById(R.id.main_locationInput_edittext);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FragmentUtil fragInfo = (FragmentUtil)getActivity();
+        fragInfo.setFragmentToolBar(MainFragment.class.getSimpleName());
     }
 }

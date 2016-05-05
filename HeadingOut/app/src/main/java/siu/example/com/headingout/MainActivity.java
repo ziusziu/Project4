@@ -22,12 +22,14 @@ import android.view.View;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.mainfragment.MainFragment;
+import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentUtil {
 
     private static final String TAG = "BaseActivity";
     private static Toolbar mToolBar;
+    private static ActionBarDrawerToggle mDrawerToggle;
     private static FragmentManager fragmentManager;
     private static MainFragment mainFragment;
     private static InputFragment inputFragment;
@@ -53,8 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initNavDrawer();
 
 
-//        drawerToggle.setDrawerIndicatorEnabled(false);
-        setActionBarIcon(R.drawable.ic_arrow_back_24dp);
 
 //        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
 //        Log.d(TAG, "onCreate: ++++>>>> about ot load fragment");
@@ -63,6 +63,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //            initToolBar();
 //        }
 
+    }
+
+
+    @Override
+    public void setFragmentToolBar(String fragmentName) {
+        switch(fragmentName){
+            case MAIN_FRAGMENT:
+                getSupportActionBar().setTitle("Main");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+                initNavDrawer();
+                break;
+            case INPUT_FRAGMENT:
+                getSupportActionBar().setTitle("Input");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+                initNavDrawer();
+                break;
+            case DETAIL_FRAGMENT:
+                Log.d(TAG, "setFragmentToolBar: lasdjflsakfjklsdfj");
+                mDrawerToggle.setDrawerIndicatorEnabled(false);
+                setActionBarIcon(R.drawable.ic_arrow_back_24dp);
+                getSupportActionBar().setTitle("Detail");
+                mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Log.d(TAG, "onClick: ToolBar was clicked");
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        InputFragment inputFragment = new InputFragment();
+                        fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+                break;
+            default:
+                initNavDrawer();
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+        }
     }
 
     private void createFragments(){
@@ -95,25 +131,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void initNavDrawer(){
         DrawerLayout drawer = (DrawerLayout)findViewById(getDrawerLayoutResource());
-        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawer,
+        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
                 mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawer.addDrawerListener(drawerToggle);
-        drawer.removeDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-
-        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "onClick: ToolBar was clicked");
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                InputFragment inputFragment = new InputFragment();
-                fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
-                fragmentTransaction.commit();
-            }
-        });
-
-
+        drawer.addDrawerListener(mDrawerToggle);
+        drawer.removeDrawerListener(mDrawerToggle);
+        mDrawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView)findViewById(getNavViewResource());
         navigationView.setNavigationItemSelectedListener(this);
@@ -180,17 +203,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch(id){
             case R.id.nav_home:
                 Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Home Clicked");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
                 fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
                 break;
             case R.id.nav_share:
                 Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Share Clicked");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
                 fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
                 break;
             case R.id.nav_send:
                 Log.d(TAG, "onNavigationItemSelected: ==>>> Drawer Send Clicked");
+                setActionBarIcon(R.drawable.ic_arrow_back_24dp);
                 fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
                 break;
             default:
+                setActionBarIcon(R.drawable.ic_menu_24dp);
                 break;
         }
         fragmentTransaction.commit();

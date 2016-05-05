@@ -16,6 +16,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
 /**
@@ -41,6 +42,14 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         // initGoogleMaps();
 
         return view;
+    }
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FragmentUtil fragInfo = (FragmentUtil)getActivity();
+        fragInfo.setFragmentToolBar(DetailFragment.class.getSimpleName());
     }
 
     @Override

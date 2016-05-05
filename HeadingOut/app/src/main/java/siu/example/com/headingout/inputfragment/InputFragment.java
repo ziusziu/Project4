@@ -18,6 +18,7 @@ import android.widget.EditText;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
 /**
@@ -103,5 +104,11 @@ public class InputFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        FragmentUtil fragInfo = (FragmentUtil)getActivity();
+        fragInfo.setFragmentToolBar(InputFragment.class.getSimpleName());
+    }
 
 }
