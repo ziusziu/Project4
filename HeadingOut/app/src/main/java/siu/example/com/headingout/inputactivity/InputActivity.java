@@ -67,6 +67,11 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
         return R.id.input_nav_view;
     }
 
+    @Override
+    protected String getToolBarTitle() {
+        return "InputActivity";
+    }
+
     private void initializeViews(){
         mFlightEditText = (EditText)findViewById(R.id.input_flight_editText);
         mInputContinueFabButton = (FloatingActionButton)findViewById(R.id.input_continue_fab);
@@ -90,8 +95,6 @@ public class InputActivity extends BaseActivity implements NavigationView.OnNavi
         super.onSaveInstanceState(outState);
         outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
-
-
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {

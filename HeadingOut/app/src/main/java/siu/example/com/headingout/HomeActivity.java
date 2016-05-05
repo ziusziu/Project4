@@ -1,25 +1,41 @@
 package siu.example.com.headingout;
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class HomeActivity extends BaseActivity {
+    private static Toolbar mToolBar;
+    private static FragmentManager fragmentManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         MainFragment mainFragment = new MainFragment();
-        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
         fragmentTransaction.commit();
 
+        Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
+//        if(fragment.getClass().getSimpleName().equals("DetailFragment")){
+//            initToolBar();
+//        }
 
+    }
+
+    private void initToolBar(){
+        mToolBar = (Toolbar)findViewById(R.id.detail_toolBar);
+        setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle("Detail");
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -55,5 +71,13 @@ public class HomeActivity extends BaseActivity {
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         return super.onNavigationItemSelected(item);
+    }
+
+    @Override
+    protected String getToolBarTitle() {
+
+        Fragment fragment = new MainFragment();
+        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
+        return fragment.getClass().getSimpleName();
     }
 }

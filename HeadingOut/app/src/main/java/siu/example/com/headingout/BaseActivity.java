@@ -24,6 +24,9 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
     private static InputFragment inputFragment;
     private static DetailFragment detailFragment;
 
+    private static final String MAIN_FRAGMENT = "MainFragment";
+    private static final String INPUT_FRAGMENT = "InputFragment";
+    private static final String DETAIL_FRAGMENT = "DetailFragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +40,17 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         detailFragment = new DetailFragment();
 
         fragmentManager = getSupportFragmentManager();
-        
+
         mToolBar = (Toolbar)findViewById(getToolBarResource());
         setSupportActionBar(mToolBar);
+        getSupportActionBar().setTitle(getToolBarTitle());
         initNavDrawer();
 
 
 
     }
+
+    protected abstract String getToolBarTitle();
 
     protected abstract int getLayoutResource();
 
@@ -84,21 +90,23 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
 
         if(drawer.isDrawerOpen(GravityCompat.START)){
             drawer.closeDrawer(GravityCompat.START);
-        } else if(fragmentName.equals("MainFragment")){
-            Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
-            super.onBackPressed();
-        }else if(fragmentName.equals("InputFragment")){
-            Log.d(TAG, "onCreate:==== INPUT FRAGMENT");
+        } else {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
+            switch(fragmentName) {
+                case MAIN_FRAGMENT:
+                    Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
+                case INPUT_FRAGMENT:
+                    Log.d(TAG, "onCreate:==== INPUT FRAGMENT");
+                    fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
+                    break;
+                case DETAIL_FRAGMENT:
+                    Log.d(TAG, "onCreate:==== DETAIL FRAGMENT");
+                    fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                    break;
+                default:
+                    super.onBackPressed();
+            }
             fragmentTransaction.commit();
-        }else if(fragmentName.equals("DetailFragment")){
-            Log.d(TAG, "onCreate:==== DETAIL FRAGMENT");
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
-            fragmentTransaction.commit();
-        }else{
-            //super.onBackPressed();
         }
     }
 

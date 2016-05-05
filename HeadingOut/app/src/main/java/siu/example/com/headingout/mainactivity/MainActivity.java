@@ -54,6 +54,11 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
+    protected String getToolBarTitle() {
+        return "MainActivity";
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 

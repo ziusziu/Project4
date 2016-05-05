@@ -27,7 +27,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
     private GoogleMap mMap;
 
     private static final String TAG = DetailFragment.class.getSimpleName();
-    private static Toolbar mToolBar;
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
 
@@ -39,7 +38,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
             mViewPager.setCurrentItem(tabPagePosition);
         }
         View view = inflater.inflate(R.layout.detail_content, container, false);
-      //  initToolBar(view);
         initViewPager(view);
         // initGoogleMaps();
 
@@ -51,13 +49,6 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         super.onSaveInstanceState(outState);
         outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
-
-//    private void initToolBar(View view){
-//        mToolBar = (Toolbar)view.findViewById(R.id.detail_toolBar);
-//        setSupportActionBar(mToolBar);
-//        getSupportActionBar().setTitle("Detail");
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//    }
 
     private void initViewPager(View view){
         mViewPager = (ViewPager)view.findViewById(R.id.detail_viewPager);
