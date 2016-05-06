@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -33,11 +35,18 @@ public class MainFragment extends Fragment{
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
 
+    AutoCompleteTextView mAutoCompleteTextView;
+    String[] arr = { "Paries,France", "PA,United States","Parana,Brazil", "Padua,Italy", "Pasadena,CA,United States"};
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_content, container, false);
+
+
+
+
 
         initializeViews(view);
         setAddButtonListener();
@@ -89,6 +98,11 @@ public class MainFragment extends Fragment{
         mLocEditText = (EditText)view.findViewById(R.id.main_locationInput_edittext);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
+        mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.select_dialog_item, arr);
+        mAutoCompleteTextView.setThreshold(2);
+        mAutoCompleteTextView.setAdapter(adapter);
     }
 
     @Override

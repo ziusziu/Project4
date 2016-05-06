@@ -11,22 +11,12 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_places_key"/>
 
-        <activity
-            android:name=".mainfragment.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
 
-        </activity>
-        <activity
-            android:name=".inputfragment.InputActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".detailfragment.DetailActivity"
-            android:parentActivityName=".inputfragment.InputActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".util.BaseActivity" />
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
