@@ -64,6 +64,8 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
         mTabLayout = (TabLayout)view.findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
+        //mTabLayout.setScrollbarFadingEnabled(true);
+
     }
 
 

@@ -68,6 +68,7 @@ public class InputFragment extends Fragment {
         mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
         mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
+        //mTabLayout.setScrollbarFadingEnabled(true);
 
         // adapter.setMyValue()
     }
