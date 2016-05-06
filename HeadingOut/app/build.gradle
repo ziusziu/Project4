@@ -30,17 +30,20 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.+'
 
     //Play Services for Maps Api
-    compile 'com.google.android.gms:play-services:8.3.0'
-    compile 'com.google.android.gms:play-services-ads:8.3.0'
-    compile 'com.google.android.gms:play-services-identity:8.3.0'
-    compile 'com.google.android.gms:play-services-gcm:8.3.0'
+    compile 'com.google.android.gms:play-services:8.4.0'
+    compile 'com.google.android.gms:play-services-ads:8.4.0'
+    compile 'com.google.android.gms:play-services-identity:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+
+    //Play Sercies Location Api
+    compile 'com.google.android.gms:play-services-location:8.4.0'
 
     //Api
     compile 'com.squareup.retrofit2:retrofit:2.0.1'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 
-    // Espress Testing
+    // Espresso Testing
     androidTestCompile 'com.android.support:support-annotations:23.3.0'
     androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }

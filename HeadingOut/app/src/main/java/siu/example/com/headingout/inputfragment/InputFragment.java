@@ -1,5 +1,7 @@
 package siu.example.com.headingout.inputfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -11,13 +13,23 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.inputfragment.tabfragment.ForecastService;
+import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
@@ -32,8 +44,17 @@ public class InputFragment extends Fragment {
     private static ViewPager mViewPager;
     private FloatingActionButton mInputContinueFabButton;
     private static EditText mFlightEditText;
+    private static String forecastApiKey;
 
+    private static String mLatitude;
+    private static String mLongitude;
+    public static final String PLACESPREFERENCES = "placesLatLong";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
 
+    private static final String API_URL = "https://api.forecast.io/forecast/";
+    Weather weather;
+    Retrofit retrofit;
 
     @Nullable
     @Override
@@ -46,6 +67,53 @@ public class InputFragment extends Fragment {
         initializeViews(view);
         initViewPager(view);
         initFab();
+
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
+
+        String latLong = mLatitude+","+mLongitude;
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        ForecastService service = retrofit.create(ForecastService.class);
+        Call<Weather> call = service.getWeather(forecastApiKey, latLong);
+        call.enqueue(new Callback<Weather>() {
+            @Override
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
+                if (response.isSuccessful()) {
+                    weather = response.body();
+
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getMinutely().getData().get(0).getPrecipProbability());
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Weather> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
 
         onFabContinueButtonClick();
 
