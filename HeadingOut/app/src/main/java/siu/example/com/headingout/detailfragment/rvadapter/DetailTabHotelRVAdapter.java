@@ -12,14 +12,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.model.Hotel;
+import siu.example.com.headingout.model.Hotels;
 
 /**
  * Created by samsiu on 5/2/16.
  */
 public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotelRVAdapter.HotelViewHolder>{
 
-    List<Hotel> hotelList;
+    List<Hotels> hotelList;
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
@@ -42,7 +42,7 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
         }
     }
 
-    public DetailTabHotelRVAdapter(List<Hotel> hotelList){
+    public DetailTabHotelRVAdapter(List<Hotels> hotelList){
         this.hotelList = hotelList;
     }
 

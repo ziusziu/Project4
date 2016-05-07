@@ -7,13 +7,13 @@ import java.util.List;
  */
 public class Airports {
 
-    List<Airport> airport;
+    List<Airport> airports;
 
     public List<Airport> getAirport() {
-        return airport;
+        return airports;
     }
 
     public void setAirport(List<Airport> airport) {
-        this.airport = airport;
+        this.airports = airport;
     }
 }

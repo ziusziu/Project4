@@ -28,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.model.Hotels;
 import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.util.FragmentUtil;
@@ -56,8 +57,10 @@ public class InputFragment extends Fragment {
 
     private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
     private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
+    private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
     Weather weather;
-    Airports airport;
+    Airports airports;
+    Hotels hotels;
     Retrofit retrofit;
 
     @Nullable
@@ -73,8 +76,63 @@ public class InputFragment extends Fragment {
         initFab();
         onFabContinueButtonClick();
 
-//        weatherapi();
 
+
+        //getAirportsApi();
+        //getWeatherApi();
+
+
+
+
+        String queryType = "type";
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(GOOGLE_HOTELS_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+
+
+        GoogleHotelService service = retrofit.create(GoogleHotelService.class);
+        Call<Hotels> call = service.getHotels();
+        call.enqueue(new Callback<Hotels>() {
+            @Override
+            public void onResponse(Call<Hotels> call, Response<Hotels> response) {
+                if (response.isSuccessful()) {
+                    hotels = response.body();
+                    Log.d(TAG, "onResponse: ===>>>" + hotels.getKind());
+
+                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Hotels> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+
+
+
+        return view;
+
+    }
+
+    private void getAirportsApi(){
 
 
         flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
@@ -105,12 +163,12 @@ public class InputFragment extends Fragment {
             @Override
             public void onResponse(Call<Airports> call, Response<Airports> response) {
                 if (response.isSuccessful()) {
-                    airport = response.body();
-                    
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getRegionName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getCityCode());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getCountryName());
+                    airports = response.body();
+
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getRegionName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getCityCode());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getCountryName());
 
 
                 } else {
@@ -125,17 +183,10 @@ public class InputFragment extends Fragment {
         });
 
 
-
-
-
-
-
-        return view;
-
     }
 
 
-    private void weatherapi(){
+    private void getWeatherApi(){
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mLatitude = sharedPref.getString(LATITUDE, "Default");

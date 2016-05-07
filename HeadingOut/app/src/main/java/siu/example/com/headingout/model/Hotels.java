@@ -3,14 +3,15 @@ package siu.example.com.headingout.model;
 /**
  * Created by samsiu on 5/2/16.
  */
-public class Hotel {
+public class Hotels {
+    String kind;
     String name;
     String city;
     String state;
     String country;
     String rating;
 
-    public Hotel(String name, String city, String state, String country, String rating) {
+    public Hotels(String name, String city, String state, String country, String rating) {
         this.name = name;
         this.city = city;
         this.state = state;
@@ -56,5 +57,13 @@ public class Hotel {
 
     public void setRating(String rating) {
         this.rating = rating;
+    }
+
+    public String getKind() {
+        return kind;
+    }
+
+    public void setKind(String kind) {
+        this.kind = kind;
     }
 }

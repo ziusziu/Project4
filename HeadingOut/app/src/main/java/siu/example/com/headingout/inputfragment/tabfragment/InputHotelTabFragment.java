@@ -15,7 +15,7 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
-import siu.example.com.headingout.model.Hotel;
+import siu.example.com.headingout.model.Hotels;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -56,14 +56,14 @@ public class InputHotelTabFragment extends Fragment {
     }
 
     private void recyclerViewSetup(){
-        List<Hotel> hotelList = new ArrayList<>();
+        List<Hotels> hotelList = new ArrayList<>();
 
         // Dummy Data
-        Hotel hotel = new Hotel("Hilton", "SF", "CA", "US", "5");
-        Hotel hotel1 = new Hotel("Hilton", "SF", "CA", "US", "5");
-        Hotel hotel2 = new Hotel("Hilton", "SF", "CA", "US", "5");
-        Hotel hotel3 = new Hotel("Hilton", "SF", "CA", "US", "5");
-        Hotel hotel4 = new Hotel("Hilton", "SF", "CA", "US", "5");
+        Hotels hotel = new Hotels("Hilton", "SF", "CA", "US", "5");
+        Hotels hotel1 = new Hotels("Hilton", "SF", "CA", "US", "5");
+        Hotels hotel2 = new Hotels("Hilton", "SF", "CA", "US", "5");
+        Hotels hotel3 = new Hotels("Hilton", "SF", "CA", "US", "5");
+        Hotels hotel4 = new Hotels("Hilton", "SF", "CA", "US", "5");
         hotelList.add(hotel);
         hotelList.add(hotel1);
         hotelList.add(hotel2);
