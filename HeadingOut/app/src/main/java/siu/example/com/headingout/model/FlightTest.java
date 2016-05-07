@@ -3,7 +3,7 @@ package siu.example.com.headingout.model;
 /**
  * Created by samsiu on 5/2/16.
  */
-public class Flight {
+public class FlightTest {
 
     String name;
     String airlineName;
@@ -12,7 +12,7 @@ public class Flight {
     String arrivalCity;
     String arrivalTerminal;
 
-    public Flight(String name, String airlineName, String departureCity, String departureTerminal, String arrivalCity, String arrivalTerminal) {
+    public FlightTest(String name, String airlineName, String departureCity, String departureTerminal, String arrivalCity, String arrivalTerminal) {
         this.name = name;
         this.airlineName = airlineName;
         this.departureCity = departureCity;

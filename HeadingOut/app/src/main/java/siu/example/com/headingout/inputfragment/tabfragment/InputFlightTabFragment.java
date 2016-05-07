@@ -15,7 +15,7 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
-import siu.example.com.headingout.model.Flight;
+import siu.example.com.headingout.model.FlightTest;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -60,14 +60,14 @@ public class InputFlightTabFragment extends Fragment {
     }
 
     private void recyclerViewSetup(){
-        List<Flight> flightList = new ArrayList<>();
+        List<FlightTest> flightList = new ArrayList<>();
 
         // Dummy Data
-        Flight flight = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        Flight flight1 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        Flight flight2 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        Flight flight3 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        Flight flight4 = new Flight("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight1 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight2 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight3 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight4 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
         flightList.add(flight);
         flightList.add(flight1);
         flightList.add(flight2);

@@ -28,6 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.model.flights.Flights;
 import siu.example.com.headingout.model.Hotels;
 import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.forecast.Weather;
@@ -58,10 +59,12 @@ public class InputFragment extends Fragment {
     private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
     private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
     private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
+    private static final String GOOGLE_QPEXPRESS_API_URL = "https://www.googleapis.com/qpxExpress/v1/trips/";
     Weather weather;
     Airports airports;
     Hotels hotels;
     Retrofit retrofit;
+    Flights flights;
 
     @Nullable
     @Override
@@ -82,6 +85,57 @@ public class InputFragment extends Fragment {
         //getWeatherApi();
 
 
+
+        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(GOOGLE_QPEXPRESS_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+
+
+        GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
+        Call<Flights> call = service.getFlights(googlePlacesApiKey);
+        call.enqueue(new Callback<Flights>() {
+            @Override
+            public void onResponse(Call<Flights> call, Response<Flights> response) {
+                if (response.isSuccessful()) {
+                    flights = response.body();
+                    Log.d(TAG, "onResponse: ===>>>" + flights);
+
+                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Flights> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+
+
+
+
+        return view;
+
+    }
+
+    private void getGoogleHotleApi(){
 
 
         String queryType = "type";
@@ -125,12 +179,9 @@ public class InputFragment extends Fragment {
         });
 
 
-
-
-
-        return view;
-
     }
+
+
 
     private void getAirportsApi(){
 

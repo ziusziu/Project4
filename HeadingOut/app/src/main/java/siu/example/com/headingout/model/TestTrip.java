@@ -3,10 +3,10 @@ package siu.example.com.headingout.model;
 /**
  * Created by samsiu on 4/29/16.
  */
-public class Trip {
+public class TestTrip {
     String location;
 
-    public Trip(String location) {
+    public TestTrip(String location) {
         this.location = location;
     }
 

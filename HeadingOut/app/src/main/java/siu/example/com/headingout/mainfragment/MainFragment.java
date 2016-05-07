@@ -42,7 +42,7 @@ import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.PlaceArrayAdapter;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.InputFragment;
-import siu.example.com.headingout.model.Trip;
+import siu.example.com.headingout.model.TestTrip;
 import siu.example.com.headingout.util.FragmentUtil;
 
 /**
@@ -104,16 +104,16 @@ public class MainFragment extends Fragment implements
     }
 
     private void recyclerViewSetup(){
-        List<Trip> tripList = new ArrayList<>();
+        List<TestTrip> tripList = new ArrayList<>();
 
         // Dummy Data
-        Trip trip = new Trip("San Francisco");
-        Trip trip1 = new Trip("San Francisco");
-        Trip trip2 = new Trip("San Francisco");
-        Trip trip3 = new Trip("San Francisco");
-        Trip trip4 = new Trip("San Francisco");
-        Trip trip5 = new Trip("San Francisco");
-        Trip trip6 = new Trip("San Francisco");
+        TestTrip trip = new TestTrip("San Francisco");
+        TestTrip trip1 = new TestTrip("San Francisco");
+        TestTrip trip2 = new TestTrip("San Francisco");
+        TestTrip trip3 = new TestTrip("San Francisco");
+        TestTrip trip4 = new TestTrip("San Francisco");
+        TestTrip trip5 = new TestTrip("San Francisco");
+        TestTrip trip6 = new TestTrip("San Francisco");
         tripList.add(trip);
         tripList.add(trip1);
         tripList.add(trip2);

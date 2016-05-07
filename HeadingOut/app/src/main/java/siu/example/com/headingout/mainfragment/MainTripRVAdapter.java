@@ -10,14 +10,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.model.Trip;
+import siu.example.com.headingout.model.TestTrip;
 
 /**
  * Created by samsiu on 4/29/16.
  */
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
-    private final List<Trip> tripList;
+    private final List<TestTrip> tripList;
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
@@ -31,7 +31,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
 
     }
 
-    public MainTripRVAdapter(List<Trip> tripList){
+    public MainTripRVAdapter(List<TestTrip> tripList){
         this.tripList = tripList;
     }
 
