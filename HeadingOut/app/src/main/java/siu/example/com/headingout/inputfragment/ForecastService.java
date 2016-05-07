@@ -1,4 +1,4 @@
-package siu.example.com.headingout.inputfragment.tabfragment;
+package siu.example.com.headingout.inputfragment;
 
 import retrofit2.Call;
 import retrofit2.http.GET;

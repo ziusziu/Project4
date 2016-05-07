@@ -28,7 +28,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
-import siu.example.com.headingout.inputfragment.tabfragment.ForecastService;
+import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
@@ -45,6 +45,8 @@ public class InputFragment extends Fragment {
     private FloatingActionButton mInputContinueFabButton;
     private static EditText mFlightEditText;
     private static String forecastApiKey;
+    private static String flightStatsApiKey;
+    private static String flightStatsAppId;
 
     private static String mLatitude;
     private static String mLongitude;
@@ -52,8 +54,10 @@ public class InputFragment extends Fragment {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
-    private static final String API_URL = "https://api.forecast.io/forecast/";
+    private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
+    private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
     Weather weather;
+    Airports airport;
     Retrofit retrofit;
 
     @Nullable
@@ -67,8 +71,71 @@ public class InputFragment extends Fragment {
         initializeViews(view);
         initViewPager(view);
         initFab();
+        onFabContinueButtonClick();
+
+//        weatherapi();
 
 
+
+        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
+        String distance = "50";
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(FLIGTHSTATS_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        FlightStatsService service = retrofit.create(FlightStatsService.class);
+        Call<Airports> call = service.getAirports(mLongitude, mLatitude, distance, flightStatsAppId, flightStatsApiKey);
+        call.enqueue(new Callback<Airports>() {
+            @Override
+            public void onResponse(Call<Airports> call, Response<Airports> response) {
+                if (response.isSuccessful()) {
+                    airport = response.body();
+                    
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getRegionName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getCityCode());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airport.getAirport().get(0).getCountryName());
+
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Airports> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+
+
+
+
+
+        return view;
+
+    }
+
+
+    private void weatherapi(){
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mLatitude = sharedPref.getString(LATITUDE, "Default");
@@ -85,7 +152,7 @@ public class InputFragment extends Fragment {
                 .build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(API_URL)
+                .baseUrl(FORECAST_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
@@ -113,12 +180,8 @@ public class InputFragment extends Fragment {
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
-
-
-        onFabContinueButtonClick();
-
-        return view;
     }
+
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
