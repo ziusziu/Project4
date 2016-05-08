@@ -9,11 +9,7 @@ public class Airports {
 
     List<Airport> airports;
 
-    public List<Airport> getAirport() {
+    public List<Airport> getAirports() {
         return airports;
-    }
-
-    public void setAirport(List<Airport> airport) {
-        this.airports = airport;
     }
 }

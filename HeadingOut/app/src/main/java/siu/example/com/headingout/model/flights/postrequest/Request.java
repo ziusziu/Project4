@@ -20,35 +20,5 @@ public class Request {
         this.refundable = refundable;
     }
 
-    public ArrayList<PostSlice> getSlice() {
-        return slice;
-    }
 
-    public void setSlice(ArrayList<PostSlice> slice) {
-        this.slice = slice;
-    }
-
-    public Passengers getPassenters() {
-        return passengers;
-    }
-
-    public void setPassenters(Passengers passenters) {
-        this.passengers = passenters;
-    }
-
-    public int getSolutions() {
-        return solutions;
-    }
-
-    public void setSolutions(int solutions) {
-        this.solutions = solutions;
-    }
-
-    public Boolean getRefundable() {
-        return refundable;
-    }
-
-    public void setRefundable(Boolean refundable) {
-        this.refundable = refundable;
-    }
 }

@@ -14,15 +14,7 @@ public class Flights {
         return kind;
     }
 
-    public void setKind(String kind) {
-        this.kind = kind;
-    }
-
     public Trip getTrips() {
         return trips;
-    }
-
-    public void setTrips(Trip trips) {
-        this.trips = trips;
     }
 }
