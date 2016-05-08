@@ -100,47 +100,47 @@ public class InputFragment extends Fragment {
         //getWeatherApi();
 
         //TODO test QPExpressApi
-        //getQPExpressApi();
+        getQPExpressApi();
 
 
-        String googlePlacesApiKey = getResources().getString(R.string.hotwire_api_key);
-
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(HOTWIRE_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())  // CHANGE TO XML CONVERTER
-                .client(client)
-                .build();
-
-
-        HotwireService service = retrofit.create(HotwireService.class);
-        Call<Hotels> call = service.getHotels(googlePlacesApiKey, "San%20Francisco,%20Ca.", "1", "2", "05/20/2016", "05/23/2016");
-        call.enqueue(new Callback<Hotels>() {
-            @Override
-            public void onResponse(Call<Hotels> call, Response<Hotels> response) {
-                if (response.isSuccessful()) {
-                    hotels = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + hotels);
-                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
-
-
-                } else {
-                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Hotels> call, Throwable t) {
-                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
-            }
-        });
-
+//        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+//
+//
+//        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+//        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+//        OkHttpClient client = new OkHttpClient.Builder()
+//                .addInterceptor(logging)
+//                .build();
+//
+//        retrofit = new Retrofit.Builder()
+//                .baseUrl(HOTWIRE_API_URL)
+//                .addConverterFactory(GsonConverterFactory.create())  // CHANGE TO XML CONVERTER
+//                .client(client)
+//                .build();
+//
+//
+//        HotwireService service = retrofit.create(HotwireService.class);
+//        Call<Hotels> call = service.getHotels(hotwireApiKey, "San%20Francisco,%20Ca.", "1", "2", "05/20/2016", "05/23/2016");
+//        call.enqueue(new Callback<Hotels>() {
+//            @Override
+//            public void onResponse(Call<Hotels> call, Response<Hotels> response) {
+//                if (response.isSuccessful()) {
+//                    hotels = response.body();
+//                    Log.d(TAG, "onResponse: ===>>>" + hotels);
+//                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+//
+//
+//                } else {
+//                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Hotels> call, Throwable t) {
+//                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+//            }
+//        });
+//
 
 
 
@@ -284,10 +284,11 @@ public class InputFragment extends Fragment {
                 if (response.isSuccessful()) {
                     airports = response.body();
 
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getRegionName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getCityCode());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirport().get(0).getCountryName());
+
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getRegionName());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getCityCode());
+                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getCountryName());
 
 
                 } else {

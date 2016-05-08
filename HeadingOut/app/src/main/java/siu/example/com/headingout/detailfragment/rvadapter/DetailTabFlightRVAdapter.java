@@ -12,14 +12,14 @@ import android.widget.TextView;
 import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.model.Flight;
+import siu.example.com.headingout.model.FlightTest;
 
 /**
  * Created by samsiu on 5/2/16.
  */
 public class DetailTabFlightRVAdapter extends RecyclerView.Adapter<DetailTabFlightRVAdapter.FlightViewHolder>{
 
-    List<Flight> flightList;
+    List<FlightTest> flightList;
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
@@ -38,7 +38,7 @@ public class DetailTabFlightRVAdapter extends RecyclerView.Adapter<DetailTabFlig
         }
     }
 
-    public DetailTabFlightRVAdapter(List<Flight> flightList){
+    public DetailTabFlightRVAdapter(List<FlightTest> flightList){
         this.flightList = flightList;
     }
 
