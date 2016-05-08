@@ -1,35 +1,80 @@
 package siu.example.com.headingout.model.hotels;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
+import org.simpleframework.xml.Root;
+
 import java.util.List;
 
 /**
  * Created by samsiu on 5/7/16.
  */
+@Root(name="HotelResult")
 public class HotelResult {
+
+    @Element(name = "CurrencyCode")
     String currencyCode;
+
+    @Element(name = "DeepLink")
     String deepLink;
+
+    @Element(name = "ResultId")
     String resultId;
+
+    @Element(name = "HWRefNumber")
     String hwRefNumber;
+
+    @Element(name = "SubTotal")
     String subTotal;
+
+    @Element(name = "TaxesAndFees")
     String taxesAndFees;
+
+    @Element(name = "TotalPrice")
     String totalPrice;
-    List<AmenityCodes> amenityCodes;
-    class AmenityCodes{
+
+    @ElementList(name = "AmenityCodes")
+    List<Codes> amenityCodes;
+
+    class Codes{
+        @Element(name = "Code")
         String Code;
+
         public String getCode() {
             return Code;
         }
     }
+
+    @Element(name = "CheckInDate")
     String checkInDate;
+
+    @Element(name = "CheckOutDate")
     String checkOutDate;
+
+    @Element(name = "NeighborhoodId")
     String neighborhoodId;
+
+    @Element(name = "LodgingTypeCode")
     String lodgingTypeCode;
+
+    @Element(name = "Nights")
     int nights;
+
+    @Element(name = "AveragePricePerNight")
     String averagePricePerNight;
+
+    @Element(name = "RecommendationPercentage")
     String recommendationPercentage;
+
+    @Element(name = "Rooms")
     int rooms;
+
+    @Element(name = "SavingsPercentage")
     String savingsPercentage;
+
+    @Element(name = "StarRating")
     String starRating;
+
 
     public String getCurrencyCode() {
         return currencyCode;
@@ -59,7 +104,7 @@ public class HotelResult {
         return totalPrice;
     }
 
-    public List<AmenityCodes> getAmenityCodes() {
+    public List<Codes> getAmenityCodes() {
         return amenityCodes;
     }
 

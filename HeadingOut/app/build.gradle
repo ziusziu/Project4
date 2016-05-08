@@ -11,6 +11,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -41,6 +42,11 @@ dependencies {
     //Api
     compile 'com.squareup.retrofit2:retrofit:2.0.1'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
+    compile ('com.squareup.retrofit2:converter-simplexml:2.0.1'){
+        exclude module: 'stax-api'
+        exclude module: 'stax'
+        exclude module: 'xpp3'
+    }
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
 
     // Espresso Testing
