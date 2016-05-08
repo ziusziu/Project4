@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -31,6 +30,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
+import siu.example.com.headingout.inputfragment.providers.ForecastService;
+import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
+import siu.example.com.headingout.inputfragment.providers.GoogleQPExpressService;
+import siu.example.com.headingout.inputfragment.providers.HotwireService;
 import siu.example.com.headingout.model.TestHotels;
 import siu.example.com.headingout.model.flights.Flights;
 
