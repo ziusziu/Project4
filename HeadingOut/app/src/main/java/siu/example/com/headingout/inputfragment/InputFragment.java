@@ -31,14 +31,16 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
+import siu.example.com.headingout.model.TestHotels;
 import siu.example.com.headingout.model.flights.Flights;
-import siu.example.com.headingout.model.Hotels;
+
 import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.flights.postrequest.Passengers;
 import siu.example.com.headingout.model.flights.postrequest.PostSlice;
 import siu.example.com.headingout.model.flights.postrequest.Request;
 import siu.example.com.headingout.model.flights.postrequest.RequestJson;
 import siu.example.com.headingout.model.forecast.Weather;
+import siu.example.com.headingout.model.hotels.Hotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
@@ -67,11 +69,13 @@ public class InputFragment extends Fragment {
     private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
     private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
     private static final String GOOGLE_QPEXPRESS_API_URL = "https://www.googleapis.com/qpxExpress/v1/trips/";
+    private static final String HOTWIRE_API_URL = "http://api.hotwire.com/v1/search/";
     Weather weather;
     Airports airports;
     Hotels hotels;
     Retrofit retrofit;
     Flights flights;
+    TestHotels testHotels;
 
     @Nullable
     @Override
@@ -91,8 +95,68 @@ public class InputFragment extends Fragment {
         //getAirportsApi();
         //getWeatherApi();
 
+        //TODO test QPExpressApi
+        //getQPExpressApi();
 
 
+        String googlePlacesApiKey = getResources().getString(R.string.hotwire_api_key);
+
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(HOTWIRE_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())  // CHANGE TO XML CONVERTER
+                .client(client)
+                .build();
+
+
+        HotwireService service = retrofit.create(HotwireService.class);
+        Call<Hotels> call = service.getHotels(googlePlacesApiKey, "San%20Francisco,%20Ca.", "1", "2", "05/20/2016", "05/23/2016");
+        call.enqueue(new Callback<Hotels>() {
+            @Override
+            public void onResponse(Call<Hotels> call, Response<Hotels> response) {
+                if (response.isSuccessful()) {
+                    hotels = response.body();
+                    Log.d(TAG, "onResponse: ===>>>" + hotels);
+                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Hotels> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+
+
+
+
+
+
+        return view;
+
+    }
+
+
+
+
+
+
+
+
+    // NOT SURE IF WORKING
+    private void getQPExpressApi(){
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         Passengers passengers = new Passengers(1,0,0,0,0);
         PostSlice postSlice = new PostSlice("BOS", "LAX", "2016-05-10");
@@ -100,7 +164,6 @@ public class InputFragment extends Fragment {
         slice.add(postSlice);
         Request request = new Request(slice, passengers, 20, false);
         RequestJson requestJson = new RequestJson(request);
-
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -113,8 +176,6 @@ public class InputFragment extends Fragment {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();
-
-
 
         GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
         Call<Flights> call = service.getFlights(googlePlacesApiKey, requestJson);
@@ -137,19 +198,12 @@ public class InputFragment extends Fragment {
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
-
-
-
-
-        return view;
-
     }
 
+    // NOT SURE IF WORKING
     private void getGoogleHotleApi(){
 
-
         String queryType = "type";
-
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -166,13 +220,13 @@ public class InputFragment extends Fragment {
 
 
         GoogleHotelService service = retrofit.create(GoogleHotelService.class);
-        Call<Hotels> call = service.getHotels();
-        call.enqueue(new Callback<Hotels>() {
+        Call<TestHotels> call = service.getHotels();
+        call.enqueue(new Callback<TestHotels>() {
             @Override
-            public void onResponse(Call<Hotels> call, Response<Hotels> response) {
+            public void onResponse(Call<TestHotels> call, Response<TestHotels> response) {
                 if (response.isSuccessful()) {
-                    hotels = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + hotels.getKind());
+                    testHotels = response.body();
+                    Log.d(TAG, "onResponse: ===>>>" + testHotels.getName());
 
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
@@ -183,7 +237,7 @@ public class InputFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<Hotels> call, Throwable t) {
+            public void onFailure(Call<TestHotels> call, Throwable t) {
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });

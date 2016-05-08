@@ -2,9 +2,7 @@ package siu.example.com.headingout.inputfragment;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
-import retrofit2.http.Query;
-import siu.example.com.headingout.model.Hotels;
+import siu.example.com.headingout.model.TestHotels;
 
 /**
  * Created by samsiu on 5/7/16.
@@ -12,6 +10,6 @@ import siu.example.com.headingout.model.Hotels;
 public interface GoogleHotelService {
 
     @GET("hotels?type=ALL")
-    Call<Hotels> getHotels();
+    Call<TestHotels> getHotels();
 
 }

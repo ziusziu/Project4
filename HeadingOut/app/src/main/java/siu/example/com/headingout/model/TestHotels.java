@@ -3,7 +3,7 @@ package siu.example.com.headingout.model;
 /**
  * Created by samsiu on 5/2/16.
  */
-public class Hotels {
+public class TestHotels {
     String kind;
     String name;
     String city;
@@ -11,7 +11,7 @@ public class Hotels {
     String country;
     String rating;
 
-    public Hotels(String name, String city, String state, String country, String rating) {
+    public TestHotels(String name, String city, String state, String country, String rating) {
         this.name = name;
         this.city = city;
         this.state = state;
