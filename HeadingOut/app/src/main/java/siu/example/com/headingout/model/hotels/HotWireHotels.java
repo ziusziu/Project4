@@ -12,10 +12,13 @@ import java.util.List;
 
 @Root(name = "Hotwire")
 public class HotWireHotels{
-    @ElementList(inline = true)
-    List<HotWireMetaData> metaDataList;
+    @Element(name = "Errors", required = false)
+    String errors;
 
-    @ElementList(inline = true)
+    @ElementList(name="MetaData")
+    List<MetaData> metaDataList;
+
+    @ElementList(name="Result")
     List<HotelResult> resultList;
 
     @Element(name = "StatusCode")
@@ -24,8 +27,11 @@ public class HotWireHotels{
     @Element(name = "StatusDesc")
     String statusDesc;
 
+    public String getErrors() {
+        return errors;
+    }
 
-    public List<HotWireMetaData> getMetaDataList() {
+    public List<MetaData> getMetaDataList() {
         return metaDataList;
     }
 

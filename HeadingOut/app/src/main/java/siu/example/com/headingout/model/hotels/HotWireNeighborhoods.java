@@ -11,48 +11,52 @@ import java.util.List;
  */
 @Root(name="Neighborhoods")
 public class HotWireNeighborhoods {
-    @ElementList(name = "Neighborhood")
-    List<Neighborhood> neighborhoodList;
+    @Element(name = "Centroid")
+    String centroid;
 
-    public List<Neighborhood> getNeighborhoodList() {
-        return neighborhoodList;
+    @Element(name = "City")
+    String city;
+
+    @Element(name = "Country")
+    String country;
+
+    @Element(name = "Id")
+    String id;
+
+    @Element(name = "Name")
+    String name;
+
+    @Element(name = "Shape", required = false)
+    String shape;
+
+    @Element(name = "State")
+    String state;
+
+    public String getCentroid() {
+        return centroid;
     }
 
-    public class Neighborhood{
-        @Element(name = "Centroid")
-        String centroid;
-
-        @Element(name = "City")
-        String city;
-
-        @Element(name = "Country")
-        String country;
-
-        @Element(name = "Id")
-        String id;
-
-        @Element(name = "State")
-        String state;
-
-        public String getCentroid() {
-            return centroid;
-        }
-
-        public String getCity() {
-            return city;
-        }
-
-        public String getCountry() {
-            return country;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getState() {
-            return state;
-        }
+    public String getCity() {
+        return city;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getShape() {
+        return shape;
+    }
 }

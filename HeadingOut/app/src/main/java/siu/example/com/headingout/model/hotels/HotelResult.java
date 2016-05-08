@@ -34,16 +34,10 @@ public class HotelResult {
     String totalPrice;
 
     @ElementList(name = "AmenityCodes")
-    List<Codes> amenityCodes;
+    List<Code> amenityCodes;
 
-    class Codes{
-        @Element(name = "Code")
-        String Code;
-
-        public String getCode() {
-            return Code;
-        }
-    }
+    @Element(name = "Code")
+    String code;
 
     @Element(name = "CheckInDate")
     String checkInDate;
@@ -71,6 +65,9 @@ public class HotelResult {
 
     @Element(name = "SavingsPercentage")
     String savingsPercentage;
+
+    @Element(name = "SpecialTaxItems", required = false)
+    String specialTaxItems;
 
     @Element(name = "StarRating")
     String starRating;
@@ -104,7 +101,7 @@ public class HotelResult {
         return totalPrice;
     }
 
-    public List<Codes> getAmenityCodes() {
+    public List<Code> getAmenityCodes() {
         return amenityCodes;
     }
 
@@ -142,6 +139,10 @@ public class HotelResult {
 
     public String getSavingsPercentage() {
         return savingsPercentage;
+    }
+
+    public String getSpecialTaxItems() {
+        return specialTaxItems;
     }
 
     public String getStarRating() {
