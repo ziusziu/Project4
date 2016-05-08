@@ -1,9 +1,11 @@
 package siu.example.com.headingout.inputfragment;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 import siu.example.com.headingout.model.flights.Flights;
+import siu.example.com.headingout.model.flights.postrequest.RequestJson;
 
 /**
  * Created by samsiu on 5/7/16.
@@ -11,6 +13,8 @@ import siu.example.com.headingout.model.flights.Flights;
 public interface GoogleQPExpressService {
 
     @POST("search?")
-    Call<Flights> getFlights(@Query("key")String key);
+    Call<Flights> getFlights(@Query("key")String key,
+                             @Body RequestJson requestJson
+    );
 
 }

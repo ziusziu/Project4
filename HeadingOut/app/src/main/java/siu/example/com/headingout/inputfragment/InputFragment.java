@@ -19,6 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -31,6 +34,10 @@ import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.model.flights.Flights;
 import siu.example.com.headingout.model.Hotels;
 import siu.example.com.headingout.model.airports.Airports;
+import siu.example.com.headingout.model.flights.postrequest.Passengers;
+import siu.example.com.headingout.model.flights.postrequest.PostSlice;
+import siu.example.com.headingout.model.flights.postrequest.Request;
+import siu.example.com.headingout.model.flights.postrequest.RequestJson;
 import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
@@ -87,6 +94,12 @@ public class InputFragment extends Fragment {
 
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+        Passengers passengers = new Passengers(1,0,0,0,0);
+        PostSlice postSlice = new PostSlice("BOS", "LAX", "2016-05-10");
+        ArrayList<PostSlice> slice = new ArrayList<>();
+        slice.add(postSlice);
+        Request request = new Request(slice, passengers, 20, false);
+        RequestJson requestJson = new RequestJson(request);
 
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -104,14 +117,13 @@ public class InputFragment extends Fragment {
 
 
         GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
-        Call<Flights> call = service.getFlights(googlePlacesApiKey);
+        Call<Flights> call = service.getFlights(googlePlacesApiKey, requestJson);
         call.enqueue(new Callback<Flights>() {
             @Override
             public void onResponse(Call<Flights> call, Response<Flights> response) {
                 if (response.isSuccessful()) {
                     flights = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + flights);
-
+                    Log.d(TAG, "onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
 
@@ -125,8 +137,6 @@ public class InputFragment extends Fragment {
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
-
-
 
 
 
