@@ -14,39 +14,19 @@ public class WeatherMinuteData {
         return time;
     }
 
-    public void setTime(int time) {
-        this.time = time;
-    }
-
     public double getPrecipIntensity() {
         return precipIntensity;
-    }
-
-    public void setPrecipIntensity(double precipIntensity) {
-        this.precipIntensity = precipIntensity;
     }
 
     public double getPrecipIntensityError() {
         return precipIntensityError;
     }
 
-    public void setPrecipIntensityError(double precipIntensityError) {
-        this.precipIntensityError = precipIntensityError;
-    }
-
     public double getPrecipProbability() {
         return precipProbability;
     }
 
-    public void setPrecipProbability(double precipProbability) {
-        this.precipProbability = precipProbability;
-    }
-
     public String getPrecipType() {
         return precipType;
-    }
-
-    public void setPrecipType(String precipType) {
-        this.precipType = precipType;
     }
 }
