@@ -21,4 +21,19 @@ public class Request {
     }
 
 
+    public void setSlice(ArrayList<PostSlice> slice) {
+        this.slice = slice;
+    }
+
+    public void setPassengers(Passengers passengers) {
+        this.passengers = passengers;
+    }
+
+    public void setSolutions(int solutions) {
+        this.solutions = solutions;
+    }
+
+    public void setRefundable(Boolean refundable) {
+        this.refundable = refundable;
+    }
 }
