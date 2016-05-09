@@ -1,10 +1,13 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,9 @@ import siu.example.com.headingout.model.TestHotels;
  * Created by samsiu on 4/29/16.
  */
 public class InputHotelTabFragment extends Fragment {
+    private static final String TAG = InputFlightTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
+    private SwipeRefreshLayout mHotelSwipeRefreshLayout;
 
     private int mPage;
     private static RecyclerView mHotelRecyclerView;
@@ -48,9 +53,13 @@ public class InputHotelTabFragment extends Fragment {
         TextView textView = (TextView) view.findViewById(R.id.input_hotel_editText);
         textView.setText("Fragment #" + mPage);
 
+        mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
+
         mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
 
         recyclerViewSetup();
+
+        swipeHotelRefreshListener();
 
         return view;
     }
@@ -78,5 +87,28 @@ public class InputHotelTabFragment extends Fragment {
         mHotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
+
+    private void swipeHotelRefreshListener(){
+        mHotelSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshFlightContent();
+            }
+        });
+    }
+
+
+    private void refreshFlightContent(){
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
+                recyclerViewSetup();
+                mHotelSwipeRefreshLayout.setRefreshing(false);
+            }
+        },0);
+    }
+
+
 
 }

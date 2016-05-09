@@ -1,10 +1,13 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +24,9 @@ import siu.example.com.headingout.model.FlightTest;
  * Created by samsiu on 4/29/16.
  */
 public class InputFlightTabFragment extends Fragment {
+    private static final String TAG = InputFlightTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
+    private SwipeRefreshLayout mFlightSwipeRefreshLayout;
 
     private int mPage;
     private static RecyclerView mFlightRecyclerView;
@@ -47,9 +52,18 @@ public class InputFlightTabFragment extends Fragment {
         TextView textView = (TextView) view.findViewById(R.id.input_flight_editText);
         textView.setText("Fragment #" + mPage);
 
+        mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
+
+
         mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
 
         recyclerViewSetup();
+
+        swipeFlightRefreshListener();
+
+
+
+
 
         return view;
     }
@@ -78,4 +92,27 @@ public class InputFlightTabFragment extends Fragment {
 
     }
 
+    private void swipeFlightRefreshListener(){
+        mFlightSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshFlightContent();
+            }
+        });
+    }
+
+
+    private void refreshFlightContent(){
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
+                recyclerViewSetup();
+                mFlightSwipeRefreshLayout.setRefreshing(false);
+            }
+        },0);
+    }
+
+
 }
+

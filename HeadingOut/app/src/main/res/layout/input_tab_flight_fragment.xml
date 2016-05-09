@@ -25,10 +25,16 @@
 
     </LinearLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/input_tab_flight_fragment_recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/input_tab_flight_fragment_swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/input_tab_flight_fragment_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 
 </LinearLayout>
