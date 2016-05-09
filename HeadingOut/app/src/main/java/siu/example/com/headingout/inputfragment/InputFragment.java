@@ -94,16 +94,18 @@ public class InputFragment extends Fragment {
         initFab();
         onFabContinueButtonClick();
 
-
-
         //getAirportsApi();
         //getWeatherApi();
         //getQPExpressApi();
+        //getHotWireApi();
 
+        return view;
+
+    }
+
+    private void getHotWireApi(){
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-
-
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -125,7 +127,7 @@ public class InputFragment extends Fragment {
             public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
                 if (response.isSuccessful()) {
                     hotels = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + hotels.getResult().get(0).getAveragePricePerNight());
+                    Log.d(TAG, "onResponse: ===>>>" + hotels.getResult().get(0).getTotalPrice());
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
 
@@ -141,20 +143,7 @@ public class InputFragment extends Fragment {
             }
         });
 
-
-
-
-
-
-
-
-        return view;
-
     }
-
-
-
-
 
 
 
