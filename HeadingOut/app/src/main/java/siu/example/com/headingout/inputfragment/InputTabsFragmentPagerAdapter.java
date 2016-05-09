@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentPagerAdapter;
 
 import siu.example.com.headingout.inputfragment.tabfragment.InputFlightTabFragment;
 import siu.example.com.headingout.inputfragment.tabfragment.InputHotelTabFragment;
+import siu.example.com.headingout.inputfragment.tabfragment.InputWeatherTabFragment;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -31,8 +32,10 @@ public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
                 return InputFlightTabFragment.newInstance(position + 1);
             case 1:
                 return InputHotelTabFragment.newInstance(position + 1);
+            case 2:
+                return InputWeatherTabFragment.newInstance(position + 1);
             default:
-                return InputFlightTabFragment.newInstance(position + 1);
+                return InputWeatherTabFragment.newInstance(position + 1);
         }
     }
 

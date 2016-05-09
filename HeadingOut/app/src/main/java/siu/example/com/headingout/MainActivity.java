@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
 
+
 //        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
 //        Log.d(TAG, "onCreate: ++++>>>> about ot load fragment");
 //        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);

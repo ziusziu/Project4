@@ -15,21 +15,23 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
+import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
 
 /**
- * Created by samsiu on 4/29/16.
+ * Created by samsiu on 5/9/16.
  */
-public class InputFlightTabFragment extends Fragment {
+public class InputWeatherTabFragment extends Fragment {
+
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private int mPage;
-    private static RecyclerView mFlightRecyclerView;
+    private static RecyclerView mWeatherRecyclerView;
 
-    public static InputFlightTabFragment newInstance(int page){
+    public static InputWeatherTabFragment newInstance(int page){
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
-        InputFlightTabFragment fragment = new InputFlightTabFragment();
+        InputWeatherTabFragment fragment = new InputWeatherTabFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -38,16 +40,16 @@ public class InputFlightTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+
+
+
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
-        TextView textView = (TextView) view.findViewById(R.id.input_flight_editText);
-        textView.setText("Fragment #" + mPage);
-
-        mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
+        View view = inflater.inflate(R.layout.input_tab_weather_fragment, container, false);
+        mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
 
         recyclerViewSetup();
 
@@ -58,11 +60,11 @@ public class InputFlightTabFragment extends Fragment {
         List<FlightTest> flightList = new ArrayList<>();
 
         // Dummy Data
-        FlightTest flight = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight1 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight2 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight3 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight4 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
+        FlightTest flight = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
+        FlightTest flight1 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
+        FlightTest flight2 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
+        FlightTest flight3 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
+        FlightTest flight4 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
         flightList.add(flight);
         flightList.add(flight1);
         flightList.add(flight2);
@@ -71,10 +73,10 @@ public class InputFlightTabFragment extends Fragment {
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-        mFlightRecyclerView.setHasFixedSize(true);
-        InputTabFlightRVAdapter recyclerViewAdapter = new InputTabFlightRVAdapter(flightList);
-        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+        mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
+        mWeatherRecyclerView.setHasFixedSize(true);
+        InputTabWeatherRVAdapter recyclerViewAdapter = new InputTabWeatherRVAdapter(flightList);
+        mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 

@@ -99,9 +99,72 @@ public class InputFragment extends Fragment {
         //getQPExpressApi();
         //getHotWireApi();
 
+
         return view;
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
+    }
+
+    private void initializeViews(View view){
+        mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
+        mInputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
+    }
+
+    private void initViewPager(View view){
+        mViewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
+        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
+        mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
+        mTabLayout.setupWithViewPager(mViewPager);
+        //mTabLayout.setScrollbarFadingEnabled(true);
+
+        // adapter.setMyValue()
+    }
+
+    private void initFab(){
+        setFabIconColor(mInputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
+    }
+
+    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor){
+        int color = Color.parseColor(fabColor);
+        searchFab.setImageResource(R.drawable.icon_search);
+        searchFab.setColorFilter(color);
+    }
+
+    private void onFabContinueButtonClick(){
+        mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String[] searchTerms = {
+                        "Hello"//mFlightEditText.getText().toString(),
+                };
+
+                PreferenceManager.getDefaultSharedPreferences(getActivity())
+                        .edit()
+                        .putString(Utilities.SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
+                        .apply();
+
+                DetailFragment detailFragment = new DetailFragment();
+                FragmentManager fragmentManager = getFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
+                fragmentTransaction.commit();
+            }
+        });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        FragmentUtil fragInfo = (FragmentUtil)getActivity();
+        fragInfo.setFragmentToolBar(InputFragment.class.getSimpleName());
+    }
+
+
 
     private void getHotWireApi(){
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
@@ -145,9 +208,6 @@ public class InputFragment extends Fragment {
     }
 
 
-
-
-    // NOT SURE IF WORKING
     private void getQPExpressApi(){
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         Passengers passengers = new Passengers(1,0,0,0,0);
@@ -192,7 +252,7 @@ public class InputFragment extends Fragment {
         });
     }
 
-    // NOT SURE IF WORKING
+    // Stopped - Switched to HotWireApi
     private void getGoogleHotleApi(){
 
         String queryType = "type";
@@ -342,64 +402,6 @@ public class InputFragment extends Fragment {
     }
 
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
-    }
 
-    private void initializeViews(View view){
-        mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
-        mInputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
-    }
-
-    private void initViewPager(View view){
-        mViewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
-        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
-        mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
-        mTabLayout.setupWithViewPager(mViewPager);
-        //mTabLayout.setScrollbarFadingEnabled(true);
-
-        // adapter.setMyValue()
-    }
-
-    private void initFab(){
-        setFabIconColor(mInputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
-    }
-
-    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor){
-        int color = Color.parseColor(fabColor);
-        searchFab.setImageResource(R.drawable.icon_search);
-        searchFab.setColorFilter(color);
-    }
-
-    private void onFabContinueButtonClick(){
-        mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String[] searchTerms = {
-                        "Hello"//mFlightEditText.getText().toString(),
-                };
-
-                PreferenceManager.getDefaultSharedPreferences(getActivity())
-                        .edit()
-                        .putString(Utilities.SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
-                        .apply();
-
-                DetailFragment detailFragment = new DetailFragment();
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
-                fragmentTransaction.commit();
-            }
-        });
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        FragmentUtil fragInfo = (FragmentUtil)getActivity();
-        fragInfo.setFragmentToolBar(InputFragment.class.getSimpleName());
-    }
 
 }
