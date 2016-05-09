@@ -104,7 +104,6 @@ public class InputFragment extends Fragment {
     }
 
     private void getHotWireApi(){
-
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
