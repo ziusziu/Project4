@@ -36,9 +36,6 @@ public class HotelResult {
     @ElementList(name = "AmenityCodes")
     List<Code> amenityCodes;
 
-    @Element(name = "Code")
-    String code;
-
     @Element(name = "CheckInDate")
     String checkInDate;
 
