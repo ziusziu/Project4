@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:id="@+id/input_drawer_layout"
     android:fitsSystemWindows="true"
-    tools:openDrawer="start"
-    tools:context=".inputfragment.InputActivity">
+    tools:openDrawer="start">
 
     <include
-        layout="@layout/input_app_bar"
+        layout="@layout/input_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 

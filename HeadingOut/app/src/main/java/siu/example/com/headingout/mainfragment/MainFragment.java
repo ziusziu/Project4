@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -85,7 +86,12 @@ public class MainFragment extends Fragment implements
         recyclerViewSetup();
         //initAutoCompleteFragment();
 
+        getGooglePlacesApi();
 
+        return view;
+    }
+
+    private void getGooglePlacesApi(){
         String apiKey = getResources().getString(R.string.google_places_key);
 
 
@@ -100,7 +106,6 @@ public class MainFragment extends Fragment implements
                 BOUNDS_MOUNTAIN_VIEW, null);
         mAutoCompleteTextView.setAdapter(mPlaceArrayAdapter);
 
-        return view;
     }
 
     private void recyclerViewSetup(){
@@ -160,7 +165,6 @@ public class MainFragment extends Fragment implements
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
-
     }
 
     @Override

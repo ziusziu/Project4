@@ -55,15 +55,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         initNavDrawer();
 
 
-
-
-//        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
-//        Log.d(TAG, "onCreate: ++++>>>> about ot load fragment");
-//        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
-//        if(fragment.getClass().getSimpleName().equals("DetailFragment")){
-//            initToolBar();
-//        }
-
     }
 
 
@@ -116,17 +107,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void initToolBar(){
-        mToolBar = (Toolbar)findViewById(R.id.detail_toolBar);
-        setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle("Detail");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-
     protected String getToolBarTitle() {
-        //TODO set the title for different fragments
         Fragment fragment = new MainFragment();
-        //Fragment fragment = fragmentManager.findFragmentById(R.id.home_fragment_container);
         return fragment.getClass().getSimpleName();
     }
 
