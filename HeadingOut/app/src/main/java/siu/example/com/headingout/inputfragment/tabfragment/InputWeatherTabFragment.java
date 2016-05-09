@@ -1,10 +1,13 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,8 +25,10 @@ import siu.example.com.headingout.model.FlightTest;
  * Created by samsiu on 5/9/16.
  */
 public class InputWeatherTabFragment extends Fragment {
-
+    private static final String TAG = InputWeatherTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
+
+    private SwipeRefreshLayout mWeatherSwipeRefreshLayout;
 
     private int mPage;
     private static RecyclerView mWeatherRecyclerView;
@@ -51,7 +56,13 @@ public class InputWeatherTabFragment extends Fragment {
         View view = inflater.inflate(R.layout.input_tab_weather_fragment, container, false);
         mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
 
+        mWeatherSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_weather_fragment_swipe_refresh_layout);
+
         recyclerViewSetup();
+
+
+        swipeWeatherRefreshListener();
+
 
         return view;
     }
@@ -79,5 +90,27 @@ public class InputWeatherTabFragment extends Fragment {
         mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
+
+    private void swipeWeatherRefreshListener(){
+        mWeatherSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshWeatherContent();
+            }
+        });
+    }
+
+
+    private void refreshWeatherContent(){
+        new Handler().postDelayed(new Runnable(){
+            @Override
+            public void run() {
+                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
+                recyclerViewSetup();
+                mWeatherSwipeRefreshLayout.setRefreshing(false);
+            }
+        },0);
+    }
+
 
 }
