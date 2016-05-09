@@ -28,7 +28,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
@@ -113,19 +112,20 @@ public class InputFragment extends Fragment {
 
         retrofit = new Retrofit.Builder()
                 .baseUrl(HOTWIRE_API_URL)
-                .addConverterFactory(SimpleXmlConverterFactory.create())  // CHANGE TO XML CONVERTER
+                .addConverterFactory(GsonConverterFactory.create())  // CHANGE TO XML CONVERTER
                 .client(client)
                 .build();
 
+        String responseFormat = "json";
 
         HotwireService service = retrofit.create(HotwireService.class);
-        Call<HotWireHotels> call = service.getHotels(hotwireApiKey, "San%20Francisco,%20Ca.", "1", "2", "0", "05/20/2016", "05/23/2016");
+        Call<HotWireHotels> call = service.getHotels(hotwireApiKey, responseFormat, "San%20Francisco,%20Ca.", "1", "2", "0", "05/20/2016", "05/23/2016");
         call.enqueue(new Callback<HotWireHotels>() {
             @Override
             public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
                 if (response.isSuccessful()) {
                     hotels = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + hotels.getResultList().get(0).getAveragePricePerNight());
+                    Log.d(TAG, "onResponse: ===>>>" + hotels.getResult().get(0).getAveragePricePerNight());
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
 

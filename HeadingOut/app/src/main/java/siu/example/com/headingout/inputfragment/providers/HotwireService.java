@@ -14,6 +14,7 @@ public interface HotwireService {
 
     @GET("hotel?")
     Call<HotWireHotels> getHotels(@Query("apikey") String apiKey,
+                          @Query("format") String format,
                           @Query("dest") String destination,
                           @Query("rooms") String rooms,
                           @Query("adults") String adults,
