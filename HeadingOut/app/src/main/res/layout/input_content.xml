@@ -29,7 +29,8 @@
             android:id="@+id/input_tabLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabIndicatorColor="@android:color/black"
+            app:tabBackground="@color/colorPrimayLight"
+            app:tabIndicatorColor="@color/colorAccent"
             android:fadeScrollbars="true"
             android:scrollbarDefaultDelayBeforeFade="0"
             tabMode="scrollable"/>
