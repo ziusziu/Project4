@@ -54,8 +54,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getSupportActionBar().setTitle(getToolBarTitle());
         initNavDrawer();
 
-
     }
+
+
+
 
 
     @Override
@@ -165,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             switch(fragmentName) {
                 case MAIN_FRAGMENT:
                     Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
+                    super.onBackPressed();
                 case INPUT_FRAGMENT:
                     mainFragment = new MainFragment();
                     Log.d(TAG, "onCreate:==== INPUT FRAGMENT");

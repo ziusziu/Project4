@@ -9,7 +9,7 @@
         android:layout_height="200dp"
         android:src="@drawable/android_arms"
         android:adjustViewBounds="true"
-        android:fitsSystemWindows="true" />
+        android:fitsSystemWindows="true"/>
 
     <LinearLayout
         android:layout_width="match_parent"
