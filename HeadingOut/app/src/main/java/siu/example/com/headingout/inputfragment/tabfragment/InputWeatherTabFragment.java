@@ -127,8 +127,8 @@ public class InputWeatherTabFragment extends Fragment {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
-                forecastApiKey = getResources().getString(R.string.forecast_api_key);
-                ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
+//                forecastApiKey = getResources().getString(R.string.forecast_api_key);
+//                ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
                 recyclerViewSetup();
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }

@@ -19,6 +19,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
+
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 
@@ -28,7 +34,7 @@ import siu.example.com.headingout.util.Utilities;
 /**
  * Created by samsiu on 5/4/16.
  */
-public class InputFragment extends Fragment {
+public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     private static final String TAG = InputFragment.class.getSimpleName();
     private static TabLayout mTabLayout;
@@ -46,6 +52,9 @@ public class InputFragment extends Fragment {
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
+    private GoogleMap mMap;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +67,14 @@ public class InputFragment extends Fragment {
         initViewPager(view);
         initFab();
         onFabContinueButtonClick();
+
+        //makeApiCall();
+
+        return view;
+
+    }
+
+    private void makeApiCall(){
 
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
@@ -82,9 +99,6 @@ public class InputFragment extends Fragment {
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         ApiCaller.getHotWireApi(hotwireApiKey);
-
-
-        return view;
 
     }
 
@@ -158,6 +172,30 @@ public class InputFragment extends Fragment {
 
     }
 
+
+
+    /**
+     * Manipulates the map once available.
+     * This callback is triggered when the map is ready to be used.
+     * This is where we can add markers or lines, add listeners or move the camera. In this case,
+     * we just add a marker near Sydney, Australia.
+     * If Google Play services is not installed on the device, the user will be prompted to install
+     * it inside the SupportMapFragment. This method will only be triggered once the user has
+     * installed Google Play services and returned to the app.
+     */
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        float zoomLevel = 13;
+        double latitude = 37.785049;
+        double longitude = -122.396387;
+
+        // Add a marker to airport and move the camera
+        LatLng airport = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(airport).title("Testing"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(airport, zoomLevel));
+    }
 
 
 

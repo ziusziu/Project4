@@ -4,36 +4,50 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
+
     <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+        <FrameLayout
+            android:id="@+id/input_maps_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+        </FrameLayout>
 
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/input_tabLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tabIndicatorColor="@android:color/black"
-        android:fadeScrollbars="true"
-        android:scrollbarDefaultDelayBeforeFade="0"
-        tabMode="scrollable"/>
+        <android.support.design.widget.TabLayout
+            android:id="@+id/input_tabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:tabIndicatorColor="@android:color/black"
+            android:fadeScrollbars="true"
+            android:scrollbarDefaultDelayBeforeFade="0"
+            tabMode="scrollable"/>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/input_viewPager"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@android:color/white" />
-    </LinearLayout>
+        <android.support.v4.view.ViewPager
+            android:id="@+id/input_viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@android:color/white" />
+        </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/input_continue_fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        app:fabSize="mini"/>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/input_continue_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            app:fabSize="mini"/>
 
 </FrameLayout>

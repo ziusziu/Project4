@@ -107,8 +107,8 @@ public class InputHotelTabFragment extends Fragment {
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
 
-                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-                ApiCaller.getHotWireApi(hotwireApiKey);
+//                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+//                ApiCaller.getHotWireApi(hotwireApiKey);
 
                 recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setRefreshing(false);

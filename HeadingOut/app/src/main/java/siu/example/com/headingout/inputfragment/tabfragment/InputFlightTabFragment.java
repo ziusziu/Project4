@@ -109,8 +109,8 @@ public class InputFlightTabFragment extends Fragment {
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
 
-                String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-                ApiCaller.getQPExpressApi(googlePlacesApiKey);
+//                String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+//                ApiCaller.getQPExpressApi(googlePlacesApiKey);
 
                 recyclerViewSetup();
                 mFlightSwipeRefreshLayout.setRefreshing(false);
