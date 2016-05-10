@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -42,6 +43,7 @@ import java.util.List;
 import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.PlaceArrayAdapter;
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.DateRangePickerFragment;
 import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.model.TestTrip;
 import siu.example.com.headingout.util.FragmentUtil;
@@ -51,13 +53,14 @@ import siu.example.com.headingout.util.FragmentUtil;
  */
 public class MainFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks{
+        GoogleApiClient.ConnectionCallbacks,
+        DateRangePickerFragment.OnDateRangeSelectedListener{
 
     private static String TAG = MainFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 0;
-    private static EditText mLocEditText;
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
+    private static ImageView mCalendarImageView;
 
     private static AutoCompleteTextView mAutoCompleteTextView;
 
@@ -88,8 +91,25 @@ public class MainFragment extends Fragment implements
 
         getGooglePlacesApi();
 
+
+        mCalendarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.newInstance(MainFragment.this, false);
+                dateRangePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+            }
+        });
+
+
         return view;
     }
+
+    @Override
+    public void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear) {
+        Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear + " to : " + endDay + "-" + endMonth + "-" + endYear);
+    }
+
+
 
     private void getGooglePlacesApi(){
         String apiKey = getResources().getString(R.string.google_places_key);
@@ -166,7 +186,7 @@ public class MainFragment extends Fragment implements
     }
 
     private void initializeViews(View view){
-        mLocEditText = (EditText)view.findViewById(R.id.main_locationInput_edittext);
+        mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
@@ -256,4 +276,5 @@ public class MainFragment extends Fragment implements
         if (mGoogleApiClient != null)
             mGoogleApiClient.stopAutoManage(getActivity());
     }
+
 }

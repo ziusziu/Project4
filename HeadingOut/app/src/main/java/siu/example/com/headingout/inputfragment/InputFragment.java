@@ -68,6 +68,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         initFab();
         onFabContinueButtonClick();
 
+
         //makeApiCall();
 
         return view;
@@ -139,7 +140,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         searchFab.setColorFilter(color);
     }
 
-    private void onFabContinueButtonClick(){
+    private void onFabContinueButtonClick() {
         mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -17,19 +17,21 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-        <EditText
-            android:id="@+id/main_locationInput_edittext"
+
+        <ImageView
+            android:id="@+id/main_calendar_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:hint="Location"/>
+            android:clickable="true"
+            android:src="@android:drawable/ic_menu_my_calendar"/>
 
         <AutoCompleteTextView
             android:id="@+id/main_autocomplete_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:singleLine="true"
             android:ems="10"
-            android:hint="Please enter your place"/>
+            android:hint="Destination"/>
 
         <Button
             android:id="@+id/main_addLocation_button"
