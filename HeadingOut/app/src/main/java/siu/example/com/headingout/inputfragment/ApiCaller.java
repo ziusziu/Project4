@@ -54,6 +54,16 @@ public class ApiCaller extends AppCompatActivity{
 
 
     public static void getHotWireApi(String hotwireApiKey){
+
+        String responseFormat = "json";
+        String destination = "San%20Francisco,%20Ca.";
+        String rooms = "1";
+        String adults = "2";
+        String children = "0";
+        String startDate = "05/20/2016";
+        String endDate = "05/23/2016";
+
+
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -66,10 +76,15 @@ public class ApiCaller extends AppCompatActivity{
                 .client(client)
                 .build();
 
-        String responseFormat = "json";
-
         HotwireService service = retrofit.create(HotwireService.class);
-        Call<HotWireHotels> call = service.getHotels(hotwireApiKey, responseFormat, "San%20Francisco,%20Ca.", "1", "2", "0", "05/20/2016", "05/23/2016");
+        Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
+                                                        responseFormat,
+                                                        destination,
+                                                        rooms,
+                                                        adults,
+                                                        children,
+                                                        startDate,
+                                                        endDate);
         call.enqueue(new Callback<HotWireHotels>() {
             @Override
             public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
@@ -96,11 +111,26 @@ public class ApiCaller extends AppCompatActivity{
 
     public static void getQPExpressApi(String googlePlacesApiKey){
 
-        Passengers passengers = new Passengers(1,0,0,0,0);
-        PostSlice postSlice = new PostSlice("BOS", "LAX", "2016-05-10");
+        int adultCount = 1;
+        int infantInLapCount = 0;
+        int infantInSeatCount = 0;
+        int childCount = 0;
+        int seniorCount = 0;
+        String origin = "BOS";
+        String destination = "LAX";
+        String date = "2016-05-10";
+        int solutions = 20;
+        boolean refundable = false;
+
+        Passengers passengers = new Passengers(adultCount,
+                                                infantInLapCount,
+                                                infantInSeatCount,
+                                                childCount,
+                                                seniorCount);
+        PostSlice postSlice = new PostSlice(origin, destination, date);
         ArrayList<PostSlice> slice = new ArrayList<>();
         slice.add(postSlice);
-        Request request = new Request(slice, passengers, 20, false);
+        Request request = new Request(slice, passengers, solutions, refundable);
         RequestJson requestJson = new RequestJson(request);
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -137,53 +167,6 @@ public class ApiCaller extends AppCompatActivity{
             }
         });
     }
-
-    // Stopped - Switched to HotWireApi
-    public static void getGoogleHotleApi(){
-
-        String queryType = "type";
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(GOOGLE_HOTELS_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-
-
-        GoogleHotelService service = retrofit.create(GoogleHotelService.class);
-        Call<TestHotels> call = service.getHotels();
-        call.enqueue(new Callback<TestHotels>() {
-            @Override
-            public void onResponse(Call<TestHotels> call, Response<TestHotels> response) {
-                if (response.isSuccessful()) {
-                    testHotels = response.body();
-                    Log.d(TAG, "onResponse: ===>>>" + testHotels.getName());
-
-                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
-
-
-                } else {
-                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<TestHotels> call, Throwable t) {
-                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
-            }
-        });
-
-
-    }
-
-
 
     public static void getAirportsApi(String flightStatsApiKey, String flightStatsAppId){
         String distance = "50";
@@ -271,6 +254,53 @@ public class ApiCaller extends AppCompatActivity{
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
+    }
+
+
+
+    // Stopped - Switched to HotWireApi
+    public static void getGoogleHotleApi(){
+
+        String queryType = "type";
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(GOOGLE_HOTELS_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+
+
+        GoogleHotelService service = retrofit.create(GoogleHotelService.class);
+        Call<TestHotels> call = service.getHotels();
+        call.enqueue(new Callback<TestHotels>() {
+            @Override
+            public void onResponse(Call<TestHotels> call, Response<TestHotels> response) {
+                if (response.isSuccessful()) {
+                    testHotels = response.body();
+                    Log.d(TAG, "onResponse: ===>>>" + testHotels.getName());
+
+                    Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+
+
+                } else {
+                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TestHotels> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
     }
 
 
