@@ -2,6 +2,7 @@ package siu.example.com.headingout.inputfragment.rvadapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,14 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.FlightTest;
+import siu.example.com.headingout.model.forecast.Weather;
 
 /**
  * Created by samsiu on 5/9/16.
  */
 public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeatherRVAdapter.WeatherViewHolder> {
+
+    private static final String TAG = InputTabWeatherRVAdapter.class.getSimpleName();
 
     List<FlightTest> weatherList;
 
@@ -49,10 +53,13 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
         holder.weatherNameTextView.setText(weatherList.get(position).getName());
+
     }
 
     @Override
     public int getItemCount() {
         return weatherList.size();
     }
+
+
 }

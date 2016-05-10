@@ -48,9 +48,24 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     private static String mLatitude;
     private static String mLongitude;
-    public static final String PLACESPREFERENCES = "placesLatLong";
+    private static String mStartDay;
+    private static String mStartMonth;
+    private static String mStartYear;
+    private static String mEndDay;
+    private static String mEndMonth;
+    private static String mEndYear;
+
+    public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
+    public static final String STARTDAY = "startDay";
+    public static final String STARTMONTH = "startMonth";
+    public static final String STARTYEAR = "startYear";
+    public static final String ENDDAY = "endDay";
+    public static final String ENDMONTH = "endMonth";
+    public static final String ENDYEAR = "endYear";
+
+    public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
 
     private GoogleMap mMap;
 
@@ -68,7 +83,27 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         initFab();
         onFabContinueButtonClick();
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        mStartDay = sharedPref.getString(STARTDAY, "Default");
+        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
+        mStartYear = sharedPref.getString(STARTYEAR, "Default");
+        mEndDay = sharedPref.getString(ENDDAY, "Default");
+        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
+        mEndYear = sharedPref.getString(ENDYEAR, "Default");
 
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartDay);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndDay);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
         //makeApiCall();
 
         return view;
@@ -77,15 +112,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     private void makeApiCall(){
 
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
-
-
-        Log.d(TAG, "onCreateView: INPUTFRAGMENT ====>>> OnCreateView");
+        Log.d(TAG, "onCreateView: INPUTFRAGMENT ====>>> makeApiCall");
 
         flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
@@ -93,7 +120,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
+        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         ApiCaller.getQPExpressApi(googlePlacesApiKey);
@@ -116,7 +143,8 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     private void initViewPager(View view){
         mViewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
-        mViewPager.setAdapter(new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
+        mInputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        mViewPager.setAdapter(mInputTabsFragmentPagerAdapter);
         mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
         //mTabLayout.setScrollbarFadingEnabled(true);

@@ -20,6 +20,8 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiCaller;
+import siu.example.com.headingout.inputfragment.InputFragment;
+import siu.example.com.headingout.inputfragment.InputTabsFragmentPagerAdapter;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
@@ -39,18 +41,21 @@ public class InputWeatherTabFragment extends Fragment {
 
     private static String mLatitude;
     private static String mLongitude;
-    public static final String PLACESPREFERENCES = "placesLatLong";
+    public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
 
     private static String forecastApiKey;
+    private static Weather mWeather = new Weather();
 
+    public InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
 
-    public static InputWeatherTabFragment newInstance(int page){
+    public static InputWeatherTabFragment newInstance(int page, Weather weather){
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
         InputWeatherTabFragment fragment = new InputWeatherTabFragment();
         fragment.setArguments(args);
+        mWeather = weather;
         return fragment;
     }
 
@@ -82,7 +87,7 @@ public class InputWeatherTabFragment extends Fragment {
         swipeWeatherRefreshListener();
 
 
-        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  WEATHER");
+        Log.d(TAG, "onCreateView: InputWeatherTabFragment Ozone ====>>>>>  WEATHER**" + mWeather.getDaily().getData().get(0).getOzone());
 
         return view;
     }
@@ -127,8 +132,8 @@ public class InputWeatherTabFragment extends Fragment {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
-//                forecastApiKey = getResources().getString(R.string.forecast_api_key);
-//                ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
+                forecastApiKey = getResources().getString(R.string.forecast_api_key);
+                ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, InputFragment.mInputTabsFragmentPagerAdapter);
                 recyclerViewSetup();
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }

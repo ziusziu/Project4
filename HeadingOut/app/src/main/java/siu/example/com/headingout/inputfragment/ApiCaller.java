@@ -213,7 +213,7 @@ public class ApiCaller extends AppCompatActivity{
     }
 
 
-    public static void getWeatherApi(String forecastApiKey, String mLatitude, String mLongitude){
+    public static void getWeatherApi(String forecastApiKey, String mLatitude, String mLongitude, final InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter){
 
         String latLong = mLatitude+","+mLongitude;
 
@@ -237,12 +237,15 @@ public class ApiCaller extends AppCompatActivity{
                 if (response.isSuccessful()) {
                     weather = response.body();
 
+
+
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getMinutely().getData().get(0).getPrecipProbability());
 
-
+                    inputTabsFragmentPagerAdapter.setWeather(weather);
+                    inputTabsFragmentPagerAdapter.notifyDataSetChanged();;
 
                 } else {
                     Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);

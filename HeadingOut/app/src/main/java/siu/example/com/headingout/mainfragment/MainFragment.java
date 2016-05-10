@@ -56,6 +56,17 @@ public class MainFragment extends Fragment implements
         GoogleApiClient.ConnectionCallbacks,
         DateRangePickerFragment.OnDateRangeSelectedListener{
 
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String STARTDAY = "startDay";
+    public static final String STARTMONTH = "startMonth";
+    public static final String STARTYEAR = "startYear";
+    public static final String ENDDAY = "endDay";
+    public static final String ENDMONTH = "endMonth";
+    public static final String ENDYEAR = "endYear";
+
+
     private static String TAG = MainFragment.class.getSimpleName();
     private static final int GOOGLE_API_CLIENT_ID = 0;
     private static Button mAddButton;
@@ -75,9 +86,12 @@ public class MainFragment extends Fragment implements
 
     private static double mLatitude;
     private static double mLongitude;
-    public static final String PLACESPREFERENCES = "placesLatLong";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
+    private static String mStartDay;
+    private static String mStartMonth;
+    private static String mStartYear;
+    private static String mEndDay;
+    private static String mEndMonth;
+    private static String mEndYear;
 
     @Nullable
     @Override
@@ -107,13 +121,18 @@ public class MainFragment extends Fragment implements
     @Override
     public void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear) {
         Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear + " to : " + endDay + "-" + endMonth + "-" + endYear);
+        mStartDay = String.valueOf(startDay);
+        mStartMonth = String.valueOf(startMonth);
+        mStartYear = String.valueOf(startYear);
+        mEndDay = String.valueOf(endDay);
+        mEndMonth = String.valueOf(endMonth);
+        mEndYear = String.valueOf(endYear);
     }
 
 
 
     private void getGooglePlacesApi(){
         String apiKey = getResources().getString(R.string.google_places_key);
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(Places.GEO_DATA_API)
@@ -164,6 +183,12 @@ public class MainFragment extends Fragment implements
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(LATITUDE, Double.toString(mLatitude));
                 editor.putString(LONGITUDE, Double.toString(mLongitude));
+                editor.putString(STARTDAY, mStartDay);
+                editor.putString(STARTMONTH, mStartMonth);
+                editor.putString(STARTYEAR, mStartYear);
+                editor.putString(ENDDAY, mEndDay);
+                editor.putString(ENDMONTH, mEndMonth);
+                editor.putString(ENDYEAR, mEndYear);
                 editor.commit();
 
                 Log.d(TAG, "onClick: THIS IS AUTOCOMPLETETEXT VALUE "+ mAutoCompleteTextView.getText());
