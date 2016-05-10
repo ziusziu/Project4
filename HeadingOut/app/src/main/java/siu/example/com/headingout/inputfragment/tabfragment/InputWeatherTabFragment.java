@@ -1,5 +1,7 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -17,9 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.ApiCaller;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
+import siu.example.com.headingout.model.forecast.Weather;
 
 /**
  * Created by samsiu on 5/9/16.
@@ -32,6 +36,17 @@ public class InputWeatherTabFragment extends Fragment {
 
     private int mPage;
     private static RecyclerView mWeatherRecyclerView;
+
+    private static String mLatitude;
+    private static String mLongitude;
+    public static final String PLACESPREFERENCES = "placesLatLong";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+
+    private static String forecastApiKey;
+    private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
+
+    Weather weather;
 
     public static InputWeatherTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -47,6 +62,11 @@ public class InputWeatherTabFragment extends Fragment {
         mPage = getArguments().getInt(ARG_PAGE);
 
 
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
 
     }
 
@@ -85,6 +105,7 @@ public class InputWeatherTabFragment extends Fragment {
         flightList.add(flight4);
 
 
+
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
         mWeatherRecyclerView.setHasFixedSize(true);
@@ -108,6 +129,8 @@ public class InputWeatherTabFragment extends Fragment {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
+                forecastApiKey = getResources().getString(R.string.forecast_api_key);
+                ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
                 recyclerViewSetup();
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }

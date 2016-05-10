@@ -110,9 +110,9 @@ public class InputFragment extends Fragment {
         flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
         ApiCaller.getAirportsApi(flightStatsApiKey, flightStatsAppId);
 
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        Weather weather = ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
 
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude);
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         ApiCaller.getQPExpressApi(googlePlacesApiKey);

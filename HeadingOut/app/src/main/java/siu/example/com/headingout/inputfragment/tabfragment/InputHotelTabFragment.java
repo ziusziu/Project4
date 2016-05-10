@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.ApiCaller;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import siu.example.com.headingout.model.TestHotels;
 
@@ -105,6 +106,10 @@ public class InputHotelTabFragment extends Fragment {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
+
+                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+                ApiCaller.getHotWireApi(hotwireApiKey);
+
                 recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }

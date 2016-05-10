@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.ApiCaller;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
 
@@ -107,6 +108,10 @@ public class InputFlightTabFragment extends Fragment {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
+
+                String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+                ApiCaller.getQPExpressApi(googlePlacesApiKey);
+
                 recyclerViewSetup();
                 mFlightSwipeRefreshLayout.setRefreshing(false);
             }

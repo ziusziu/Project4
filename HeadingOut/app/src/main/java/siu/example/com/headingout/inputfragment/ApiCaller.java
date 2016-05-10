@@ -3,6 +3,7 @@ package siu.example.com.headingout.inputfragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import siu.example.com.headingout.inputfragment.providers.ForecastService;
 import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
 import siu.example.com.headingout.inputfragment.providers.GoogleQPExpressService;
 import siu.example.com.headingout.inputfragment.providers.HotwireService;
+import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import siu.example.com.headingout.model.TestHotels;
 import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.flights.Flights;
@@ -33,7 +35,7 @@ import siu.example.com.headingout.model.hotels.HotWireHotels;
 /**
  * Created by samsiu on 5/9/16.
  */
-public class ApiCaller{
+public class ApiCaller extends AppCompatActivity{
 
     private static final String TAG = ApiCaller.class.getSimpleName();
 
@@ -240,7 +242,7 @@ public class ApiCaller{
     }
 
 
-    public static Weather getWeatherApi(String forecastApiKey, String mLatitude, String mLongitude){
+    public static void getWeatherApi(String forecastApiKey, String mLatitude, String mLongitude){
 
         String latLong = mLatitude+","+mLongitude;
 
@@ -269,6 +271,8 @@ public class ApiCaller{
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getMinutely().getData().get(0).getPrecipProbability());
 
+
+
                 } else {
                     Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
                 }
@@ -279,8 +283,6 @@ public class ApiCaller{
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
-
-        return weather;
     }
 
 
