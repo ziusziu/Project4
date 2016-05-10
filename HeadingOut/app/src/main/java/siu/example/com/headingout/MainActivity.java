@@ -194,13 +194,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nav_share:
                 Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Share Clicked");
-                setActionBarIcon(R.drawable.ic_menu_24dp);
-                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);
                 break;
             case R.id.nav_send:
                 Log.d(TAG, "onNavigationItemSelected: ==>>> Drawer Send Clicked");
-                setActionBarIcon(R.drawable.ic_arrow_back_24dp);
-                fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
                 break;
             default:
                 setActionBarIcon(R.drawable.ic_menu_24dp);
