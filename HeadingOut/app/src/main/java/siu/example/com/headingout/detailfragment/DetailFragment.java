@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.NestedScrollView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +42,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
         initViewPager(view);
         // initGoogleMaps();
 
+
         return view;
     }
 
@@ -64,6 +66,7 @@ public class DetailFragment extends Fragment implements OnMapReadyCallback {
 
         mTabLayout = (TabLayout)view.findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
+
         //mTabLayout.setScrollbarFadingEnabled(true);
 
     }

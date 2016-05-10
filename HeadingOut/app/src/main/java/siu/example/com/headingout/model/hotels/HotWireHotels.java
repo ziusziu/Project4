@@ -1,8 +1,6 @@
 package siu.example.com.headingout.model.hotels;
 
 
-import com.google.android.gms.drive.Metadata;
-
 import java.util.List;
 
 /**

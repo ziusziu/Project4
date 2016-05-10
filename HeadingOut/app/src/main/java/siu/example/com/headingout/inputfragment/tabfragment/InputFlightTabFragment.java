@@ -61,7 +61,7 @@ public class InputFlightTabFragment extends Fragment {
 
         swipeFlightRefreshListener();
 
-
+        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  FLIGHT");
 
 
 
@@ -113,6 +113,10 @@ public class InputFlightTabFragment extends Fragment {
         },0);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: INPUT----FLIGHT-----TABFRAGMENT ===>>> resuming");
+    }
 }
 

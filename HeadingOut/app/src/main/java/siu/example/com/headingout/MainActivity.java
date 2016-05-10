@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void createFragments(){
+        Log.d(TAG, "createFragments: ===>>> Creating new Fragments in MainActvity");
         mainFragment = new MainFragment();
         inputFragment = new InputFragment();
         detailFragment = new DetailFragment();
@@ -165,10 +166,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 case MAIN_FRAGMENT:
                     Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
                 case INPUT_FRAGMENT:
+                    mainFragment = new MainFragment();
                     Log.d(TAG, "onCreate:==== INPUT FRAGMENT");
                     fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
                     break;
                 case DETAIL_FRAGMENT:
+                    inputFragment = new InputFragment();
                     Log.d(TAG, "onCreate:==== DETAIL FRAGMENT");
                     fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
                     break;

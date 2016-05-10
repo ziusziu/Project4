@@ -2,6 +2,7 @@ package siu.example.com.headingout.mainfragment;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import siu.example.com.headingout.model.TestTrip;
  */
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
+    private static final String TAG = MainTripRVAdapter.class.getSimpleName();
     private final List<TestTrip> tripList;
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
@@ -48,8 +50,16 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     }
 
     @Override
-    public void onBindViewHolder(TripViewHolder holder, int position) {
+    public void onBindViewHolder(TripViewHolder holder, final int position) {
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
+            }
+        });
+
     }
 
     @Override

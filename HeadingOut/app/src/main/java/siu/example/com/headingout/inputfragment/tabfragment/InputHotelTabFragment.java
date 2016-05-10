@@ -24,7 +24,7 @@ import siu.example.com.headingout.model.TestHotels;
  * Created by samsiu on 4/29/16.
  */
 public class InputHotelTabFragment extends Fragment {
-    private static final String TAG = InputFlightTabFragment.class.getSimpleName();
+    private static final String TAG = InputHotelTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
     private SwipeRefreshLayout mHotelSwipeRefreshLayout;
 
@@ -60,6 +60,8 @@ public class InputHotelTabFragment extends Fragment {
         recyclerViewSetup();
 
         swipeHotelRefreshListener();
+
+        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  HOTEL");
 
         return view;
     }
@@ -110,5 +112,9 @@ public class InputHotelTabFragment extends Fragment {
     }
 
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
+    }
 }

@@ -3,6 +3,7 @@ package siu.example.com.headingout.inputfragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
 import siu.example.com.headingout.inputfragment.tabfragment.InputFlightTabFragment;
 import siu.example.com.headingout.inputfragment.tabfragment.InputHotelTabFragment;
@@ -11,10 +12,10 @@ import siu.example.com.headingout.inputfragment.tabfragment.InputWeatherTabFragm
 /**
  * Created by samsiu on 4/29/16.
  */
-public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
+public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
     final int PAGE_COUNT = 3;
-    private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "TRANSIT"};
+    private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "WEATHER"};
 
     public InputTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -43,4 +44,6 @@ public class InputTabsFragmentPagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position) {
         return tabTitles[position];
     }
+
+
 }

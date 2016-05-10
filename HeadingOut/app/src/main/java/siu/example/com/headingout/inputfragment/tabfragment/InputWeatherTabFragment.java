@@ -64,6 +64,8 @@ public class InputWeatherTabFragment extends Fragment {
         swipeWeatherRefreshListener();
 
 
+        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  WEATHER");
+
         return view;
     }
 
@@ -105,12 +107,16 @@ public class InputWeatherTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
+                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
                 recyclerViewSetup();
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }
         },0);
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: INPUT------WEATHER----TABFRAGMENT ===>>> resuming");
+    }
 }
