@@ -9,8 +9,10 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -50,8 +52,18 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
-        TextView textView = (TextView) view.findViewById(R.id.input_flight_editText);
-        textView.setText("Fragment #" + mPage);
+        EditText flightEditText = (EditText) view.findViewById(R.id.input_flight_editText);
+        flightEditText.setText("Fragment #" + mPage);
+        flightEditText.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.d(TAG, "onTouch: ====>>> Inside edit text");
+                return false;
+            }
+
+
+
+        });
 
         mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
 

@@ -146,8 +146,13 @@ public class MainFragment extends Fragment implements
                 editor.putString(LONGITUDE, Double.toString(mLongitude));
                 editor.commit();
 
-                Log.d(TAG, "onClick: THIS IS EDITEXT VALUE "+mLocEditText.getText());
+                Log.d(TAG, "onClick: THIS IS AUTOCOMPLETETEXT VALUE "+ mAutoCompleteTextView.getText());
                 //TODO if empty pop up error and block
+                String location = mAutoCompleteTextView.getText().toString();
+                if(location.isEmpty()){
+                    mAutoCompleteTextView.setError("Please input a location");
+                    return;
+                }
 
                 Log.d(TAG, "BUTTON CLICKED======>>>>>>>> " + mLatitude);
                 Log.d(TAG, "BUTTON CLICKED======>>>>>>>> " + mLongitude);
