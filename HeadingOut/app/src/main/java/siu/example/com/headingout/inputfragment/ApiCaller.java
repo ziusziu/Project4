@@ -1,9 +1,7 @@
 package siu.example.com.headingout.inputfragment;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
 import siu.example.com.headingout.inputfragment.providers.ForecastService;
 import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
@@ -39,18 +36,9 @@ public class ApiCaller extends AppCompatActivity{
 
     private static final String TAG = ApiCaller.class.getSimpleName();
 
-    InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
-
-    private static String forecastApiKey;
-    private static String flightStatsApiKey;
-    private static String flightStatsAppId;
-
 
     private static String mLatitude;
     private static String mLongitude;
-    public static final String PLACESPREFERENCES = "placesLatLong";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
 
     private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
     private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";

@@ -2,7 +2,6 @@ package siu.example.com.headingout.inputfragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 import siu.example.com.headingout.inputfragment.tabfragment.InputFlightTabFragment;

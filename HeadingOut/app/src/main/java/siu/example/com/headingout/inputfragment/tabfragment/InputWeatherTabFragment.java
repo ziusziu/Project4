@@ -44,9 +44,7 @@ public class InputWeatherTabFragment extends Fragment {
     public static final String LONGITUDE = "longitude";
 
     private static String forecastApiKey;
-    private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
 
-    Weather weather;
 
     public static InputWeatherTabFragment newInstance(int page){
         Bundle args = new Bundle();

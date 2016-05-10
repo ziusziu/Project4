@@ -19,32 +19,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 
-import java.util.ArrayList;
-
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
-import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
-import siu.example.com.headingout.inputfragment.providers.ForecastService;
-import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
-import siu.example.com.headingout.inputfragment.providers.GoogleQPExpressService;
-import siu.example.com.headingout.inputfragment.providers.HotwireService;
-import siu.example.com.headingout.model.TestHotels;
-import siu.example.com.headingout.model.flights.Flights;
 
-import siu.example.com.headingout.model.airports.Airports;
-import siu.example.com.headingout.model.flights.postrequest.Passengers;
-import siu.example.com.headingout.model.flights.postrequest.PostSlice;
-import siu.example.com.headingout.model.flights.postrequest.Request;
-import siu.example.com.headingout.model.flights.postrequest.RequestJson;
-import siu.example.com.headingout.model.forecast.Weather;
-import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
@@ -54,7 +31,6 @@ import siu.example.com.headingout.util.Utilities;
 public class InputFragment extends Fragment {
 
     private static final String TAG = InputFragment.class.getSimpleName();
-    private static Toolbar mToolBar;
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
     private FloatingActionButton mInputContinueFabButton;
@@ -63,25 +39,12 @@ public class InputFragment extends Fragment {
     private static String flightStatsApiKey;
     private static String flightStatsAppId;
 
-    InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
 
     private static String mLatitude;
     private static String mLongitude;
     public static final String PLACESPREFERENCES = "placesLatLong";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
-
-    private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
-    private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
-    private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
-    private static final String GOOGLE_QPEXPRESS_API_URL = "https://www.googleapis.com/qpxExpress/v1/trips/";
-    private static final String HOTWIRE_API_URL = "http://api.hotwire.com/v1/search/";
-    Weather weather;
-    Airports airports;
-    HotWireHotels hotels;
-    Retrofit retrofit;
-    Flights flights;
-    TestHotels testHotels;
 
     @Nullable
     @Override
