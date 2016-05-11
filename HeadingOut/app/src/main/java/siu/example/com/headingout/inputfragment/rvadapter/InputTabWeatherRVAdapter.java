@@ -22,6 +22,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     private static final String TAG = InputTabWeatherRVAdapter.class.getSimpleName();
 
     List<FlightTest> weatherList;
+    Weather weather;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
@@ -34,8 +35,9 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         }
     }
 
-    public InputTabWeatherRVAdapter(List<FlightTest> weatherList){
+    public InputTabWeatherRVAdapter(List<FlightTest> weatherList, Weather weather){
         this.weatherList = weatherList;
+        this.weather = weather;
     }
 
     @Override
@@ -53,6 +55,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
         holder.weatherNameTextView.setText(weatherList.get(position).getName());
+        Log.d(TAG, "onBindViewHolder: WeatherRVAdapter=====>>>  Point Dew ===>>  "+weather.getDaily().getData().get(0).getDewPoint());
 
     }
 

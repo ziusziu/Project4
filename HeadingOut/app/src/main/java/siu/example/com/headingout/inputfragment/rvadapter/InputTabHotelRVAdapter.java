@@ -2,6 +2,7 @@ package siu.example.com.headingout.inputfragment.rvadapter;
 
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,11 +12,14 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.TestHotels;
+import siu.example.com.headingout.model.hotels.HotWireHotels;
 
 /**
  * Created by samsiu on 5/2/16.
  */
 public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRVAdapter.HotelViewHolder>{
+
+    private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
 
     List<TestHotels> hotelList;
 
@@ -49,6 +53,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     @Override
     public void onBindViewHolder(HotelViewHolder holder, int position) {
         holder.hotelNameTextView.setText(hotelList.get(position).getName());
+//        Log.d(TAG, "onCreateView: ===>>>> HotelTab RV Adapter ====>>>>>  TOTALPRICE " + hotels.getResult().get(0).getTotalPrice());
     }
 
     @Override

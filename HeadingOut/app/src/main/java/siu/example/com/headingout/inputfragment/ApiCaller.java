@@ -4,6 +4,8 @@ package siu.example.com.headingout.inputfragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.squareup.otto.Bus;
+
 import java.util.ArrayList;
 
 import okhttp3.OkHttpClient;
@@ -32,7 +34,7 @@ import siu.example.com.headingout.model.hotels.HotWireHotels;
 /**
  * Created by samsiu on 5/9/16.
  */
-public class ApiCaller extends AppCompatActivity{
+public class ApiCaller {
 
     private static final String TAG = ApiCaller.class.getSimpleName();
 
@@ -53,7 +55,7 @@ public class ApiCaller extends AppCompatActivity{
     static TestHotels testHotels;
 
 
-    public static void getHotWireApi(String hotwireApiKey){
+    public static void getHotWireApi(final Bus bus, String hotwireApiKey){
 
         String responseFormat = "json";
         String destination = "San%20Francisco,%20Ca.";
@@ -93,6 +95,10 @@ public class ApiCaller extends AppCompatActivity{
                     Log.d(TAG, "onResponse: ===>>>" + hotels.getResult().get(0).getTotalPrice());
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
+
+                    bus.post(hotels);
+                    //inputTabsFragmentPagerAdapter.setHotels(hotels);
+                    // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
 
                 } else {
                     Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
@@ -242,7 +248,6 @@ public class ApiCaller extends AppCompatActivity{
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getMinutely().getData().get(0).getPrecipProbability());
 
                     inputTabsFragmentPagerAdapter.setWeather(weather);
                     inputTabsFragmentPagerAdapter.notifyDataSetChanged();;

@@ -13,13 +13,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiCaller;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import siu.example.com.headingout.model.TestHotels;
+import siu.example.com.headingout.model.hotels.HotWireHotels;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -28,9 +34,11 @@ public class InputHotelTabFragment extends Fragment {
     private static final String TAG = InputHotelTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
     private SwipeRefreshLayout mHotelSwipeRefreshLayout;
+    private static HotWireHotels mHotels = new HotWireHotels();
 
     private int mPage;
     private static RecyclerView mHotelRecyclerView;
+    private InputTabHotelRVAdapter recyclerViewAdapter;
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -44,6 +52,11 @@ public class InputHotelTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+
+        // Register for bus events
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+        bus.register(this);
 
     }
 
@@ -62,7 +75,7 @@ public class InputHotelTabFragment extends Fragment {
 
         swipeHotelRefreshListener();
 
-        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  HOTEL");
+
 
         return view;
     }
@@ -86,7 +99,7 @@ public class InputHotelTabFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mHotelRecyclerView.setLayoutManager(linearLayoutManager);
         mHotelRecyclerView.setHasFixedSize(true);
-        InputTabHotelRVAdapter recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
+        recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
         mHotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
@@ -102,18 +115,20 @@ public class InputHotelTabFragment extends Fragment {
 
 
     private void refreshFlightContent(){
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
 
-//                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-//                ApiCaller.getHotWireApi(hotwireApiKey);
+                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+                HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+                Bus bus = headingOutApplication.provideBus();
+                ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
                 recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }
-        },0);
+        }, 0);
     }
 
 
@@ -122,4 +137,12 @@ public class InputHotelTabFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
     }
+
+    @Subscribe
+    public void onHotelData(HotWireHotels hotWireHotels) {
+        Log.d(TAG, "onHotelData  SIZE " + hotWireHotels.getResult().size());
+        //recyclerViewAdapter.update(hotWireHotels);
+        //recyclerViewAdapter.notifyDataSetChanged();
+    }
+
 }

@@ -9,6 +9,7 @@ import siu.example.com.headingout.inputfragment.tabfragment.InputFlightTabFragme
 import siu.example.com.headingout.inputfragment.tabfragment.InputHotelTabFragment;
 import siu.example.com.headingout.inputfragment.tabfragment.InputWeatherTabFragment;
 import siu.example.com.headingout.model.forecast.Weather;
+import siu.example.com.headingout.model.hotels.HotWireHotels;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -21,6 +22,7 @@ public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
 
 
     private Weather mWeather;
+    private HotWireHotels mHotels;
 
     public InputTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
@@ -55,4 +57,8 @@ public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         Log.d(TAG, "onBindViewHolder: INPUTTABSFRAGMENTADAPTER ====>>>> DEWPOINT" + weather.getDaily().getData().get(0).getDewPoint());
     }
 
+    public void setHotels(HotWireHotels mHotels) {
+        this.mHotels = mHotels;
+        Log.d(TAG, "onBindViewHolder: INPUTTABSFRAGMENTADAPTER ====>>>> TOTALPRICE " + mHotels.getResult().get(0).getTotalPrice());
+    }
 }

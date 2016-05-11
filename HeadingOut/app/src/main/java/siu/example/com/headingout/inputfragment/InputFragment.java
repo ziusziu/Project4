@@ -24,10 +24,15 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Produce;
+import com.squareup.otto.Subscribe;
 
+import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 
+import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
@@ -68,6 +73,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
     public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
 
     private GoogleMap mMap;
+    private HotWireHotels hotWireHotels;
 
 
     @Nullable
@@ -104,10 +110,29 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
+
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+
+        bus.register(this);
+
+        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+        ApiCaller.getHotWireApi(bus, hotwireApiKey);
+
         //makeApiCall();
 
         return view;
 
+    }
+
+    @Subscribe
+    public void onHotelData(HotWireHotels hotWireHotels) {
+        this.hotWireHotels = hotWireHotels;
+    }
+
+    @Produce
+    public HotWireHotels produceHotwireHotels() {
+        return hotWireHotels;
     }
 
     private void makeApiCall(){
@@ -126,7 +151,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         ApiCaller.getQPExpressApi(googlePlacesApiKey);
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiCaller.getHotWireApi(hotwireApiKey);
+        // ApiCaller.getHotWireApi(hotwireApiKey, mInputTabsFragmentPagerAdapter);
 
     }
 

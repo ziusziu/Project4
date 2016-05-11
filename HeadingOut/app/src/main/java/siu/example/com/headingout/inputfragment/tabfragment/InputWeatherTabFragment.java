@@ -92,6 +92,7 @@ public class InputWeatherTabFragment extends Fragment {
         return view;
     }
 
+    //TODO remove dummy data and use Weather Object to populate cardView
     private void recyclerViewSetup(){
         List<FlightTest> flightList = new ArrayList<>();
 
@@ -112,7 +113,7 @@ public class InputWeatherTabFragment extends Fragment {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
         mWeatherRecyclerView.setHasFixedSize(true);
-        InputTabWeatherRVAdapter recyclerViewAdapter = new InputTabWeatherRVAdapter(flightList);
+        InputTabWeatherRVAdapter recyclerViewAdapter = new InputTabWeatherRVAdapter(flightList, mWeather);
         mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
