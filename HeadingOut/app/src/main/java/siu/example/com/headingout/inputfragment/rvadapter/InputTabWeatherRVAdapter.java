@@ -21,7 +21,6 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     private static final String TAG = InputTabWeatherRVAdapter.class.getSimpleName();
 
-    List<FlightTest> weatherList;
     Weather weather;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
@@ -35,8 +34,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         }
     }
 
-    public InputTabWeatherRVAdapter(List<FlightTest> weatherList, Weather weather){
-        this.weatherList = weatherList;
+    public InputTabWeatherRVAdapter(Weather weather){
         this.weather = weather;
     }
 
@@ -54,14 +52,14 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, int position) {
-        holder.weatherNameTextView.setText(weatherList.get(position).getName());
-        Log.d(TAG, "onBindViewHolder: WeatherRVAdapter=====>>>  Point Dew ===>>  "+weather.getDaily().getData().get(0).getDewPoint());
+        holder.weatherNameTextView.setText(String.valueOf(weather.getDaily().getData().size()));
+//        Log.d(TAG, "onBindViewHolder: WeatherRVAdapter=====>>>  Point Dew ===>>  "+weather.getDaily().getData().get(0).getDewPoint());
 
     }
 
     @Override
     public int getItemCount() {
-        return weatherList.size();
+        return weather.getDaily().getData().size();
     }
 
 

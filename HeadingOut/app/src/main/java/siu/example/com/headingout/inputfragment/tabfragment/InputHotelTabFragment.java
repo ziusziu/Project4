@@ -34,7 +34,6 @@ public class InputHotelTabFragment extends Fragment {
     private static final String TAG = InputHotelTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
     private SwipeRefreshLayout mHotelSwipeRefreshLayout;
-    private static HotWireHotels mHotels = new HotWireHotels();
 
     private int mPage;
     private static RecyclerView mHotelRecyclerView;
@@ -70,8 +69,11 @@ public class InputHotelTabFragment extends Fragment {
         mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
 
         mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
+        mHotelRecyclerView.setHasFixedSize(true);
 
-        recyclerViewSetup();
+        //recyclerViewSetup();
 
         swipeHotelRefreshListener();
 
@@ -96,11 +98,11 @@ public class InputHotelTabFragment extends Fragment {
         hotelList.add(hotel4);
 
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
-        mHotelRecyclerView.setHasFixedSize(true);
-        recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
-        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
+//        mHotelRecyclerView.setHasFixedSize(true);
+//        recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
+//        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
@@ -125,7 +127,7 @@ public class InputHotelTabFragment extends Fragment {
                 Bus bus = headingOutApplication.provideBus();
                 ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
-                recyclerViewSetup();
+                //recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -141,8 +143,10 @@ public class InputHotelTabFragment extends Fragment {
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
         Log.d(TAG, "onHotelData  SIZE " + hotWireHotels.getResult().size());
-        //recyclerViewAdapter.update(hotWireHotels);
-        //recyclerViewAdapter.notifyDataSetChanged();
+
+        recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
+        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
+
     }
 
 }

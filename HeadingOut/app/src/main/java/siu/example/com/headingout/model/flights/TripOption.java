@@ -13,7 +13,6 @@ public class TripOption {
     List<Slice> slice;
     List<Pricing> pricing;
 
-
     public String getKind() {
         return kind;
     }

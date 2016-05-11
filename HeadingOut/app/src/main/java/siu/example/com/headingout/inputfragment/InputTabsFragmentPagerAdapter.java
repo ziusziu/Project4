@@ -20,10 +20,6 @@ public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "WEATHER"};
 
-
-    private Weather mWeather;
-    private HotWireHotels mHotels;
-
     public InputTabsFragmentPagerAdapter(FragmentManager fm) {
         super(fm);
     }
@@ -41,9 +37,9 @@ public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return InputHotelTabFragment.newInstance(position + 1);
             case 2:
-                return InputWeatherTabFragment.newInstance(position + 1, mWeather);
+                return InputWeatherTabFragment.newInstance(position + 1);
             default:
-                return InputWeatherTabFragment.newInstance(position + 1, mWeather);
+                return InputWeatherTabFragment.newInstance(position + 1);
         }
     }
 
@@ -52,13 +48,4 @@ public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         return tabTitles[position];
     }
 
-    public void setWeather(Weather weather) {
-        this.mWeather = weather;
-        Log.d(TAG, "onBindViewHolder: INPUTTABSFRAGMENTADAPTER ====>>>> DEWPOINT" + weather.getDaily().getData().get(0).getDewPoint());
-    }
-
-    public void setHotels(HotWireHotels mHotels) {
-        this.mHotels = mHotels;
-        Log.d(TAG, "onBindViewHolder: INPUTTABSFRAGMENTADAPTER ====>>>> TOTALPRICE " + mHotels.getResult().get(0).getTotalPrice());
-    }
 }

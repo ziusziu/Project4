@@ -22,8 +22,6 @@ public class DetailTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    Weather mWeather;
-
     @Override
     public int getCount() {
         return PAGE_COUNT;
@@ -37,9 +35,9 @@ public class DetailTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
             case 1:
                 return DetailHotelTabFragment.newInstance(position + 1);
             case 2:
-                return InputWeatherTabFragment.newInstance(position + 1, mWeather);
+                return InputWeatherTabFragment.newInstance(position + 1);
             default:
-                return InputWeatherTabFragment.newInstance(position + 1, mWeather);
+                return InputWeatherTabFragment.newInstance(position + 1);
         }
     }
 

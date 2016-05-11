@@ -11,13 +11,16 @@ import java.util.List;
 
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.FlightTest;
+import siu.example.com.headingout.model.flights.Flights;
+import siu.example.com.headingout.model.flights.Trip;
 
 /**
  * Created by samsiu on 5/2/16.
  */
 public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlightRVAdapter.FlightViewHolder>{
 
-    List<FlightTest> flightList;
+    //List<FlightTest> flightList;
+    Flights flights;
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
@@ -30,8 +33,8 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         }
     }
 
-    public InputTabFlightRVAdapter(List<FlightTest> flightList){
-        this.flightList = flightList;
+    public InputTabFlightRVAdapter(Flights flights){
+        this.flights = flights;
     }
 
     @Override
@@ -48,11 +51,11 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     @Override
     public void onBindViewHolder(FlightViewHolder holder, int position) {
-        holder.flightNameTextView.setText(flightList.get(position).getName());
+        holder.flightNameTextView.setText(String.valueOf(flights.getTrips().getTripOption().get(0).getPricing().size()));
     }
 
     @Override
     public int getItemCount() {
-        return flightList.size();
+        return flights.getTrips().getTripOption().size();
     }
 }

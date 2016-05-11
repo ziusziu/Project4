@@ -32,6 +32,9 @@ import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 
+import siu.example.com.headingout.model.flights.Flights;
+
+import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
@@ -74,7 +77,8 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     private GoogleMap mMap;
     private HotWireHotels hotWireHotels;
-
+    private Weather weather;
+    private Flights flights;
 
     @Nullable
     @Override
@@ -108,16 +112,26 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
 
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
+
+
 
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
         Bus bus = headingOutApplication.provideBus();
-
         bus.register(this);
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         ApiCaller.getHotWireApi(bus, hotwireApiKey);
+
+
+        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+
+        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+        String distance = "5";
+        ApiCaller.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId);
 
         //makeApiCall();
 
@@ -135,23 +149,43 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         return hotWireHotels;
     }
 
+    @Subscribe
+    public void onWeatherData(Weather weather){
+        this.weather = weather;
+    }
+
+    @Produce
+    public Weather produceWeather(){
+        return weather;
+    }
+
+    @Subscribe
+    public void onFlightData(Flights flights){
+        this.flights = flights;
+    }
+
+    @Produce
+    public Flights produceFlights(){
+        return flights;
+    }
+
     private void makeApiCall(){
 
         Log.d(TAG, "onCreateView: INPUTFRAGMENT ====>>> makeApiCall");
 
         flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        ApiCaller.getAirportsApi(flightStatsApiKey, flightStatsAppId);
+        //ApiCaller.getAirportsApi(flightStatsApiKey, flightStatsAppId);
 
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
+        //ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-        ApiCaller.getQPExpressApi(googlePlacesApiKey);
+       // ApiCaller.getQPExpressApi(googlePlacesApiKey);
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        // ApiCaller.getHotWireApi(hotwireApiKey, mInputTabsFragmentPagerAdapter);
+        // ApiCaller.getHotWireApi(bus, hotwireApiKey, mInputTabsFragmentPagerAdapter);
 
     }
 

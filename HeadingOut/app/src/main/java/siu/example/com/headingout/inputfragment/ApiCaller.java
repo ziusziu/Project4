@@ -15,6 +15,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
 import siu.example.com.headingout.inputfragment.providers.ForecastService;
 import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
@@ -115,16 +116,79 @@ public class ApiCaller {
     }
 
 
-    public static void getQPExpressApi(String googlePlacesApiKey){
+    public static void getAirportsApi(final Bus bus, final String googlePlacesApiKey, String latitude, String longitude, String distance, String flightStatsApiKey, String flightStatsAppId){
+
+
+        Log.d(TAG, "getAirportsApi: ===>>>> CALLING API  " +latitude + "    " + longitude);
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(FLIGTHSTATS_API_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        FlightStatsService service = retrofit.create(FlightStatsService.class);
+        Call<Airports> call = service.getAirports(longitude, latitude, distance, flightStatsAppId, flightStatsApiKey);
+        call.enqueue(new Callback<Airports>() {
+            @Override
+            public void onResponse(Call<Airports> call, Response<Airports> response) {
+                if (response.isSuccessful()) {
+                    airports = response.body();
+
+
+                    int adultCount = 1;
+                    int infantInLapCount = 0;
+                    int infantInSeatCount = 0;
+                    int childCount = 0;
+                    int seniorCount = 0;
+                    int solutions = 20;
+                    boolean refundable = false;
+
+
+
+                    String origin = "BOS";
+                    String destination = "LAX";
+                    String date = "2016-07-10";
+
+                    getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
+
+
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getName());
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getRegionName());
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL ***** CITYCODE  " + airports.getAirports().get(0).getCityCode());
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getIata());
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getFaa());
+                    Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getFs());
+
+
+                } else {
+                    Log.d(TAG, "getAirportsApi:  RESPONSE UNSUCCESSFUL IN onResponse()  ==  " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Airports> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+    }
+
+
+
+    public static void getQPExpressApi(final Bus bus, String googlePlacesApiKey, String origin, String destination, String date){
 
         int adultCount = 1;
         int infantInLapCount = 0;
         int infantInSeatCount = 0;
         int childCount = 0;
         int seniorCount = 0;
-        String origin = "BOS";
-        String destination = "LAX";
-        String date = "2016-05-10";
         int solutions = 20;
         boolean refundable = false;
 
@@ -161,6 +225,7 @@ public class ApiCaller {
                     Log.d(TAG, "onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
                     Log.d(TAG, "onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
+                    bus.post(flights);
 
                 } else {
                     Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
@@ -174,52 +239,8 @@ public class ApiCaller {
         });
     }
 
-    public static void getAirportsApi(String flightStatsApiKey, String flightStatsAppId){
-        String distance = "50";
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(FLIGTHSTATS_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        FlightStatsService service = retrofit.create(FlightStatsService.class);
-        Call<Airports> call = service.getAirports(mLongitude, mLatitude, distance, flightStatsAppId, flightStatsApiKey);
-        call.enqueue(new Callback<Airports>() {
-            @Override
-            public void onResponse(Call<Airports> call, Response<Airports> response) {
-                if (response.isSuccessful()) {
-                    airports = response.body();
-
-
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getRegionName());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getCityCode());
-                    Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getCountryName());
-
-
-                } else {
-                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Airports> call, Throwable t) {
-                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
-            }
-        });
-
-
-    }
-
-
-    public static void getWeatherApi(String forecastApiKey, String mLatitude, String mLongitude, final InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter){
+    public static void getWeatherApi(final Bus bus,String forecastApiKey, String mLatitude, String mLongitude){
 
         String latLong = mLatitude+","+mLongitude;
 
@@ -244,13 +265,12 @@ public class ApiCaller {
                     weather = response.body();
 
 
-
+                    bus.post(weather);
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
                     Log.d(TAG, "onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
 
-                    inputTabsFragmentPagerAdapter.setWeather(weather);
-                    inputTabsFragmentPagerAdapter.notifyDataSetChanged();;
+
 
                 } else {
                     Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);

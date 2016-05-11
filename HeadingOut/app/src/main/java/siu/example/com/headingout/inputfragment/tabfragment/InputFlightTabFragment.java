@@ -15,13 +15,19 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiCaller;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
+import siu.example.com.headingout.model.flights.Flights;
+import siu.example.com.headingout.model.flights.Trip;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -33,6 +39,7 @@ public class InputFlightTabFragment extends Fragment {
 
     private int mPage;
     private static RecyclerView mFlightRecyclerView;
+    private InputTabFlightRVAdapter recyclerViewAdapter;
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -46,6 +53,7 @@ public class InputFlightTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
+
     }
 
     @Nullable
@@ -69,13 +77,19 @@ public class InputFlightTabFragment extends Fragment {
 
 
         mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
+        mFlightRecyclerView.setHasFixedSize(true);
 
-        recyclerViewSetup();
+        //recyclerViewSetup();
 
         swipeFlightRefreshListener();
 
-        Log.d(TAG, "onCreateView: ===>>>> On Create View ====>>>>>  FLIGHT");
 
+        // Register for bus events
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+        bus.register(this);
 
 
         return view;
@@ -96,12 +110,12 @@ public class InputFlightTabFragment extends Fragment {
         flightList.add(flight3);
         flightList.add(flight4);
 
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-        mFlightRecyclerView.setHasFixedSize(true);
-        InputTabFlightRVAdapter recyclerViewAdapter = new InputTabFlightRVAdapter(flightList);
-        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+//
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+//        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
+//        mFlightRecyclerView.setHasFixedSize(true);
+//        InputTabFlightRVAdapter recyclerViewAdapter = new InputTabFlightRVAdapter(flightList);
+//        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
@@ -116,18 +130,26 @@ public class InputFlightTabFragment extends Fragment {
 
 
     private void refreshFlightContent(){
-        new Handler().postDelayed(new Runnable(){
+        new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
 
-//                String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-//                ApiCaller.getQPExpressApi(googlePlacesApiKey);
+                HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+                Bus bus = headingOutApplication.provideBus();
+                bus.register(this);
+
+                String origin = "BOS";
+                String destination = "LAX";
+                String date = "2016-07-10";
+
+                String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+                ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
 
                 recyclerViewSetup();
                 mFlightSwipeRefreshLayout.setRefreshing(false);
             }
-        },0);
+        }, 0);
     }
 
     @Override
@@ -135,5 +157,14 @@ public class InputFlightTabFragment extends Fragment {
         super.onResume();
         Log.d(TAG, "onResume: INPUT----FLIGHT-----TABFRAGMENT ===>>> resuming");
     }
+
+    @Subscribe
+    public void onFlightData(Flights flights){
+        Log.d(TAG, "onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
+
+        recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
+        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
 }
 

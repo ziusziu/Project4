@@ -22,6 +22,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
 
     List<TestHotels> hotelList;
+    HotWireHotels hotels;
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
@@ -34,8 +35,12 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         }
     }
 
-    public InputTabHotelRVAdapter(List<TestHotels> hotelList){
-        this.hotelList = hotelList;
+//    public InputTabHotelRVAdapter(List<TestHotels> hotelList){
+//        this.hotelList = hotelList;
+//    }
+
+    public InputTabHotelRVAdapter(HotWireHotels hotels){
+        this.hotels = hotels;
     }
 
     @Override
@@ -52,12 +57,14 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
 
     @Override
     public void onBindViewHolder(HotelViewHolder holder, int position) {
-        holder.hotelNameTextView.setText(hotelList.get(position).getName());
+        //holder.hotelNameTextView.setText(hotelList.get(position).getName());
+        holder.hotelNameTextView.setText(hotels.getResult().get(0).getAveragePricePerNight());
 //        Log.d(TAG, "onCreateView: ===>>>> HotelTab RV Adapter ====>>>>>  TOTALPRICE " + hotels.getResult().get(0).getTotalPrice());
     }
 
     @Override
     public int getItemCount() {
-        return hotelList.size();
+        //return hotelList.size();
+        return hotels.getResult().size();
     }
 }
