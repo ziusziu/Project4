@@ -10,6 +10,7 @@ public class HWResult {
     String DeepLink;
     String ResultId;
     String HWRefNumber;
+    String SubTotal;
     String TaxesAndFees;
     String TotalPrice;
     //List<HWAmenityCodes> AmenityCodes;
@@ -44,6 +45,10 @@ public class HWResult {
 
     public String getHWRefNumber() {
         return HWRefNumber;
+    }
+
+    public String getSubTotal() {
+        return SubTotal;
     }
 
     public String getTaxesAndFees() {

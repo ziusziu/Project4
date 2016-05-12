@@ -13,7 +13,7 @@ public class Pricing {
     String saleFareTotal;
     String saleTaxTotal;
     String saleTotal;
-    Passengers passenters;
+    Passengers passengers;
     public class Passengers{
         String kind;
         int adultCount;
@@ -97,11 +97,11 @@ public class Pricing {
     }
 
     public Passengers getPassenters() {
-        return passenters;
+        return passengers;
     }
 
     public void setPassenters(Passengers passenters) {
-        this.passenters = passenters;
+        this.passengers = passenters;
     }
 
     public List<Tax> getTax() {

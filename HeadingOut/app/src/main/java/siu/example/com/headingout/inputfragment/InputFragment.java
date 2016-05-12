@@ -21,12 +21,19 @@ import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
@@ -35,6 +42,8 @@ import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.model.flights.Flights;
 
 import siu.example.com.headingout.model.forecast.Weather;
+import siu.example.com.headingout.model.hotels.HWAmenities;
+import siu.example.com.headingout.model.hotels.HWNeighborhoods;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
@@ -42,7 +51,7 @@ import siu.example.com.headingout.util.Utilities;
 /**
  * Created by samsiu on 5/4/16.
  */
-public class InputFragment extends Fragment implements OnMapReadyCallback{
+public class InputFragment extends Fragment{
 
     private static final String TAG = InputFragment.class.getSimpleName();
     private static TabLayout mTabLayout;
@@ -75,10 +84,15 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
 
+    MapView mMapView;
     private GoogleMap mMap;
+    private GoogleMap googleMap;
     private HotWireHotels hotWireHotels;
     private Weather weather;
     private Flights flights;
+
+    private int size;
+    private Bus bus;
 
     @Nullable
     @Override
@@ -91,7 +105,20 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         initializeViews(view);
         initViewPager(view);
         initFab();
+       // initGoogleMaps();
         onFabContinueButtonClick();
+
+        mMapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
+        mMapView.onCreate(savedInstanceState);
+
+        mMapView.onResume();// needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mLatitude = sharedPref.getString(LATITUDE, "Default");
@@ -116,7 +143,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
 
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
+        bus = headingOutApplication.provideBus();
         bus.register(this);
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
@@ -135,6 +162,9 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
         //makeApiCall();
 
+        googleMap = mMapView.getMap();
+
+
         return view;
 
     }
@@ -142,6 +172,28 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
         this.hotWireHotels = hotWireHotels;
+
+        List<HWAmenities> hwAmenities = hotWireHotels.getMetaData().getHotelMetaData().getAmenities();
+        for(HWAmenities amenities: hwAmenities){
+            Log.d(TAG, "onHotelData: " + amenities.getName());
+            //TODO put id into HashMap, for easy find
+        }
+
+        List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
+        for(HWNeighborhoods neighborhoods : hwNeighborHoods){
+            Log.d(TAG, "onHotelData: " + neighborhoods.getName());
+            String centroid = neighborhoods.getCentroid();
+            String[] centroidList = centroid.split("," , 2);
+            double latitude = Double.parseDouble(centroidList[0]);
+            double longitude = Double.parseDouble(centroidList[1]);
+            Log.d(TAG, "onHotelData: " + latitude);
+            Log.d(TAG, "onHotelData: " + longitude);
+
+            plotGoogleMaps(latitude, longitude);
+        }
+
+
+
     }
 
     @Produce
@@ -214,6 +266,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
     @Override
     public void onDestroyView() {
         Log.d(TAG, "INPUTFRAGMENT View Destroyed");
+        bus.unregister(this);
         super.onDestroyView();
     }
 
@@ -249,6 +302,9 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         });
     }
 
+
+
+
     @Override
     public void onResume() {
         super.onResume();
@@ -258,33 +314,50 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
         Log.d(TAG, "onResume: ===>>>>  InputFragment On RESUME");
 
+        mMapView.onResume();
     }
 
 
-
-    /**
-     * Manipulates the map once available.
-     * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
-     * If Google Play services is not installed on the device, the user will be prompted to install
-     * it inside the SupportMapFragment. This method will only be triggered once the user has
-     * installed Google Play services and returned to the app.
-     */
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
+    public void onDestroy() {
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
 
-        float zoomLevel = 13;
-        double latitude = 37.785049;
-        double longitude = -122.396387;
+    @Override
+    public void onPause() {
+        super.onPause();
+        mMapView.onPause();
+    }
 
-        // Add a marker to airport and move the camera
-        LatLng airport = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(airport).title("Testing"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(airport, zoomLevel));
+    @Subscribe
+    public void onSizeData(Integer size){
+        this.size = size;
+        Log.d(TAG, "onSizeData: === Posting Data from adapter" + size);
     }
 
 
+    private void plotGoogleMaps(double latitude, double longitude){
+
+        // latitude and longitude
+//        double latitude = 17.385044;
+//        double longitude = 78.486671;
+
+        // create marker
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("Hello Maps");
+
+        // Changing marker icon
+        marker.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+
+        googleMap.addMarker(marker);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude)).zoom(12).build();
+        googleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+    }
 
 }

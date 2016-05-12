@@ -13,7 +13,7 @@ public class Weather {
     WeatherInfo currently;
     WeatherMinute minutely;
     WeatherDetail hourly;
-    WeatherDetail daily;
+    WeatherDetailDaily daily;
 
     public double getLatitude() {
         return latitude;
@@ -43,7 +43,7 @@ public class Weather {
         return hourly;
     }
 
-    public WeatherDetail getDaily() {
+    public WeatherDetailDaily getDaily() {
         return daily;
     }
 }

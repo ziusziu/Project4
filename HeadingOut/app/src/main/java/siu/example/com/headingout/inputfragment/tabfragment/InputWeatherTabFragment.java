@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -39,6 +40,7 @@ public class InputWeatherTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private SwipeRefreshLayout mWeatherSwipeRefreshLayout;
+//    private ProgressBar mSpinner;
 
     private int mPage;
 
@@ -67,7 +69,6 @@ public class InputWeatherTabFragment extends Fragment {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
 
-
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mLatitude = sharedPref.getString(LATITUDE, "Default");
         mLongitude = sharedPref.getString(LONGITUDE, "Default");
@@ -81,52 +82,35 @@ public class InputWeatherTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_weather_fragment, container, false);
 
-        mWeatherSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_weather_fragment_swipe_refresh_layout);
-
-        mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
-        mWeatherRecyclerView.setHasFixedSize(true);
-
-
-        //recyclerViewSetup();
-
-
+        initViews(view);
+        initRecyclerView();
         swipeWeatherRefreshListener();
-
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
+        Bus bus = createBus();
         bus.register(this);
 
         return view;
     }
 
-    //TODO remove dummy data and use Weather Object to populate cardView
-    private void recyclerViewSetup(){
-        List<FlightTest> flightList = new ArrayList<>();
 
-        // Dummy Data
-        FlightTest flight = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
-        FlightTest flight1 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
-        FlightTest flight2 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
-        FlightTest flight3 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
-        FlightTest flight4 = new FlightTest("Weather", "Weather", "Weather" , "Weather", "Weather", "Weather");
-        flightList.add(flight);
-        flightList.add(flight1);
-        flightList.add(flight2);
-        flightList.add(flight3);
-        flightList.add(flight4);
-
-//
-//
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
-//        mWeatherRecyclerView.setHasFixedSize(true);
-//        InputTabWeatherRVAdapter recyclerViewAdapter = new InputTabWeatherRVAdapter(flightList, mWeather);
-//        mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
-
+    private void initViews(View view){
+        mWeatherSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_weather_fragment_swipe_refresh_layout);
+        mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
+   //     mSpinner = (ProgressBar)view.findViewById(R.id.input_tab_weather_fragment_progressBar);
     }
+
+    private void initRecyclerView(){
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mWeatherRecyclerView.setLayoutManager(linearLayoutManager);
+        mWeatherRecyclerView.setHasFixedSize(true);
+    }
+
+    private Bus createBus(){
+        // Register for bus events
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+        return bus;
+    }
+
 
     private void swipeWeatherRefreshListener(){
         mWeatherSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -145,8 +129,7 @@ public class InputWeatherTabFragment extends Fragment {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
 
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
-                HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-                Bus bus = headingOutApplication.provideBus();
+                Bus bus = createBus();
 
                 ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
                 //recyclerViewSetup();
@@ -161,11 +144,19 @@ public class InputWeatherTabFragment extends Fragment {
         Log.d(TAG, "onResume: INPUT------WEATHER----TABFRAGMENT ===>>> resuming");
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "onDestroy: INPUT----WEATHER--- TABFRAGMENT ===>>>> onDestroy");
+    }
+
     @Subscribe
     public void onWeatherData(Weather weather){
         Log.d(TAG, "onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
-        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather);
+        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather, getContext());
         mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
+   //     mSpinner.setVisibility(View.GONE);
 
     }
+
 }

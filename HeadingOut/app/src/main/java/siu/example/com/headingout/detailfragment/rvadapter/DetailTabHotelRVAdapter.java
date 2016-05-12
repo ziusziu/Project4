@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import siu.example.com.headingout.R;
@@ -24,20 +26,16 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView hotelNameTextView;
-        TextView hotelCityTextView;
-        TextView hotelStateTextView;
-        TextView hotelCountryTextView;
-        TextView hotelRatingTextView;
+
+
+
         Button shareButton;
 
         HotelViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.detail_tab_hotel_fragment_cardView);
             hotelNameTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_name_textView);
-            hotelCityTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_city_textView);
-            hotelStateTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_state_textView);
-            hotelCountryTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_country_textView);
-            hotelRatingTextView = (TextView) itemView.findViewById(R.id.detail_tab_hotel_rating_textView);
+
             shareButton = (Button)itemView.findViewById(R.id.detail_tab_hotel_share_button);
         }
     }
@@ -61,10 +59,6 @@ public class DetailTabHotelRVAdapter extends RecyclerView.Adapter<DetailTabHotel
     @Override
     public void onBindViewHolder(HotelViewHolder holder, int position) {
         holder.hotelNameTextView.setText("Name: "+hotelList.get(position).getName());
-        holder.hotelCityTextView.setText("City: "+hotelList.get(position).getCity());
-        holder.hotelStateTextView.setText("State: "+hotelList.get(position).getState());
-        holder.hotelCountryTextView.setText("Country: "+hotelList.get(position).getCountry());
-        holder.hotelRatingTextView.setText("Rating: "+hotelList.get(position).getRating());
 
         setShareButtonListener(holder);
     }

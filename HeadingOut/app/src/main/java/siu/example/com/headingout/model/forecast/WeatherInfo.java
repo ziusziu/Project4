@@ -5,7 +5,7 @@ package siu.example.com.headingout.model.forecast;
  */
 public class WeatherInfo {
     int time;
-    String sumary;
+    String summary;
     String icon;
     int nearestStormDistance;
     double precipIntensity;
@@ -27,8 +27,8 @@ public class WeatherInfo {
         return time;
     }
 
-    public String getSumary() {
-        return sumary;
+    public String getSummary() {
+        return summary;
     }
 
     public String getIcon() {
