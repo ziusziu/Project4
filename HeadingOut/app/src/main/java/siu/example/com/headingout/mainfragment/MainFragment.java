@@ -2,12 +2,14 @@ package siu.example.com.headingout.mainfragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -57,6 +59,8 @@ public class MainFragment extends Fragment implements
         DateRangePickerFragment.OnDateRangeSelectedListener{
 
     public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String ORIGINNAME = "originName";
+    public static final String ORIGINADDRESS = "originAddress";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -84,6 +88,8 @@ public class MainFragment extends Fragment implements
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
 
+    private static String mOriginName;
+    private static String mOriginAddress;
     private static double mLatitude;
     private static double mLongitude;
     private static String mStartDay;
@@ -151,21 +157,11 @@ public class MainFragment extends Fragment implements
         List<TestTrip> tripList = new ArrayList<>();
 
         // Dummy Data
-        TestTrip trip = new TestTrip("San Francisco");
-        TestTrip trip1 = new TestTrip("San Francisco");
-        TestTrip trip2 = new TestTrip("San Francisco");
-        TestTrip trip3 = new TestTrip("San Francisco");
-        TestTrip trip4 = new TestTrip("San Francisco");
-        TestTrip trip5 = new TestTrip("San Francisco");
-        TestTrip trip6 = new TestTrip("San Francisco");
-        tripList.add(trip);
-        tripList.add(trip1);
-        tripList.add(trip2);
-        tripList.add(trip3);
-        tripList.add(trip4);
-        tripList.add(trip5);
-        tripList.add(trip6);
+//        TestTrip trip = new TestTrip("San Francisco");
+//        tripList.add(trip);
 
+
+     //   GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity());
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mTripRecyclerView.setLayoutManager(linearLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
@@ -181,6 +177,8 @@ public class MainFragment extends Fragment implements
 
                 SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
+                editor.putString(ORIGINNAME, mOriginName);
+                editor.putString(ORIGINADDRESS, mOriginAddress);
                 editor.putString(LATITUDE, Double.toString(mLatitude));
                 editor.putString(LONGITUDE, Double.toString(mLongitude));
                 editor.putString(STARTDAY, mStartDay);
@@ -191,16 +189,13 @@ public class MainFragment extends Fragment implements
                 editor.putString(ENDYEAR, mEndYear);
                 editor.commit();
 
-                Log.d(TAG, "onClick: THIS IS AUTOCOMPLETETEXT VALUE "+ mAutoCompleteTextView.getText());
-                //TODO if empty pop up error and block
+
                 String location = mAutoCompleteTextView.getText().toString();
                 if(location.isEmpty()){
                     mAutoCompleteTextView.setError("Please input a location");
                     return;
                 }
 
-                Log.d(TAG, "BUTTON CLICKED======>>>>>>>> " + mLatitude);
-                Log.d(TAG, "BUTTON CLICKED======>>>>>>>> " + mLongitude);
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 InputFragment inputFragment = new InputFragment();
@@ -215,6 +210,11 @@ public class MainFragment extends Fragment implements
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
+
+        int color = Color.parseColor("#68EFAD");
+        mCalendarImageView.setImageResource(R.drawable.calendar);
+        mCalendarImageView.setColorFilter(color);
+
     }
 
     @Override
@@ -252,17 +252,16 @@ public class MainFragment extends Fragment implements
             CharSequence attributions = places.getAttributions();
             mLatitude = place.getLatLng().latitude;
             mLongitude = place.getLatLng().longitude;
+            mOriginName = String.valueOf(place.getName());
+            mOriginAddress = String.valueOf(place.getAddress());
 
-            Log.d(TAG, "onResult:======>>>>>>>> "+ mLatitude);
-            Log.d(TAG, "onResult:======>>>>>>>> "+ mLongitude);
-//            mNameTextView.setText(Html.fromHtml(place.getName() + ""));
-//            mAddressTextView.setText(Html.fromHtml(place.getAddress() + ""));
-//            mIdTextView.setText(Html.fromHtml(place.getId() + ""));
-//            mPhoneTextView.setText(Html.fromHtml(place.getPhoneNumber() + ""));
-//            mWebTextView.setText(place.getWebsiteUri() + "");
-//            if (attributions != null) {
-//                mAttTextView.setText(Html.fromHtml(attributions.toString()));
-//            }
+            Log.d(TAG, "onResult: ----->>>> MainFragment AutoFillCallBack <<<<<--------");
+            Log.d(TAG, "onResult: Latitude "+ mLatitude);
+            Log.d(TAG, "onResult: Longitude "+ mLongitude);
+            Log.d(TAG, "onResult: PlaceName " + place.getName());
+            Log.d(TAG, "onResult: PlaceAddress " + place.getAddress());
+            Log.d(TAG, "onResult: PlaceLocale  " + place.getLocale());
+            Log.d(TAG, "onResult: ----->>>> MainFragment AutoFillCallBack <<<<<--------");
         }
     };
 

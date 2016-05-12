@@ -4,12 +4,12 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/fragment_image"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:src="@drawable/android_arms"
-        android:adjustViewBounds="true"
-        android:fitsSystemWindows="true"/>
+        android:id="@+id/main_calendar_imageView"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:clickable="true" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,27 +17,22 @@
         android:orientation="horizontal"
         android:gravity="center">
 
-
-        <ImageView
-            android:id="@+id/main_calendar_imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="true"
-            android:src="@drawable/calendar"/>
-
         <AutoCompleteTextView
             android:id="@+id/main_autocomplete_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:singleLine="true"
             android:ems="10"
-            android:hint="Destination"/>
+            android:hint="Destination"
+            android:textColorHint="@color/colorPrimayLight"/>
 
         <Button
             android:id="@+id/main_addLocation_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add"/>
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/colorAccentDark"
+            android:text="Go!"/>
 
     </LinearLayout>
 

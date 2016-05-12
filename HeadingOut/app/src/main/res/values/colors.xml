@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#691A99</color>
     <color name="colorPrimayLight">#E8CFF7</color>
     <color name="colorAccent">#68EFAD</color>
+    <color name="colorAccentDark">#00C853</color>
     <color name="maps">#BBFFFFFF</color>
 </resources>

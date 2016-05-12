@@ -276,7 +276,7 @@ public class InputFragment extends Fragment{
 
     protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor){
         int color = Color.parseColor(fabColor);
-        searchFab.setImageResource(R.drawable.icon_search);
+        searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
         searchFab.setColorFilter(color);
     }
 
@@ -338,10 +338,6 @@ public class InputFragment extends Fragment{
 
 
     private void plotGoogleMaps(double latitude, double longitude){
-
-        // latitude and longitude
-//        double latitude = 17.385044;
-//        double longitude = 78.486671;
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(

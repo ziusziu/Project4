@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -24,11 +25,14 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     public static class TripViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
         TextView tripNameTextView;
+        ImageView tripOriginImageView;
 
         TripViewHolder(View itemView){
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.main_trip_item_cardView);
             tripNameTextView = (TextView)itemView.findViewById(R.id.main_card_tripItem_textView);
+            tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_imageView);
+
         }
 
     }
@@ -51,7 +55,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
 
     @Override
     public void onBindViewHolder(TripViewHolder holder, final int position) {
-        holder.tripNameTextView.setText(tripList.get(position).getLocation());
+        //holder.tripNameTextView.setText(tripList.get(position).getLocation());
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
