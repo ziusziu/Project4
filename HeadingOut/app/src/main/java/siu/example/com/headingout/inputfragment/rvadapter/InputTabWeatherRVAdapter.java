@@ -92,10 +92,10 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         double weatherMax = weather.getDaily().getData().get(position).getTemperatureMax();
         double weatherMin = weather.getDaily().getData().get(position).getTemperatureMin();
         double weatherAvg = (weatherMax + weatherMin) / 2;
-        String formattedTime = new SimpleDateFormat("MM/dd/yyy").format(new Date(time * 1000L));
+        String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
 
         holder.weatherTimeTextView.setText(formattedTime);
-        holder.weatherAvgTempTextView.setText(String.valueOf(weatherAvg));
+        holder.weatherAvgTempTextView.setText(String.format("%.0f" + (char) 0x00B0, weatherAvg));
         holder.weatherSummaryTextView.setText(weather.getDaily().getData().get(position).getSummary());
 
 

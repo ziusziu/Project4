@@ -3,8 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    android:layout_marginRight="20dp"
-    android:layout_marginLeft="20dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginBottom="5dp"
     card_view:cardCornerRadius="8dp"
@@ -24,21 +24,24 @@
             android:id="@+id/input_tab_weather_time_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
+            android:layout_gravity="center_horizontal"
+            android:textSize="20dp"
             android:text="DATE"/>
 
         <TextView
             android:id="@+id/input_tab_weather_avgTemp_TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:textSize="40dp"
             android:text="TEMP"/>
 
         <TextView
             android:id="@+id/input_tab_weather_summary_textView"
-            android:textSize="10dp"
+            android:textSize="15dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:text="Summary"/>
 
 
@@ -100,22 +103,26 @@
         <TextView
             android:id="@+id/input_tab_weather_temperatureMin_TextView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_temperatureMinTime_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_temperatureMax_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_temperatureMaxTime_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

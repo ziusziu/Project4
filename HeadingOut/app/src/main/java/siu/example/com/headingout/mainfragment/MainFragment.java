@@ -238,14 +238,17 @@ public class MainFragment extends Fragment implements
 
         // Set Default Calendar Dates to Today and Tomorrow
         Calendar currentDate = Calendar.getInstance();
+        currentDate.setTime(new Date());
         SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
         SimpleDateFormat monthFormatter = new SimpleDateFormat("MM");
         SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
+
+        currentDate.add(currentDate.DATE, 1); // Tomorrow's Date
         mStartDay = dayFormatter.format(currentDate.getTime());
         mStartMonth = monthFormatter.format(currentDate.getTime());
         mStartYear = yearFormatter.format(currentDate.getTime());
-        currentDate.setTime(new Date());
-        currentDate.add(currentDate.DATE, 1); // Tomorrow's Date
+
+        currentDate.add(currentDate.DATE, 1); // Day After's Date
         mEndDay = dayFormatter.format(currentDate.getTime());
         mEndMonth = monthFormatter.format(currentDate.getTime());
         mEndYear = yearFormatter.format(currentDate.getTime());

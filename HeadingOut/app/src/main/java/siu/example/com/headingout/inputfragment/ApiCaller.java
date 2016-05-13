@@ -151,8 +151,8 @@ public class ApiCaller {
 
 
 
-                    String origin = "BOS";
-                    String destination = "LAX";
+                    String origin = "SFO";
+                    String destination = airports.getAirports().get(0).getCityCode();
                     String date = "2016-07-10";
 
                     getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
