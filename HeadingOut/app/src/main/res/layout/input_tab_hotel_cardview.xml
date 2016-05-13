@@ -66,13 +66,13 @@
                 android:id="@+id/input_tab_hotel_currencyCode_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="40dp"/>
+                android:textSize="25dp"/>
 
             <TextView
                 android:id="@+id/input_tab_hotel_totalPrice_textView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="40dp"/>
+                android:textSize="25dp"/>
 
         </LinearLayout>
 

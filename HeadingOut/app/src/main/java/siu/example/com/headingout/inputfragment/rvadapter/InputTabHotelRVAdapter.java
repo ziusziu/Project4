@@ -81,7 +81,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     }
 
     @Override
-    public void onBindViewHolder(HotelViewHolder holder, int position) {
+    public void onBindViewHolder(final HotelViewHolder holder, int position) {
         //holder.hotelNameTextView.setText(hotelList.get(position).getName());
 
         List<HWNeighborhoods> neighborhoods = hotels.getMetaData().getHotelMetaData().getNeighborhoods();
@@ -94,6 +94,15 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         holder.hotelTotalPriceTextView.setText(hotels.getResult().get(position).getTotalPrice());
         Log.d(TAG, "onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
+
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                holder.cardView.setCardBackgroundColor(R.color.colorPrimayLight);
+
+            }
+        });
 
 
 //        holder.hotelSubTotalTextView.setText(hotels.getResult().get(position).getSubTotal());

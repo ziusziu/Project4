@@ -10,7 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:visibility="gone">
 
         <EditText
             android:id="@+id/input_hotel_editText"
@@ -27,6 +28,13 @@
             android:text="Add"/>
 
     </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/input_tab_hotel_progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/input_tab_hotel_fragment_swipe_refresh_layout"

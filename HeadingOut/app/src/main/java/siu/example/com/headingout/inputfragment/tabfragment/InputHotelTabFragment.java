@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -38,6 +39,7 @@ public class InputHotelTabFragment extends Fragment {
     private int mPage;
     private static RecyclerView mHotelRecyclerView;
     private InputTabHotelRVAdapter recyclerViewAdapter;
+    private ProgressBar progressBar;
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -66,6 +68,9 @@ public class InputHotelTabFragment extends Fragment {
         TextView textView = (TextView) view.findViewById(R.id.input_hotel_editText);
         textView.setText("Fragment #" + mPage);
 
+        progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
+        progressBar.setVisibility(View.VISIBLE);
+
         mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
 
         mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
@@ -76,7 +81,6 @@ public class InputHotelTabFragment extends Fragment {
         //recyclerViewSetup();
 
         swipeHotelRefreshListener();
-
 
 
         return view;
@@ -128,6 +132,7 @@ public class InputHotelTabFragment extends Fragment {
                 ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
                 //recyclerViewSetup();
+                mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -144,6 +149,8 @@ public class InputHotelTabFragment extends Fragment {
     public void onHotelData(HotWireHotels hotWireHotels) {
         Log.d(TAG, "onHotelData  SIZE " + hotWireHotels.getResult().size());
 
+
+        progressBar.setVisibility(View.GONE);
         recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
         mHotelRecyclerView.setAdapter(recyclerViewAdapter);
 
