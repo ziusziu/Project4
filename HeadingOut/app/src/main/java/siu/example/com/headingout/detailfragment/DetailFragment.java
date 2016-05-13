@@ -58,6 +58,7 @@ public class DetailFragment extends Fragment{
         mTabLayout = (TabLayout)view.findViewById(R.id.detail_tabLayout);
         mTabLayout.setupWithViewPager(mViewPager);
 
+
         //mTabLayout.setScrollbarFadingEnabled(true);
 
     }

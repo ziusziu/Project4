@@ -134,6 +134,7 @@ public class InputWeatherTabFragment extends Fragment {
 
                 ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
                 //recyclerViewSetup();
+                mWeatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);

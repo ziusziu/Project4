@@ -61,6 +61,7 @@ public class InputFragment extends Fragment{
     private static String forecastApiKey;
     private static String flightStatsApiKey;
     private static String flightStatsAppId;
+    private static String mDestinationAirportCode;
 
 
     private static String mLatitude;
@@ -73,6 +74,7 @@ public class InputFragment extends Fragment{
     private static String mEndYear;
 
     public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -129,6 +131,7 @@ public class InputFragment extends Fragment{
         mEndDay = sharedPref.getString(ENDDAY, "Default");
         mEndMonth = sharedPref.getString(ENDMONTH, "Default");
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
 
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
@@ -157,8 +160,20 @@ public class InputFragment extends Fragment{
         flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+
+
+        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
+
         String distance = "5";
-        ApiCaller.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId);
+        ApiCaller.getAirportsApi(bus,
+                                googlePlacesApiKey,
+                                mLatitude,
+                                mLongitude,
+                                distance,
+                                flightStatsApiKey,
+                                flightStatsAppId,
+                                startDate,
+                                mDestinationAirportCode);
 
         //makeApiCall();
 
@@ -179,6 +194,8 @@ public class InputFragment extends Fragment{
             //TODO put id into HashMap, for easy find
         }
 
+
+
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
         for(HWNeighborhoods neighborhoods : hwNeighborHoods){
             Log.d(TAG, "onHotelData: " + neighborhoods.getName());
@@ -188,8 +205,10 @@ public class InputFragment extends Fragment{
             double longitude = Double.parseDouble(centroidList[1]);
             Log.d(TAG, "onHotelData: " + latitude);
             Log.d(TAG, "onHotelData: " + longitude);
-
-            plotGoogleMaps(latitude, longitude);
+            int i = 0;
+            String hwRefNum = hotWireHotels.getResult().get(i).getHWRefNumber();
+            i++;
+            plotGoogleMaps(latitude, longitude, hwRefNum);
         }
 
 
@@ -337,11 +356,11 @@ public class InputFragment extends Fragment{
     }
 
 
-    private void plotGoogleMaps(double latitude, double longitude){
+    private void plotGoogleMaps(double latitude, double longitude, String HWRefNum){
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("Hello Maps");
+                new LatLng(latitude, longitude)).title("HotWire Ref Num: " + HWRefNum);
 
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory

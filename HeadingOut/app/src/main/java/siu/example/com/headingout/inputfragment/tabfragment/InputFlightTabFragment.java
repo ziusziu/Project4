@@ -147,6 +147,7 @@ public class InputFlightTabFragment extends Fragment {
                 ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
 
                 recyclerViewSetup();
+                mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
                 mFlightSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
