@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -158,7 +159,7 @@ public class MainFragment extends Fragment implements
         TestTrip trip5 = new TestTrip("Miami (MIA)", "MIA", "25.795884", "-80.287346");
         TestTrip trip6 = new TestTrip("Seatle (SEA)", "SEA", "47.450134", "-122.309031");
         TestTrip trip7 = new TestTrip("Chicago (ORD)", "ORD", "41.974027", "-87.907579");
-        TestTrip trip8 = new TestTrip("LasVegas (LAS)", "LAS", "36.083974", "-115.154082");
+        TestTrip trip8 = new TestTrip("Las Vegas (LAS)", "LAS", "36.083974", "-115.154082");
 
         tripList.add(trip1);
         tripList.add(trip2);

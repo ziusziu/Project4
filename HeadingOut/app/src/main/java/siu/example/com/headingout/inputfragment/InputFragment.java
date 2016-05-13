@@ -143,25 +143,14 @@ public class InputFragment extends Fragment{
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
 
 
-
-
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
         bus = headingOutApplication.provideBus();
         bus.register(this);
-
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
-
-        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiCaller.getHotWireApi(bus, hotwireApiKey);
-
 
         flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-
-
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
         String distance = "5";
@@ -176,6 +165,12 @@ public class InputFragment extends Fragment{
                                 mDestinationAirportCode);
 
         //makeApiCall();
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+
+        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+        ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
         googleMap = mMapView.getMap();
 

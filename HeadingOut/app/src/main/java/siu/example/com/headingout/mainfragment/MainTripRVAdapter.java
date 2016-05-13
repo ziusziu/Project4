@@ -65,7 +65,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     @Override
     public void onBindViewHolder(TripViewHolder holder, final int position) {
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
-        holder.tripOriginImageView.setVisibility(View.VISIBLE);
+        holder.tripOriginImageView.setVisibility(View.GONE);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

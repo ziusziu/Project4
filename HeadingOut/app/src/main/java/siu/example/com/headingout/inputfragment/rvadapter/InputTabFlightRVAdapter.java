@@ -37,25 +37,24 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView flightNameTextView;
-        TextView flightOriginTextView;
-        TextView flightDestinationTextView;
-        TextView flightSaleTotalTextView;
-        TextView flightIdTextView;
-        TextView flightDurationTextView;
+        TextView flightOriginTextView, flightDestinationTextView,
+                flightSaleTotalTextView, flightDurationTextView;
+
+        //TextView flightNameTextView, flightIdTextView;
+
 
 
         FlightViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
-            flightNameTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_textView);
             flightOriginTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_origin_textView);
             flightDestinationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_destination_textView);
             flightSaleTotalTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_saleTotal_textView);
-            flightIdTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_tripId_textView);
             flightDurationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_duration_textView);
             flightSegmentListView = (ListView) itemView.findViewById(R.id.input_tab_flight_segments_listView);
 
+//            flightIdTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_tripId_textView);
+//            flightNameTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_textView);
         }
     }
 
@@ -78,15 +77,25 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     @Override
     public void onBindViewHolder(FlightViewHolder holder, int position) {
-        holder.flightNameTextView.setText(String.valueOf(flights.getTrips().getTripOption().get(0).getPricing().size()));
+//        holder.flightNameTextView.setText(String.valueOf(flights.getTrips().getTripOption().get(0).getPricing().size()));
+//        holder.flightIdTextView.setText(flights.getTrips().getTripOption().get(position).getId());
+
         holder.flightOriginTextView.setText("ORIGIN ____ NEED TO GRAB FROM MAIN");
         holder.flightDestinationTextView.setText("DESTINGATION ___ NEED TO GRAB FROM MAIN");
         holder.flightSaleTotalTextView.setText(flights.getTrips().getTripOption().get(position).getSaleTotal());
-        holder.flightIdTextView.setText(flights.getTrips().getTripOption().get(position).getId());
-        holder.flightDurationTextView.setText(String.valueOf(flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration()));
+
+        int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
+        Long longVal = new Long(duration);
+        int hours = (int) longVal.longValue() / 60;
+        int mins = (int) longVal.longValue() - (hours * 60);
+        String durationString = hours + " hours " + mins + " mins ";
+        Log.d(TAG, "onCreateView: hours " + durationString);
+
+        holder.flightDurationTextView.setText(durationString);
         List<Segment> listSegment = flights.getTrips().getTripOption().get(position).getSlice().get(0).getSegment();
         List<Leg> listLeg;
 
+        //TODO Don't need list view, populate programmatically, INSTEAD OF USING ADAPTERS!!!!
         FlightSegmentAdapter flightSegmentAdapter = new FlightSegmentAdapter(flightSegmentListView.getContext(), listSegment);
         flightSegmentListView.setAdapter(flightSegmentAdapter);
 

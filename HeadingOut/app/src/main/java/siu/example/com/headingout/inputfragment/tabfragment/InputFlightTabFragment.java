@@ -1,5 +1,8 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -13,6 +16,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
@@ -35,8 +39,13 @@ import siu.example.com.headingout.model.flights.Trip;
 public class InputFlightTabFragment extends Fragment {
     private static final String TAG = InputFlightTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
+
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+
     private SwipeRefreshLayout mFlightSwipeRefreshLayout;
 
+    private static String mDestinationAirportCode;
     private int mPage;
     private static RecyclerView mFlightRecyclerView;
     private InputTabFlightRVAdapter recyclerViewAdapter;
@@ -72,6 +81,21 @@ public class InputFlightTabFragment extends Fragment {
 
 
         });
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+
+        TextView mainOrigin = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
+        TextView mainDestination = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
+
+        ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
+        int color = Color.parseColor("#BBFFFFFF");
+        mainAirplaneIcon.setColorFilter(color);
+
+        mainOrigin.setText("SFO");
+        mainDestination.setText(mDestinationAirportCode);
+
+
 
         mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
 

@@ -14,6 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dp"
+            android:textStyle="bold"
             android:text="FLIGHT CARRIER"/>
 
         <TextView
@@ -33,17 +34,17 @@
     </LinearLayout>
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:text="Departing: "/>
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:textStyle="bold"
-            android:text="Departing: "/>
 
         <TextView
             android:id="@+id/input_tab_flight_listView_originTerminal_textView"
@@ -67,6 +68,12 @@
     </LinearLayout>
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:textStyle="bold"
+        android:text="Arriving: "/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -77,8 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="15dp"
-            android:textStyle="bold"
-            android:text="Arriving: "/>
+            android:text="Terminal "/>
 
         <TextView
             android:id="@+id/input_tab_flight_listView_destinationTerminal_textView"
