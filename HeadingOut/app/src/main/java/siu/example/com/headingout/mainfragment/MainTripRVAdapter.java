@@ -26,6 +26,11 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
 
     private static final String TAG = MainTripRVAdapter.class.getSimpleName();
     private final List<TestTrip> tripList;
+    private final OnMainCardViewClickListener listener;
+
+    public interface OnMainCardViewClickListener{
+        void onMainCardViewClick(TestTrip testTrip);
+    }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
         CardView cardView;
@@ -40,8 +45,9 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         }
     }
 
-    public MainTripRVAdapter(List<TestTrip> tripList){
+    public MainTripRVAdapter(List<TestTrip> tripList, OnMainCardViewClickListener listener){
         this.tripList = tripList;
+        this.listener = listener;
     }
 
     @Override
@@ -65,6 +71,9 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
+                listener.onMainCardViewClick(tripList.get(position));
+
+
 
             }
         });

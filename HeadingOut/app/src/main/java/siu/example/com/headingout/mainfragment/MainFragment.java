@@ -49,9 +49,11 @@ import siu.example.com.headingout.util.FragmentUtil;
 public class MainFragment extends Fragment implements
         GoogleApiClient.OnConnectionFailedListener,
         GoogleApiClient.ConnectionCallbacks,
-        DateRangePickerFragment.OnDateRangeSelectedListener{
+        DateRangePickerFragment.OnDateRangeSelectedListener,
+        MainTripRVAdapter.OnMainCardViewClickListener{
 
     public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
     public static final String DESTINATIONNAME = "originName";
     public static final String DESTINATIONADDRESS = "originAddress";
     public static final String LATITUDE = "latitude";
@@ -82,6 +84,7 @@ public class MainFragment extends Fragment implements
 
     private static String mDestinationName;
     private static String mDestinationAddress;
+    private static String mDestinationAirportCode;
     private static double mLatitude;
     private static double mLongitude;
     private static String mStartDay;
@@ -148,17 +151,15 @@ public class MainFragment extends Fragment implements
         List<TestTrip> tripList = new ArrayList<>();
 
         // Dummy Data
-        TestTrip trip0 = new TestTrip("San Francisco");
-        TestTrip trip1 = new TestTrip("Los Angeles");
-        TestTrip trip2 = new TestTrip("Washington D.C.");
-        TestTrip trip3 = new TestTrip("New York City");
-        TestTrip trip4 = new TestTrip("Hawaii");
-        TestTrip trip5 = new TestTrip("Miami");
-        TestTrip trip6 = new TestTrip("Seatle");
-        TestTrip trip7 = new TestTrip("Chicago");
-        TestTrip trip8 = new TestTrip("LasVegas");
+        TestTrip trip1 = new TestTrip("Los Angeles (LAX)", "LAX", "33.941446", "-118.408702");
+        TestTrip trip2 = new TestTrip("Washington D.C. (DCA)", "DCA", "38.851125", "-77.040350");
+        TestTrip trip3 = new TestTrip("New York City (JFK)", "JFK", "40.641189", "-73.778214");
+        TestTrip trip4 = new TestTrip("Hawaii (HNL)", "HNL", "21.324224", "-157.925262");
+        TestTrip trip5 = new TestTrip("Miami (MIA)", "MIA", "25.795884", "-80.287346");
+        TestTrip trip6 = new TestTrip("Seatle (SEA)", "SEA", "47.450134", "-122.309031");
+        TestTrip trip7 = new TestTrip("Chicago (ORD)", "ORD", "41.974027", "-87.907579");
+        TestTrip trip8 = new TestTrip("LasVegas (LAS)", "LAS", "36.083974", "-115.154082");
 
-        tripList.add(trip0);
         tripList.add(trip1);
         tripList.add(trip2);
         tripList.add(trip3);
@@ -172,7 +173,7 @@ public class MainFragment extends Fragment implements
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mTripRecyclerView.setLayoutManager(gridLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
-        MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList);
+        MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList, this);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
@@ -185,6 +186,7 @@ public class MainFragment extends Fragment implements
                 SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putString(DESTINATIONNAME, mDestinationName);
                 editor.putString(DESTINATIONADDRESS, mDestinationAddress);
+                editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
                 editor.putString(LATITUDE, Double.toString(mLatitude));
                 editor.putString(LONGITUDE, Double.toString(mLongitude));
                 editor.putString(STARTDAY, mStartDay);
@@ -349,4 +351,11 @@ public class MainFragment extends Fragment implements
             mGoogleApiClient.stopAutoManage(getActivity());
     }
 
+    @Override
+    public void onMainCardViewClick(TestTrip testTrip) {
+        mDestinationAirportCode = testTrip.getAirportCode();
+        mAutoCompleteTextView.setText(mDestinationAirportCode);
+        mLatitude = Double.parseDouble(testTrip.getLatitude());
+        mLongitude = Double.parseDouble(testTrip.getLongitude());
+    }
 }

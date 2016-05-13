@@ -116,7 +116,15 @@ public class ApiCaller {
     }
 
 
-    public static void getAirportsApi(final Bus bus, final String googlePlacesApiKey, String latitude, String longitude, String distance, String flightStatsApiKey, String flightStatsAppId){
+    public static void getAirportsApi(final Bus bus,
+                                      final String googlePlacesApiKey,
+                                      String latitude,
+                                      String longitude,
+                                      String distance,
+                                      String flightStatsApiKey,
+                                      String flightStatsAppId,
+                                      final String startDate,
+                                      final String tripDestination){
 
 
         Log.d(TAG, "getAirportsApi: ===>>>> CALLING API  " +latitude + "    " + longitude);
@@ -150,10 +158,14 @@ public class ApiCaller {
                     boolean refundable = false;
 
 
+         //           Log.d(TAG, "onResponse: APICALLER CityCode " + airports.getAirports().get(0).getCityCode());
 
                     String origin = "SFO";
-                    String destination = airports.getAirports().get(0).getCityCode();
-                    String date = "2016-07-10";
+                    String destination = tripDestination;//airports.getAirports().get(0).getCityCode();
+                    String date = startDate;
+
+                    Log.d(TAG, "onResponse: DESTINATION CODE ***" + tripDestination);
+                    Log.d(TAG, "onResponse: StartDate *** "+ startDate);
 
                     getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
 
