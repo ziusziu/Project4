@@ -13,6 +13,8 @@
     android:foreground="?android:attr/selectableItemBackground"
     android:id="@+id/input_tab_hotel_fragment_cardView">
 
+
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -20,64 +22,111 @@
         android:padding="16dp">
 
         <TextView
-            android:id="@+id/input_tab_hotel_textView"
+            android:id="@+id/input_tab_hotel_name_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="12dp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/input_tab_hotel_checkInDate_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" - "/>
+
+            <TextView
+                android:id="@+id/input_tab_hotel_checkOutDate_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18dp"/>
+
+            <TextView
+                android:id="@+id/input_tab_hotel_nights_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="15dp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/input_tab_hotel_currencyCode_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"/>
+
+            <TextView
+                android:id="@+id/input_tab_hotel_totalPrice_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="40dp"/>
+
+        </LinearLayout>
+
+        <RatingBar
+            android:id="@+id/input_tab_hotel_ratingBar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:numStars="5"
+            android:stepSize="0.5"
+            android:rating="2.0" />
+
+
 
         <TextView
-            android:id="@+id/detail_tab_hotel_currencyCode_textView"
+            android:id="@+id/input_tab_hotel_starRating_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_subTotal_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_taxesFees_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_totalPrice_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_checkInDate_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_checkOutDate_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_hotel_nights_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
-        <TextView
-            android:id="@+id/detail_tab_avgPriceNight_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="15dp"/>
 
         <TextView
             android:id="@+id/detail_tab_hotel_rooms_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:textSize="15dp"/>
+
+
 
         <TextView
-            android:id="@+id/detail_tab_hotel_starRating_textView"
+            android:id="@+id/detail_tab_hotel_subTotal_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/detail_tab_hotel_taxesFees_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+
+        <TextView
+            android:id="@+id/detail_tab_avgPriceNight_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/deatil_tab_hotel_deepLink_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
 
 
