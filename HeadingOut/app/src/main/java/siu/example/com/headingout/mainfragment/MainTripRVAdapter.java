@@ -38,7 +38,6 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
             tripNameTextView = (TextView)itemView.findViewById(R.id.main_card_tripItem_textView);
             tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_imageView);
         }
-
     }
 
     public MainTripRVAdapter(List<TestTrip> tripList){
@@ -76,6 +75,5 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     public int getItemCount() {
         return tripList.size();
     }
-
 
 }

@@ -6,12 +6,9 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,7 +17,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -28,22 +24,18 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
 import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
-import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.PlaceArrayAdapter;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.DateRangePickerFragment;
@@ -60,8 +52,8 @@ public class MainFragment extends Fragment implements
         DateRangePickerFragment.OnDateRangeSelectedListener{
 
     public static final String PLACESPREFERENCES = "placesPreferences";
-    public static final String ORIGINNAME = "originName";
-    public static final String ORIGINADDRESS = "originAddress";
+    public static final String DESTINATIONNAME = "originName";
+    public static final String DESTINATIONADDRESS = "originAddress";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -84,13 +76,12 @@ public class MainFragment extends Fragment implements
     private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
     private static final String OUT_JSON = "/json";
 
-    private static final LatLngBounds BOUNDS_MOUNTAIN_VIEW = new LatLngBounds(
-            new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+
     private GoogleApiClient mGoogleApiClient;
     private PlaceArrayAdapter mPlaceArrayAdapter;
 
-    private static String mOriginName;
-    private static String mOriginAddress;
+    private static String mDestinationName;
+    private static String mDestinationAddress;
     private static double mLatitude;
     private static double mLongitude;
     private static String mStartDay;
@@ -110,20 +101,15 @@ public class MainFragment extends Fragment implements
         recyclerViewSetup();
         //initAutoCompleteFragment();
 
+        setDefaultDates();
+        setCalendarClickListener();
+
         getGooglePlacesApi();
-
-
-        mCalendarImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.newInstance(MainFragment.this, false);
-                dateRangePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
-            }
-        });
-
 
         return view;
     }
+
+
 
     @Override
     public void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear) {
@@ -148,8 +134,12 @@ public class MainFragment extends Fragment implements
                 .build();
         mAutoCompleteTextView.setThreshold(1);
         mAutoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
+
+        LatLngBounds boundsMountView = new LatLngBounds(
+                new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
+
         mPlaceArrayAdapter = new PlaceArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
-                BOUNDS_MOUNTAIN_VIEW, null);
+                boundsMountView, null);
         mAutoCompleteTextView.setAdapter(mPlaceArrayAdapter);
 
     }
@@ -193,8 +183,8 @@ public class MainFragment extends Fragment implements
 
                 SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(ORIGINNAME, mOriginName);
-                editor.putString(ORIGINADDRESS, mOriginAddress);
+                editor.putString(DESTINATIONNAME, mDestinationName);
+                editor.putString(DESTINATIONADDRESS, mDestinationAddress);
                 editor.putString(LATITUDE, Double.toString(mLatitude));
                 editor.putString(LONGITUDE, Double.toString(mLongitude));
                 editor.putString(STARTDAY, mStartDay);
@@ -204,7 +194,6 @@ public class MainFragment extends Fragment implements
                 editor.putString(ENDMONTH, mEndMonth);
                 editor.putString(ENDYEAR, mEndYear);
                 editor.apply();
-
 
                 String location = mAutoCompleteTextView.getText().toString();
                 if(location.isEmpty()){
@@ -221,6 +210,17 @@ public class MainFragment extends Fragment implements
         });
     }
 
+    private void setCalendarClickListener(){
+        mCalendarImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.newInstance(MainFragment.this, false);
+                dateRangePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
+            }
+        });
+
+    }
+
     private void initializeViews(View view){
         mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
@@ -231,6 +231,31 @@ public class MainFragment extends Fragment implements
         mCalendarImageView.setImageResource(R.drawable.calendar);
         mCalendarImageView.setColorFilter(color);
         mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
+
+    }
+
+    private void setDefaultDates(){
+
+        // Set Default Calendar Dates to Today and Tomorrow
+        Calendar currentDate = Calendar.getInstance();
+        SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
+        SimpleDateFormat monthFormatter = new SimpleDateFormat("MM");
+        SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
+        mStartDay = dayFormatter.format(currentDate.getTime());
+        mStartMonth = monthFormatter.format(currentDate.getTime());
+        mStartYear = yearFormatter.format(currentDate.getTime());
+        currentDate.setTime(new Date());
+        currentDate.add(currentDate.DATE, 1); // Tomorrow's Date
+        mEndDay = dayFormatter.format(currentDate.getTime());
+        mEndMonth = monthFormatter.format(currentDate.getTime());
+        mEndYear = yearFormatter.format(currentDate.getTime());
+
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartDay);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndDay);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndYear);
 
     }
 
@@ -272,8 +297,8 @@ public class MainFragment extends Fragment implements
             CharSequence attributions = places.getAttributions();
             mLatitude = place.getLatLng().latitude;
             mLongitude = place.getLatLng().longitude;
-            mOriginName = String.valueOf(place.getName());
-            mOriginAddress = String.valueOf(place.getAddress());
+            mDestinationName = String.valueOf(place.getName());
+            mDestinationAddress = String.valueOf(place.getAddress());
 
             Log.d(TAG, "onResult: ----->>>> MainFragment AutoFillCallBack <<<<<--------");
             Log.d(TAG, "onResult: Latitude "+ mLatitude);
