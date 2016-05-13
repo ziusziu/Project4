@@ -209,6 +209,7 @@ public class ApiCaller {
                 .addInterceptor(logging)
                 .build();
 
+        //TODO Only should be build once
         retrofit = new Retrofit.Builder()
                 .baseUrl(GOOGLE_QPEXPRESS_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())

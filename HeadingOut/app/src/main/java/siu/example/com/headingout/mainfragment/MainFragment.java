@@ -3,6 +3,7 @@ package siu.example.com.headingout.mainfragment;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -157,17 +158,32 @@ public class MainFragment extends Fragment implements
         List<TestTrip> tripList = new ArrayList<>();
 
         // Dummy Data
-//        TestTrip trip = new TestTrip("San Francisco");
-//        tripList.add(trip);
+        TestTrip trip0 = new TestTrip("San Francisco");
+        TestTrip trip1 = new TestTrip("Los Angeles");
+        TestTrip trip2 = new TestTrip("Washington D.C.");
+        TestTrip trip3 = new TestTrip("New York City");
+        TestTrip trip4 = new TestTrip("Hawaii");
+        TestTrip trip5 = new TestTrip("Miami");
+        TestTrip trip6 = new TestTrip("Seatle");
+        TestTrip trip7 = new TestTrip("Chicago");
+        TestTrip trip8 = new TestTrip("LasVegas");
 
+        tripList.add(trip0);
+        tripList.add(trip1);
+        tripList.add(trip2);
+        tripList.add(trip3);
+        tripList.add(trip4);
+        tripList.add(trip5);
+        tripList.add(trip6);
+        tripList.add(trip7);
+        tripList.add(trip8);
 
-     //   GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity());
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mTripRecyclerView.setLayoutManager(linearLayoutManager);
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mTripRecyclerView.setLayoutManager(gridLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
         MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
-
     }
 
     private void setAddButtonListener(){
@@ -187,7 +203,7 @@ public class MainFragment extends Fragment implements
                 editor.putString(ENDDAY, mEndDay);
                 editor.putString(ENDMONTH, mEndMonth);
                 editor.putString(ENDYEAR, mEndYear);
-                editor.commit();
+                editor.apply();
 
 
                 String location = mAutoCompleteTextView.getText().toString();
@@ -196,8 +212,8 @@ public class MainFragment extends Fragment implements
                     return;
                 }
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();
                 fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
                 fragmentTransaction.commit();
@@ -214,6 +230,7 @@ public class MainFragment extends Fragment implements
         int color = Color.parseColor("#68EFAD");
         mCalendarImageView.setImageResource(R.drawable.calendar);
         mCalendarImageView.setColorFilter(color);
+        mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
 
     }
 
@@ -228,11 +245,14 @@ public class MainFragment extends Fragment implements
             = new AdapterView.OnItemClickListener() {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //TODO Add comments
             final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
             final String placeId = String.valueOf(item.placeId);
             Log.i(TAG, "Selected: " + item.description);
+
             PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
                     .getPlaceById(mGoogleApiClient, placeId);
+
             placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
             Log.i(TAG, "Fetching details for ID: " + item.placeId);
         }

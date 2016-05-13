@@ -1,5 +1,8 @@
 package siu.example.com.headingout.mainfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,7 +14,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
+import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.model.TestTrip;
 
 /**
@@ -32,7 +37,6 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
             cardView = (CardView)itemView.findViewById(R.id.main_trip_item_cardView);
             tripNameTextView = (TextView)itemView.findViewById(R.id.main_card_tripItem_textView);
             tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_imageView);
-
         }
 
     }
@@ -55,12 +59,14 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
 
     @Override
     public void onBindViewHolder(TripViewHolder holder, final int position) {
-        //holder.tripNameTextView.setText(tripList.get(position).getLocation());
+        holder.tripNameTextView.setText(tripList.get(position).getLocation());
+        holder.tripOriginImageView.setVisibility(View.VISIBLE);
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
+
             }
         });
 

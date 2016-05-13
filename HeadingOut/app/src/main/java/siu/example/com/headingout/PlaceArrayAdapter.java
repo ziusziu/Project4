@@ -71,10 +71,13 @@ public class PlaceArrayAdapter
                     Places.GeoDataApi
                             .getAutocompletePredictions(mGoogleApiClient, constraint.toString(),
                                     mBounds, mPlaceFilter);
+
             // Wait for predictions, set the timeout.
             AutocompletePredictionBuffer autocompletePredictions = results
                     .await(60, TimeUnit.SECONDS);
+
             final Status status = autocompletePredictions.getStatus();
+
             if (!status.isSuccess()) {
                 Toast.makeText(getContext(), "Error: " + status.toString(),
                         Toast.LENGTH_SHORT).show();
@@ -88,6 +91,7 @@ public class PlaceArrayAdapter
                     + " predictions.");
             Iterator<AutocompletePrediction> iterator = autocompletePredictions.iterator();
             ArrayList resultList = new ArrayList<>(autocompletePredictions.getCount());
+
             while (iterator.hasNext()) {
                 AutocompletePrediction prediction = iterator.next();
                 resultList.add(new PlaceAutocomplete(prediction.getPlaceId(),

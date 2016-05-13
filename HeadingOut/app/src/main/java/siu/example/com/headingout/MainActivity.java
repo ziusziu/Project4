@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private static final String INPUT_FRAGMENT = "InputFragment";
     private static final String DETAIL_FRAGMENT = "DetailFragment";
 
+    private ActionBar actionBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,27 +52,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         createFragments();
         loadMainFragment();
 
-        mToolBar = (Toolbar)findViewById(getToolBarResource());
+        mToolBar = (Toolbar) findViewById(getToolBarResource());
         setSupportActionBar(mToolBar);
-        getSupportActionBar().setTitle(getToolBarTitle());
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(getToolBarTitle());
         initNavDrawer();
 
     }
 
 
-
-
-
     @Override
     public void setFragmentToolBar(String fragmentName) {
-        switch(fragmentName){
+        switch (fragmentName) {
             case MAIN_FRAGMENT:
-                getSupportActionBar().setTitle("Main");
+                actionBar.setTitle("Main");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
                 initNavDrawer();
                 break;
             case INPUT_FRAGMENT:
-                getSupportActionBar().setTitle("Input");
+                actionBar.setTitle("Input");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
                 initNavDrawer();
                 break;
@@ -77,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.d(TAG, "setFragmentToolBar: lasdjflsakfjklsdfj");
                 mDrawerToggle.setDrawerIndicatorEnabled(false);
                 setActionBarIcon(R.drawable.ic_arrow_back_24dp);
-                getSupportActionBar().setTitle("Detail");
+                actionBar.setTitle("Detail");
                 mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -95,14 +96,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void createFragments(){
+    private void createFragments() {
         Log.d(TAG, "createFragments: ===>>> Creating new Fragments in MainActvity");
         mainFragment = new MainFragment();
         inputFragment = new InputFragment();
         detailFragment = new DetailFragment();
     }
 
-    private void loadMainFragment(){
+    private void loadMainFragment() {
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
@@ -111,12 +112,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     protected String getToolBarTitle() {
-        Fragment fragment = new MainFragment();
-        return fragment.getClass().getSimpleName();
+        return MainFragment.class.getSimpleName();
     }
 
-    private void initNavDrawer(){
-        DrawerLayout drawer = (DrawerLayout)findViewById(getDrawerLayoutResource());
+    private void initNavDrawer() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
         mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
                 mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
@@ -124,7 +124,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.removeDrawerListener(mDrawerToggle);
         mDrawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView)findViewById(getNavViewResource());
+        NavigationView navigationView = (NavigationView) findViewById(getNavViewResource());
         navigationView.setNavigationItemSelectedListener(this);
     }
 
@@ -160,11 +160,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         String fragmentName = fragment.getClass().getSimpleName();
 
-        if(drawer.isDrawerOpen(GravityCompat.START)){
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            switch(fragmentName) {
+            switch (fragmentName) {
                 case MAIN_FRAGMENT:
                     Log.d(TAG, "onCreate:==== MAIN FRAGMENT");
                     super.onBackPressed();
@@ -189,13 +189,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        switch(id){
+        switch (id) {
             case R.id.nav_home:
                 Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Home Clicked");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
                 fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
                 break;
-            case R.id.nav_share:
+            case R.id.nav_saved:
                 Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Share Clicked");
                 break;
             case R.id.nav_send:
@@ -212,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    protected void setActionBarIcon(int iconResource){
+    protected void setActionBarIcon(int iconResource) {
         int color = Color.parseColor("#FFFFFF");
         Drawable iconDrawable = ResourcesCompat.getDrawable(getResources(), iconResource, null);
         iconDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);

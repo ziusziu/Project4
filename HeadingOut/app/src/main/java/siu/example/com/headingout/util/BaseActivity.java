@@ -119,7 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity implements Navigati
         int id = item.getItemId();
         // TODO: Ask about fragmentManager one manager okay? Never close?
 
-        if (id == R.id.nav_share) {
+        if (id == R.id.nav_saved) {
             Log.d(TAG, "onNavigationItemSelected: ===>>> Drawer Share Clicked");
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.replace(R.id.home_fragment_container, detailFragment);

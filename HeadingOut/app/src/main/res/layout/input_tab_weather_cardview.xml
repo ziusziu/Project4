@@ -19,56 +19,83 @@
         android:orientation="vertical"
         android:padding="16dp">
 
+
         <TextView
-            android:id="@+id/input_tab_weather_textView"
+            android:id="@+id/input_tab_weather_time_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="DATE"/>
+
+        <TextView
+            android:id="@+id/input_tab_weather_avgTemp_TextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="40dp"
+            android:text="TEMP"/>
 
         <TextView
             android:id="@+id/input_tab_weather_summary_textView"
+            android:textSize="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="Summary"/>
+
+
+        <TextView
+            android:id="@+id/input_tab_weather_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_sunriseTime_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_sunsetTime_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_precipIntensity_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_precipProbability_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_humidity_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
 
         <TextView
             android:id="@+id/input_tab_weather_windSpeed_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_visibility_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_dewPoint_textView"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
         <TextView
             android:id="@+id/input_tab_weather_temperatureMin_TextView"
