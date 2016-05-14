@@ -1,8 +1,6 @@
 package siu.example.com.headingout.mainfragment;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,11 +10,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
-import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.model.TestTrip;
 
 /**
@@ -27,6 +25,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     private static final String TAG = MainTripRVAdapter.class.getSimpleName();
     private final List<TestTrip> tripList;
     private final OnMainCardViewClickListener listener;
+    private Context mContext;
 
     public interface OnMainCardViewClickListener{
         void onMainCardViewClick(TestTrip testTrip);
@@ -41,7 +40,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
             super(itemView);
             cardView = (CardView)itemView.findViewById(R.id.main_trip_item_cardView);
             tripNameTextView = (TextView)itemView.findViewById(R.id.main_card_tripItem_textView);
-            tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_imageView);
+            tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_city_imageView);
         }
     }
 
@@ -59,13 +58,17 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     public TripViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_trip_item_cardview, parent, false);
         TripViewHolder tripViewHolder = new TripViewHolder(view);
+        mContext = parent.getContext();
         return tripViewHolder;
     }
 
     @Override
     public void onBindViewHolder(TripViewHolder holder, final int position) {
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
-        holder.tripOriginImageView.setVisibility(View.GONE);
+        holder.tripOriginImageView.setVisibility(View.VISIBLE);
+
+       Picasso.with(mContext).load(tripList.get(position).getUrl()).placeholder(R.mipmap.ic_headingout).resize(300,200).centerCrop().into(holder.tripOriginImageView);
+
 
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override

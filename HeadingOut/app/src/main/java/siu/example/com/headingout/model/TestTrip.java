@@ -8,13 +8,15 @@ public class TestTrip {
     String latitude;
     String longitude;
     String airportCode;
+    String url;
 
 
-    public TestTrip(String location, String airportCode, String latitude, String longitude) {
+    public TestTrip(String location, String airportCode, String latitude, String longitude, String url) {
         this.location = location;
         this.airportCode = airportCode;
         this.latitude = latitude;
         this.longitude = longitude;
+        this.url = url;
     }
 
     public String getLocation() {
@@ -31,5 +33,9 @@ public class TestTrip {
 
     public String getAirportCode() {
         return airportCode;
+    }
+
+    public String getUrl() {
+        return url;
     }
 }

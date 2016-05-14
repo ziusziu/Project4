@@ -30,6 +30,7 @@ import com.google.android.gms.location.places.PlaceBuffer;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ public class MainFragment extends Fragment implements
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
     private static ImageView mCalendarImageView;
+    private static ImageView mCityImageView;
 
     private static AutoCompleteTextView mAutoCompleteTextView;
 
@@ -151,15 +153,28 @@ public class MainFragment extends Fragment implements
     private void recyclerViewSetup(){
         List<TestTrip> tripList = new ArrayList<>();
 
+
+
+
+        String urlLA = "https://upload.wikimedia.org/wikipedia/commons/5/57/LA_Skyline_Mountains2.jpg";
+        String urlDC = "https://upload.wikimedia.org/wikipedia/commons/a/af/WhiteHouseSouthFacade.JPG";
+        String urlNYC = "https://upload.wikimedia.org/wikipedia/commons/d/d3/Statue_of_Liberty%2C_NY.jpg";
+        String urlHawaii = "https://upload.wikimedia.org/wikipedia/commons/8/8d/Na_Pali_Coast%2C_Kauai%2C_Hawaii.jpg";
+        String urlMiami = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Mouth_of_Miami_River_20100211.jpg";
+        String urlSeattle = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Seattle_Skyline-.jpg";
+        String urlChicago = "https://upload.wikimedia.org/wikipedia/commons/2/26/Chicago_Theatre_blend.jpg";
+        String urlVegas = "https://upload.wikimedia.org/wikipedia/commons/2/2b/Las_Vegas%2C_Planet_Hollywood.jpg";
+
+
         // Dummy Data
-        TestTrip trip1 = new TestTrip("Los Angeles (LAX)", "LAX", "33.941446", "-118.408702");
-        TestTrip trip2 = new TestTrip("Washington D.C. (DCA)", "DCA", "38.851125", "-77.040350");
-        TestTrip trip3 = new TestTrip("New York City (JFK)", "JFK", "40.641189", "-73.778214");
-        TestTrip trip4 = new TestTrip("Hawaii (HNL)", "HNL", "21.324224", "-157.925262");
-        TestTrip trip5 = new TestTrip("Miami (MIA)", "MIA", "25.795884", "-80.287346");
-        TestTrip trip6 = new TestTrip("Seatle (SEA)", "SEA", "47.450134", "-122.309031");
-        TestTrip trip7 = new TestTrip("Chicago (ORD)", "ORD", "41.974027", "-87.907579");
-        TestTrip trip8 = new TestTrip("Las Vegas (LAS)", "LAS", "36.083974", "-115.154082");
+        TestTrip trip1 = new TestTrip("Los Angeles (LAX)", "LAX", "33.941446", "-118.408702", urlLA);
+        TestTrip trip2 = new TestTrip("Washington D.C. (DCA)", "DCA", "38.851125", "-77.040350", urlDC);
+        TestTrip trip3 = new TestTrip("New York City (JFK)", "JFK", "40.641189", "-73.778214", urlNYC);
+        TestTrip trip4 = new TestTrip("Hawaii (HNL)", "HNL", "21.324224", "-157.925262", urlHawaii);
+        TestTrip trip5 = new TestTrip("Miami (MIA)", "MIA", "25.795884", "-80.287346", urlMiami);
+        TestTrip trip6 = new TestTrip("Seatle (SEA)", "SEA", "47.450134", "-122.309031", urlSeattle);
+        TestTrip trip7 = new TestTrip("Chicago (ORD)", "ORD", "41.974027", "-87.907579", urlChicago);
+        TestTrip trip8 = new TestTrip("Las Vegas (LAS)", "LAS", "36.083974", "-115.154082", urlVegas);
 
         tripList.add(trip1);
         tripList.add(trip2);
@@ -229,6 +244,7 @@ public class MainFragment extends Fragment implements
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
+
 
         int color = Color.parseColor("#68EFAD");
         mCalendarImageView.setImageResource(R.drawable.calendar);

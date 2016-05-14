@@ -47,6 +47,12 @@
         android:orientation="horizontal">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="15dp"
+            android:text="Terminal "/>
+
+        <TextView
             android:id="@+id/input_tab_flight_listView_originTerminal_textView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

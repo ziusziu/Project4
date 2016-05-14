@@ -153,16 +153,22 @@ public class InputFragment extends Fragment{
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
-        String distance = "5";
-        ApiCaller.getAirportsApi(bus,
-                                googlePlacesApiKey,
-                                mLatitude,
-                                mLongitude,
-                                distance,
-                                flightStatsApiKey,
-                                flightStatsAppId,
-                                startDate,
-                                mDestinationAirportCode);
+        ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
+
+
+//        String distance = "5";
+//        ApiCaller.getAirportsApi(bus,
+//                                googlePlacesApiKey,
+//                                mLatitude,
+//                                mLongitude,
+//                                distance,
+//                                flightStatsApiKey,
+//                                flightStatsAppId,
+//                                startDate,
+//                                mDestinationAirportCode);
+
+
+
 
         //makeApiCall();
 
