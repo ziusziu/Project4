@@ -153,7 +153,7 @@ public class InputFragment extends Fragment{
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
-        ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
+    //    ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
 
 
 //        String distance = "5";
@@ -172,11 +172,11 @@ public class InputFragment extends Fragment{
 
         //makeApiCall();
 
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+   //     forecastApiKey = getResources().getString(R.string.forecast_api_key);
+   //     ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
 
-        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiCaller.getHotWireApi(bus, hotwireApiKey);
+  //      String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+  //      ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
         googleMap = mMapView.getMap();
 
