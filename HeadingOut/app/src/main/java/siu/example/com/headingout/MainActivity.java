@@ -20,7 +20,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import siu.example.com.headingout.detailfragment.DetailFragment;
 import siu.example.com.headingout.inputfragment.InputFragment;
 import siu.example.com.headingout.mainfragment.MainFragment;
 import siu.example.com.headingout.util.FragmentUtil;

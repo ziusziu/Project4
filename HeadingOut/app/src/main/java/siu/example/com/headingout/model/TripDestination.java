@@ -3,7 +3,7 @@ package siu.example.com.headingout.model;
 /**
  * Created by samsiu on 4/29/16.
  */
-public class TestTrip {
+public class TripDestination {
     String location;
     String latitude;
     String longitude;
@@ -11,7 +11,7 @@ public class TestTrip {
     String url;
 
 
-    public TestTrip(String location, String airportCode, String latitude, String longitude, String url) {
+    public TripDestination(String location, String airportCode, String latitude, String longitude, String url) {
         this.location = location;
         this.airportCode = airportCode;
         this.latitude = latitude;

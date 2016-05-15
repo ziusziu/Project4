@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.model.TestTrip;
+import siu.example.com.headingout.model.TripDestination;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -23,12 +23,12 @@ import siu.example.com.headingout.model.TestTrip;
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
     private static final String TAG = MainTripRVAdapter.class.getSimpleName();
-    private final List<TestTrip> tripList;
+    private final List<TripDestination> tripList;
     private final OnMainCardViewClickListener listener;
-    private Context mContext;
+    private static Context mContext;
 
     public interface OnMainCardViewClickListener{
-        void onMainCardViewClick(TestTrip testTrip);
+        void onMainCardViewClick(TripDestination tripDestination);
     }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
@@ -44,7 +44,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         }
     }
 
-    public MainTripRVAdapter(List<TestTrip> tripList, OnMainCardViewClickListener listener){
+    public MainTripRVAdapter(List<TripDestination> tripList, OnMainCardViewClickListener listener){
         this.tripList = tripList;
         this.listener = listener;
     }
@@ -69,18 +69,14 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
 
        Picasso.with(mContext).load(tripList.get(position).getUrl()).placeholder(R.mipmap.ic_headingout).resize(300,200).centerCrop().into(holder.tripOriginImageView);
 
-
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
                 listener.onMainCardViewClick(tripList.get(position));
 
-
-
             }
         });
-
     }
 
     @Override

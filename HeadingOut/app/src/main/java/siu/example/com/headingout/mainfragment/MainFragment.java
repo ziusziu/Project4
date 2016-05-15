@@ -14,50 +14,32 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.PendingResult;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.PlaceBuffer;
-import com.google.android.gms.location.places.Places;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import siu.example.com.headingout.PlaceArrayAdapter;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.DateRangePickerFragment;
 import siu.example.com.headingout.inputfragment.InputFragment;
-import siu.example.com.headingout.model.TestTrip;
+import siu.example.com.headingout.model.TripDestination;
 import siu.example.com.headingout.util.FragmentUtil;
+import siu.example.com.headingout.util.Utilities;
 
 /**
  * Created by samsiu on 5/3/16.
  */
 public class MainFragment extends Fragment implements
-        GoogleApiClient.OnConnectionFailedListener,
-        GoogleApiClient.ConnectionCallbacks,
         DateRangePickerFragment.OnDateRangeSelectedListener,
         MainTripRVAdapter.OnMainCardViewClickListener{
 
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
-    public static final String DESTINATIONNAME = "originName";
-    public static final String DESTINATIONADDRESS = "originAddress";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -69,24 +51,12 @@ public class MainFragment extends Fragment implements
 
 
     private static String TAG = MainFragment.class.getSimpleName();
-    private static final int GOOGLE_API_CLIENT_ID = 0;
     private static Button mAddButton;
     private static RecyclerView mTripRecyclerView;
     private static ImageView mCalendarImageView;
-    private static ImageView mCityImageView;
 
     private static AutoCompleteTextView mAutoCompleteTextView;
 
-    private static final String PLACES_API_BASE = "https://maps.googleapis.com/maps/api/place";
-    private static final String TYPE_AUTOCOMPLETE = "/autocomplete";
-    private static final String OUT_JSON = "/json";
-
-
-    private GoogleApiClient mGoogleApiClient;
-    private PlaceArrayAdapter mPlaceArrayAdapter;
-
-    private static String mDestinationName;
-    private static String mDestinationAddress;
     private static String mDestinationAirportCode;
     private static double mLatitude;
     private static double mLongitude;
@@ -105,17 +75,13 @@ public class MainFragment extends Fragment implements
         initializeViews(view);
         setAddButtonListener();
         recyclerViewSetup();
-        //initAutoCompleteFragment();
 
         setDefaultDates();
         setCalendarClickListener();
 
-        getGooglePlacesApi();
 
         return view;
     }
-
-
 
     @Override
     public void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear) {
@@ -128,67 +94,13 @@ public class MainFragment extends Fragment implements
         mEndYear = String.valueOf(endYear);
     }
 
-
-
-    private void getGooglePlacesApi(){
-        String apiKey = getResources().getString(R.string.google_places_key);
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .addApi(Places.GEO_DATA_API)
-                .enableAutoManage(getActivity(), GOOGLE_API_CLIENT_ID, this)
-                .addConnectionCallbacks(this)
-                .build();
-        mAutoCompleteTextView.setThreshold(1);
-        mAutoCompleteTextView.setOnItemClickListener(mAutocompleteClickListener);
-
-        LatLngBounds boundsMountView = new LatLngBounds(
-                new LatLng(37.398160, -122.180831), new LatLng(37.430610, -121.972090));
-
-        mPlaceArrayAdapter = new PlaceArrayAdapter(getActivity(), android.R.layout.simple_list_item_1,
-                boundsMountView, null);
-        mAutoCompleteTextView.setAdapter(mPlaceArrayAdapter);
-
-    }
-
     private void recyclerViewSetup(){
-        List<TestTrip> tripList = new ArrayList<>();
-
-
-
-
-        String urlLA = "https://upload.wikimedia.org/wikipedia/commons/5/57/LA_Skyline_Mountains2.jpg";
-        String urlDC = "https://upload.wikimedia.org/wikipedia/commons/a/af/WhiteHouseSouthFacade.JPG";
-        String urlNYC = "https://upload.wikimedia.org/wikipedia/commons/d/d3/Statue_of_Liberty%2C_NY.jpg";
-        String urlHawaii = "https://upload.wikimedia.org/wikipedia/commons/8/8d/Na_Pali_Coast%2C_Kauai%2C_Hawaii.jpg";
-        String urlMiami = "https://upload.wikimedia.org/wikipedia/commons/a/a5/Mouth_of_Miami_River_20100211.jpg";
-        String urlSeattle = "https://upload.wikimedia.org/wikipedia/commons/3/3a/Seattle_Skyline-.jpg";
-        String urlChicago = "https://upload.wikimedia.org/wikipedia/commons/2/26/Chicago_Theatre_blend.jpg";
-        String urlVegas = "https://upload.wikimedia.org/wikipedia/commons/2/2b/Las_Vegas%2C_Planet_Hollywood.jpg";
-
-
-        // Dummy Data
-        TestTrip trip1 = new TestTrip("Los Angeles (LAX)", "LAX", "33.941446", "-118.408702", urlLA);
-        TestTrip trip2 = new TestTrip("Washington D.C. (DCA)", "DCA", "38.851125", "-77.040350", urlDC);
-        TestTrip trip3 = new TestTrip("New York City (JFK)", "JFK", "40.641189", "-73.778214", urlNYC);
-        TestTrip trip4 = new TestTrip("Hawaii (HNL)", "HNL", "21.324224", "-157.925262", urlHawaii);
-        TestTrip trip5 = new TestTrip("Miami (MIA)", "MIA", "25.795884", "-80.287346", urlMiami);
-        TestTrip trip6 = new TestTrip("Seatle (SEA)", "SEA", "47.450134", "-122.309031", urlSeattle);
-        TestTrip trip7 = new TestTrip("Chicago (ORD)", "ORD", "41.974027", "-87.907579", urlChicago);
-        TestTrip trip8 = new TestTrip("Las Vegas (LAS)", "LAS", "36.083974", "-115.154082", urlVegas);
-
-        tripList.add(trip1);
-        tripList.add(trip2);
-        tripList.add(trip3);
-        tripList.add(trip4);
-        tripList.add(trip5);
-        tripList.add(trip6);
-        tripList.add(trip7);
-        tripList.add(trip8);
+        List<TripDestination> tripList = Utilities.initTripDestinations();
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         mTripRecyclerView.setLayoutManager(gridLayoutManager);
         mTripRecyclerView.setHasFixedSize(true);
+
         MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList, this);
         mTripRecyclerView.setAdapter(recyclerViewAdapter);
     }
@@ -197,28 +109,9 @@ public class MainFragment extends Fragment implements
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                saveSharedPreferences();
 
-                SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPref.edit();
-                editor.putString(DESTINATIONNAME, mDestinationName);
-                editor.putString(DESTINATIONADDRESS, mDestinationAddress);
-                editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
-                editor.putString(LATITUDE, Double.toString(mLatitude));
-                editor.putString(LONGITUDE, Double.toString(mLongitude));
-                editor.putString(STARTDAY, mStartDay);
-                editor.putString(STARTMONTH, mStartMonth);
-                editor.putString(STARTYEAR, mStartYear);
-                editor.putString(ENDDAY, mEndDay);
-                editor.putString(ENDMONTH, mEndMonth);
-                editor.putString(ENDYEAR, mEndYear);
-                editor.apply();
-
-                String location = mAutoCompleteTextView.getText().toString();
-                if(location.isEmpty()){
-                    mAutoCompleteTextView.setError("Please input a location");
-                    return;
-                }
-
+                checkAutoCompleteTextInput(mAutoCompleteTextView);
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();
@@ -226,6 +119,30 @@ public class MainFragment extends Fragment implements
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    private void saveSharedPreferences(){
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
+        editor.putString(LATITUDE, Double.toString(mLatitude));
+        editor.putString(LONGITUDE, Double.toString(mLongitude));
+        editor.putString(STARTDAY, mStartDay);
+        editor.putString(STARTMONTH, mStartMonth);
+        editor.putString(STARTYEAR, mStartYear);
+        editor.putString(ENDDAY, mEndDay);
+        editor.putString(ENDMONTH, mEndMonth);
+        editor.putString(ENDYEAR, mEndYear);
+        editor.apply();
+    }
+
+
+    private void checkAutoCompleteTextInput(AutoCompleteTextView textView){
+        String location = textView.getText().toString();
+        if (location.isEmpty()) {
+            textView.setError("Please input a location");
+            return;
+        }
     }
 
     private void setCalendarClickListener(){
@@ -253,9 +170,10 @@ public class MainFragment extends Fragment implements
 
     }
 
+    /**
+     * Set Defaul Calendar dates to today and tomorrow
+     */
     private void setDefaultDates(){
-
-        // Set Default Calendar Dates to Today and Tomorrow
         Calendar currentDate = Calendar.getInstance();
         currentDate.setTime(new Date());
         SimpleDateFormat dayFormatter = new SimpleDateFormat("dd");
@@ -278,7 +196,6 @@ public class MainFragment extends Fragment implements
         Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndDay);
         Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
         Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndYear);
-
     }
 
     @Override
@@ -288,91 +205,11 @@ public class MainFragment extends Fragment implements
         fragInfo.setFragmentToolBar(MainFragment.class.getSimpleName());
     }
 
-    private AdapterView.OnItemClickListener mAutocompleteClickListener
-            = new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-            //TODO Add comments
-            final PlaceArrayAdapter.PlaceAutocomplete item = mPlaceArrayAdapter.getItem(position);
-            final String placeId = String.valueOf(item.placeId);
-            Log.i(TAG, "Selected: " + item.description);
-
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi
-                    .getPlaceById(mGoogleApiClient, placeId);
-
-            placeResult.setResultCallback(mUpdatePlaceDetailsCallback);
-            Log.i(TAG, "Fetching details for ID: " + item.placeId);
-        }
-    };
-
-    private ResultCallback<PlaceBuffer> mUpdatePlaceDetailsCallback
-            = new ResultCallback<PlaceBuffer>() {
-        @Override
-        public void onResult(PlaceBuffer places) {
-            if (!places.getStatus().isSuccess()) {
-                Log.e(TAG, "Place query did not complete. Error: " +
-                        places.getStatus().toString());
-                return;
-            }
-            // Selecting the first object buffer.
-            final Place place = places.get(0);
-            CharSequence attributions = places.getAttributions();
-            mLatitude = place.getLatLng().latitude;
-            mLongitude = place.getLatLng().longitude;
-            mDestinationName = String.valueOf(place.getName());
-            mDestinationAddress = String.valueOf(place.getAddress());
-
-            Log.d(TAG, "onResult: ----->>>> MainFragment AutoFillCallBack <<<<<--------");
-            Log.d(TAG, "onResult: Latitude "+ mLatitude);
-            Log.d(TAG, "onResult: Longitude "+ mLongitude);
-            Log.d(TAG, "onResult: PlaceName " + place.getName());
-            Log.d(TAG, "onResult: PlaceAddress " + place.getAddress());
-            Log.d(TAG, "onResult: PlaceLocale  " + place.getLocale());
-            Log.d(TAG, "onResult: ----->>>> MainFragment AutoFillCallBack <<<<<--------");
-        }
-    };
-
-
     @Override
-    public void onConnected(Bundle bundle) {
-        mPlaceArrayAdapter.setGoogleApiClient(mGoogleApiClient);
-        Log.i(TAG, "Google Places API connected.");
-
-    }
-
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.e(TAG, "Google Places API connection failed with error code: "
-                + connectionResult.getErrorCode());
-
-        Toast.makeText(getActivity(),
-                "Google Places API connection failed with error code:" +
-                        connectionResult.getErrorCode(),
-                Toast.LENGTH_LONG).show();
-    }
-
-    @Override
-    public void onConnectionSuspended(int i) {
-        mPlaceArrayAdapter.setGoogleApiClient(null);
-        Log.e(TAG, "Google Places API connection suspended.");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        stopAutoManage();
-    }
-
-    private void stopAutoManage() {
-        if (mGoogleApiClient != null)
-            mGoogleApiClient.stopAutoManage(getActivity());
-    }
-
-    @Override
-    public void onMainCardViewClick(TestTrip testTrip) {
-        mDestinationAirportCode = testTrip.getAirportCode();
+    public void onMainCardViewClick(TripDestination tripDestination) {
+        mDestinationAirportCode = tripDestination.getAirportCode();
         mAutoCompleteTextView.setText(mDestinationAirportCode);
-        mLatitude = Double.parseDouble(testTrip.getLatitude());
-        mLongitude = Double.parseDouble(testTrip.getLongitude());
+        mLatitude = Double.parseDouble(tripDestination.getLatitude());
+        mLongitude = Double.parseDouble(tripDestination.getLongitude());
     }
 }

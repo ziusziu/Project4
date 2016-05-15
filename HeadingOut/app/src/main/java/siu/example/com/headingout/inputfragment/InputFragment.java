@@ -12,7 +12,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -59,8 +58,6 @@ public class InputFragment extends Fragment{
     private FloatingActionButton mInputContinueFabButton;
     private static EditText mFlightEditText;
     private static String forecastApiKey;
-    private static String flightStatsApiKey;
-    private static String flightStatsAppId;
     private static String mDestinationAirportCode;
 
 
@@ -104,85 +101,26 @@ public class InputFragment extends Fragment{
             mViewPager.setCurrentItem(tabPagePosition);
         }
         View view = inflater.inflate(R.layout.input_content, container, false);
+
         initializeViews(view);
         initViewPager(view);
         initFab();
-       // initGoogleMaps();
+
+        getSharedPreferences();
+        createBus();
+
+        initGoogleMaps(view, savedInstanceState);
+        googleMap = mMapView.getMap();
         onFabContinueButtonClick();
 
-        mMapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
-        mMapView.onCreate(savedInstanceState);
-
-        mMapView.onResume();// needed to get the map to display immediately
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        mStartDay = sharedPref.getString(STARTDAY, "Default");
-        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
-        mStartYear = sharedPref.getString(STARTYEAR, "Default");
-        mEndDay = sharedPref.getString(ENDDAY, "Default");
-        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
-        mEndYear = sharedPref.getString(ENDYEAR, "Default");
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartDay);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndDay);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
-
-
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        bus = headingOutApplication.provideBus();
-        bus.register(this);
-
-        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-
-        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
-
-    //    ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
-
-
-//        String distance = "5";
-//        ApiCaller.getAirportsApi(bus,
-//                                googlePlacesApiKey,
-//                                mLatitude,
-//                                mLongitude,
-//                                distance,
-//                                flightStatsApiKey,
-//                                flightStatsAppId,
-//                                startDate,
-//                                mDestinationAirportCode);
-
-
-
-
-        //makeApiCall();
-
-   //     forecastApiKey = getResources().getString(R.string.forecast_api_key);
-   //     ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
-
-  //      String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-  //      ApiCaller.getHotWireApi(bus, hotwireApiKey);
-
-        googleMap = mMapView.getMap();
-
+      //  makeApiCall();
 
         return view;
 
+//        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+//        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+//        String distance = "5";
+//        ApiCaller.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
     }
 
     @Subscribe
@@ -196,7 +134,7 @@ public class InputFragment extends Fragment{
         }
 
 
-
+        // Gets the Lat Longs from API Data for plots
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
         for(HWNeighborhoods neighborhoods : hwNeighborHoods){
             Log.d(TAG, "onHotelData: " + neighborhoods.getName());
@@ -209,11 +147,9 @@ public class InputFragment extends Fragment{
             int i = 0;
             String hwRefNum = hotWireHotels.getResult().get(i).getHWRefNumber();
             i++;
+
             plotGoogleMaps(latitude, longitude, hwRefNum);
         }
-
-
-
     }
 
     @Produce
@@ -243,21 +179,18 @@ public class InputFragment extends Fragment{
 
     private void makeApiCall(){
 
-        Log.d(TAG, "onCreateView: INPUTFRAGMENT ====>>> makeApiCall");
-
-        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        //ApiCaller.getAirportsApi(flightStatsApiKey, flightStatsAppId);
-
-
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        //ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude, mInputTabsFragmentPagerAdapter);
+        Log.d(TAG, "onCreateView: ====>>> InputFragment - makeApiCall");
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-       // ApiCaller.getQPExpressApi(googlePlacesApiKey);
+        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
+
+        ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        // ApiCaller.getHotWireApi(bus, hotwireApiKey, mInputTabsFragmentPagerAdapter);
+        ApiCaller.getHotWireApi(bus, hotwireApiKey);
 
     }
 
@@ -281,6 +214,48 @@ public class InputFragment extends Fragment{
         //mTabLayout.setScrollbarFadingEnabled(true);
 
         // adapter.setMyValue()
+    }
+
+    private void getSharedPreferences(){
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        mStartDay = sharedPref.getString(STARTDAY, "Default");
+        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
+        mStartYear = sharedPref.getString(STARTYEAR, "Default");
+        mEndDay = sharedPref.getString(ENDDAY, "Default");
+        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
+        mEndYear = sharedPref.getString(ENDYEAR, "Default");
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartDay);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndDay);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
+
+    }
+
+    private void createBus(){
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        bus = headingOutApplication.provideBus();
+        bus.register(this);
+    }
+
+    private void initGoogleMaps(View view, Bundle savedInstanceState){
+        mMapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
+        mMapView.onCreate(savedInstanceState);
+        mMapView.onResume();// needed to get the map to display immediately
+
+        try {
+            MapsInitializer.initialize(getActivity().getApplicationContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -322,9 +297,6 @@ public class InputFragment extends Fragment{
         });
     }
 
-
-
-
     @Override
     public void onResume() {
         super.onResume();
@@ -356,7 +328,6 @@ public class InputFragment extends Fragment{
         Log.d(TAG, "onSizeData: === Posting Data from adapter" + size);
     }
 
-
     private void plotGoogleMaps(double latitude, double longitude, String HWRefNum){
 
         // create marker
@@ -366,7 +337,6 @@ public class InputFragment extends Fragment{
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-
 
         googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder()
