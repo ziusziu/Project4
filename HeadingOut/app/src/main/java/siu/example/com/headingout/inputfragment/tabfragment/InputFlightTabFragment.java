@@ -27,7 +27,7 @@ import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.inputfragment.ApiCaller;
+import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
 import siu.example.com.headingout.model.flights.Flights;
@@ -168,7 +168,7 @@ public class InputFlightTabFragment extends Fragment {
                 String date = "2016-07-10";
 
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-                ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
+                ApiManager.getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
 
                 recyclerViewSetup();
                 mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);

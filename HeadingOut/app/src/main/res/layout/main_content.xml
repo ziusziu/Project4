@@ -37,9 +37,40 @@
 
     </LinearLayout>
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Origin"
+        android:textSize="15dp"/>
+
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_recyclerView"
+        android:id="@+id/main_origin_recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Destination"
+        android:textSize="15dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_destination_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Saved Trips"
+        android:textSize="15dp"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/main_savedTrips_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

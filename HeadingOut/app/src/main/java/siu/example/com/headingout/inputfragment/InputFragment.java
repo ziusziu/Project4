@@ -184,13 +184,13 @@ public class InputFragment extends Fragment{
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
-        ApiCaller.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
+        ApiManager.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiCaller.getHotWireApi(bus, hotwireApiKey);
+        ApiManager.getHotWireApi(bus, hotwireApiKey);
 
     }
 
@@ -302,7 +302,6 @@ public class InputFragment extends Fragment{
         super.onResume();
         FragmentUtil fragInfo = (FragmentUtil)getActivity();
         fragInfo.setFragmentToolBar(InputFragment.class.getSimpleName());
-
 
         Log.d(TAG, "onResume: ===>>>>  InputFragment On RESUME");
 

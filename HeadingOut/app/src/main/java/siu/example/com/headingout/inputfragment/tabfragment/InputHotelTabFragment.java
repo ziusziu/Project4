@@ -15,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -23,7 +22,7 @@ import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.inputfragment.ApiCaller;
+import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import siu.example.com.headingout.model.TestHotels;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
@@ -129,7 +128,7 @@ public class InputHotelTabFragment extends Fragment {
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
-                ApiCaller.getHotWireApi(bus, hotwireApiKey);
+                ApiManager.getHotWireApi(bus, hotwireApiKey);
 
                 //recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);

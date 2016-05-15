@@ -40,7 +40,7 @@ public class Utilities {
         TripDestination trip3 = new TripDestination("New York City (JFK)", "JFK", "40.641189", "-73.778214", urlNYC);
         TripDestination trip4 = new TripDestination("Hawaii (HNL)", "HNL", "21.324224", "-157.925262", urlHawaii);
         TripDestination trip5 = new TripDestination("Miami (MIA)", "MIA", "25.795884", "-80.287346", urlMiami);
-        TripDestination trip6 = new TripDestination("Seatle (SEA)", "SEA", "47.450134", "-122.309031", urlSeattle);
+        TripDestination trip6 = new TripDestination("Seattle (SEA)", "SEA", "47.450134", "-122.309031", urlSeattle);
         TripDestination trip7 = new TripDestination("Chicago (ORD)", "ORD", "41.974027", "-87.907579", urlChicago);
         TripDestination trip8 = new TripDestination("Las Vegas (LAS)", "LAS", "36.083974", "-115.154082", urlVegas);
 

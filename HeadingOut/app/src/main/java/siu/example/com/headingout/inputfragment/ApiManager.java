@@ -35,9 +35,9 @@ import siu.example.com.headingout.model.hotels.HotWireHotels;
 /**
  * Created by samsiu on 5/9/16.
  */
-public class ApiCaller {
+public class ApiManager {
 
-    private static final String TAG = ApiCaller.class.getSimpleName();
+    private static final String TAG = ApiManager.class.getSimpleName();
 
 
     private static String mLatitude;
@@ -56,10 +56,11 @@ public class ApiCaller {
     static TestHotels testHotels;
 
 
+    // TODO change the input, Add StartDate, EndDate, State Code
     public static void getHotWireApi(final Bus bus, String hotwireApiKey){
 
         String responseFormat = "json";
-        String destination = "San%20Francisco,%20Ca.";
+        String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
         String rooms = "1";
         String adults = "2";
         String children = "0";

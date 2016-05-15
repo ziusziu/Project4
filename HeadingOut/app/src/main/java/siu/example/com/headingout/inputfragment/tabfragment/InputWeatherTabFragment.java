@@ -8,29 +8,19 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.inputfragment.ApiCaller;
-import siu.example.com.headingout.inputfragment.InputFragment;
-import siu.example.com.headingout.inputfragment.InputTabsFragmentPagerAdapter;
-import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
+import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
-import siu.example.com.headingout.model.FlightTest;
 import siu.example.com.headingout.model.forecast.Weather;
 
 /**
@@ -132,7 +122,7 @@ public class InputWeatherTabFragment extends Fragment {
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
                 Bus bus = createBus();
 
-                ApiCaller.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+                ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
                 //recyclerViewSetup();
                 mWeatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
                 mWeatherSwipeRefreshLayout.setRefreshing(false);

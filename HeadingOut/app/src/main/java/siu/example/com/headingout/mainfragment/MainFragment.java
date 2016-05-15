@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -52,7 +52,8 @@ public class MainFragment extends Fragment implements
 
     private static String TAG = MainFragment.class.getSimpleName();
     private static Button mAddButton;
-    private static RecyclerView mTripRecyclerView;
+    private static RecyclerView mTripDestinationRecyclerView;
+    private static RecyclerView mTripOriginRecyclerView;
     private static ImageView mCalendarImageView;
 
     private static AutoCompleteTextView mAutoCompleteTextView;
@@ -79,7 +80,6 @@ public class MainFragment extends Fragment implements
         setDefaultDates();
         setCalendarClickListener();
 
-
         return view;
     }
 
@@ -97,12 +97,19 @@ public class MainFragment extends Fragment implements
     private void recyclerViewSetup(){
         List<TripDestination> tripList = Utilities.initTripDestinations();
 
+        LinearLayoutManager destinationLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager originLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mTripRecyclerView.setLayoutManager(gridLayoutManager);
-        mTripRecyclerView.setHasFixedSize(true);
+        mTripDestinationRecyclerView.setLayoutManager(destinationLinearLayoutManager);
+        mTripDestinationRecyclerView.setHasFixedSize(true);
 
-        MainTripRVAdapter recyclerViewAdapter = new MainTripRVAdapter(tripList, this);
-        mTripRecyclerView.setAdapter(recyclerViewAdapter);
+        MainTripRVAdapter recyclerDestinationViewAdapter = new MainTripRVAdapter(tripList, this);
+        mTripDestinationRecyclerView.setAdapter(recyclerDestinationViewAdapter);
+
+        MainTripRVAdapter recyclerOriginViewAdapter = new MainTripRVAdapter(tripList, this);
+        mTripOriginRecyclerView.setLayoutManager(originLinearLayoutManager);
+        mTripOriginRecyclerView.setAdapter(recyclerOriginViewAdapter);
+
     }
 
     private void setAddButtonListener(){
@@ -159,7 +166,8 @@ public class MainFragment extends Fragment implements
     private void initializeViews(View view){
         mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
-        mTripRecyclerView = (RecyclerView)view.findViewById(R.id.main_recyclerView);
+        mTripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
+        mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
 
 
