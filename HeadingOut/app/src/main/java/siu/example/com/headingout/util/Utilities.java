@@ -18,10 +18,20 @@ public class Utilities {
     public static final String INTENT_FLIGHT_KEY = "location_terms";
     public static final String SHARED_PREFERENCES_FLIGHTTERM = "shared_pref_location_term";
 
+    /**
+     * Hide the keyboard on activity load
+     *
+     * @param activity
+     */
     public static void hideKeyboard(Activity activity){
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
 
+    /**
+     * Creates a list of Trips with default data for popular locations
+     *
+     * @return List<TripDestination>
+     */
     public static List<TripDestination> initTripDestinations(){
         List<TripDestination> tripList = new ArrayList<>();
 

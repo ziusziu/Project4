@@ -8,6 +8,9 @@ public class HeadingOutApplication extends Application {
 
     Bus bus;
 
+    /**
+     * Define a bus of Otto events
+     */
     public void onCreate() {
         super.onCreate();
 
