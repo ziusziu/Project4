@@ -19,9 +19,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +34,6 @@ import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.FlightTest;
 import siu.example.com.headingout.model.flights.Flights;
-import siu.example.com.headingout.model.flights.Trip;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -94,9 +96,7 @@ public class InputFlightTabFragment extends Fragment {
 
         mainOrigin.setText("SFO");
         mainDestination.setText(mDestinationAirportCode);
-
-
-
+        
         mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
 
 
@@ -116,8 +116,13 @@ public class InputFlightTabFragment extends Fragment {
         bus.register(this);
 
 
+        setRecyclerViewFlightsDummyData();
+
+
         return view;
     }
+
+
 
     private void recyclerViewSetup(){
         List<FlightTest> flightList = new ArrayList<>();
@@ -159,7 +164,7 @@ public class InputFlightTabFragment extends Fragment {
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
 
-                HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+                HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
                 bus.register(this);
 
@@ -190,6 +195,38 @@ public class InputFlightTabFragment extends Fragment {
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
         mFlightRecyclerView.setAdapter(recyclerViewAdapter);
     }
+
+
+    private void setRecyclerViewFlightsDummyData(){
+        Flights flights = returnFlightsDummyData();
+        recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
+        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+    }
+
+    private Flights returnFlightsDummyData(){
+        Gson gson = new Gson();
+        Flights sampleFlights = gson.fromJson(loadJSONFromAsset("QPXExpressJSON.json"), Flights.class);
+        Log.d(TAG, "onCreateView: ===>>> TEST DATA " + sampleFlights.getTrips().getTripOption().size());
+        return sampleFlights;
+    }
+
+    public String loadJSONFromAsset(String file) {
+        String json = null;
+        try {
+            InputStream is = getActivity().getAssets().open(file);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
+
+
 
 }
 
