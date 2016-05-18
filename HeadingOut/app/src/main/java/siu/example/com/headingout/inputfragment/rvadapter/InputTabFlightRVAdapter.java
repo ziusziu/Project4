@@ -78,6 +78,8 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         Context context = holder.flightCardsLinearLayout.getContext();
 
+        holder.flightCardsLinearLayout.removeAllViews();
+
         for(Segment segment: listSegment){
             LinearLayout segmentLinearLayout = new LinearLayout(context);
             segmentLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
