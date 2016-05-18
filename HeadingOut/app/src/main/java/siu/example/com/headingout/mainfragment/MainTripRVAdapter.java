@@ -27,6 +27,9 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     private final OnMainCardViewClickListener listener;
     private static Context mContext;
 
+    /**
+     * Create listener that returns TripDestination object on click
+     */
     public interface OnMainCardViewClickListener{
         void onMainCardViewClick(TripDestination tripDestination);
     }
@@ -62,19 +65,30 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         return tripViewHolder;
     }
 
+    /**
+     * Load city images and set clickListeners to all CardViews
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(TripViewHolder holder, final int position) {
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
         holder.tripOriginImageView.setVisibility(View.VISIBLE);
 
-       Picasso.with(mContext).load(tripList.get(position).getUrl()).placeholder(R.mipmap.ic_headingout).resize(300,200).centerCrop().into(holder.tripOriginImageView);
+        Picasso.with(mContext)
+                .load(tripList.get(position).getUrl())  // Load image from URL
+                .placeholder(R.mipmap.ic_headingout)    // PlaceHolder Image
+                .resize(300,200)                        // Resize Image
+                .centerCrop()
+                .into(holder.tripOriginImageView);      // Load image to view
 
+        //When cardView is clicked send use interface to send TripDestination object to MainFragment
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
+                //Gets the TripDestination at position and sends to MainFragment
                 listener.onMainCardViewClick(tripList.get(position));
-
             }
         });
     }

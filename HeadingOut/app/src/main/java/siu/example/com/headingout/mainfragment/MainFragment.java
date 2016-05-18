@@ -38,6 +38,9 @@ public class MainFragment extends Fragment implements
         DateRangePickerFragment.OnDateRangeSelectedListener,
         MainTripRVAdapter.OnMainCardViewClickListener{
 
+    private static String TAG = MainFragment.class.getSimpleName();
+
+    //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
     public static final String LATITUDE = "latitude";
@@ -48,16 +51,9 @@ public class MainFragment extends Fragment implements
     public static final String ENDDAY = "endDay";
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
+    //endregion
 
-
-    private static String TAG = MainFragment.class.getSimpleName();
-    private static Button mAddButton;
-    private static RecyclerView mTripDestinationRecyclerView;
-    private static RecyclerView mTripOriginRecyclerView;
-    private static ImageView mCalendarImageView;
-
-    private static AutoCompleteTextView mAutoCompleteTextView;
-
+    //region SharedPreferences Objects
     private static String mDestinationAirportCode;
     private static double mLatitude;
     private static double mLongitude;
@@ -67,6 +63,15 @@ public class MainFragment extends Fragment implements
     private static String mEndDay;
     private static String mEndMonth;
     private static String mEndYear;
+    //endregion
+
+    //region ViewDeclarations
+    private static Button mAddButton;
+    private static RecyclerView mTripDestinationRecyclerView;
+    private static RecyclerView mTripOriginRecyclerView;
+    private static ImageView mCalendarImageView;
+    private static AutoCompleteTextView mAutoCompleteTextView;
+    //endregion
 
     @Nullable
     @Override
@@ -83,9 +88,20 @@ public class MainFragment extends Fragment implements
         return view;
     }
 
+    /**
+     * Returns selected date from DateRangePickerFragment
+     * @param startDay
+     * @param startMonth
+     * @param startYear
+     * @param endDay
+     * @param endMonth
+     * @param endYear
+     */
     @Override
-    public void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear) {
-        Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear + " to : " + endDay + "-" + endMonth + "-" + endYear);
+    public void onDateRangeSelected(int startDay, int startMonth, int startYear,
+                                    int endDay, int endMonth, int endYear) {
+        Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear +
+                " to : " + endDay + "-" + endMonth + "-" + endYear);
         mStartDay = String.valueOf(startDay);
         mStartMonth = String.valueOf(startMonth);
         mStartYear = String.valueOf(startYear);
@@ -112,6 +128,9 @@ public class MainFragment extends Fragment implements
 
     }
 
+    /**
+     * Store sharedPreferences and switch out fragment when button is clicked
+     */
     private void setAddButtonListener(){
         mAddButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +147,9 @@ public class MainFragment extends Fragment implements
         });
     }
 
+    /**
+     * Store objects to shared preferences
+     */
     private void saveSharedPreferences(){
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
@@ -143,7 +165,10 @@ public class MainFragment extends Fragment implements
         editor.apply();
     }
 
-
+    /**
+     * Ensure there is a destination in textView
+     * @param textView
+     */
     private void checkAutoCompleteTextInput(AutoCompleteTextView textView){
         String location = textView.getText().toString();
         if (location.isEmpty()) {
@@ -152,6 +177,9 @@ public class MainFragment extends Fragment implements
         }
     }
 
+    /**
+     * Set listener to show dateRangePickerFragment
+     */
     private void setCalendarClickListener(){
         mCalendarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -163,6 +191,10 @@ public class MainFragment extends Fragment implements
 
     }
 
+    /**
+     * Initialize Views
+     * @param view
+     */
     private void initializeViews(View view){
         mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
@@ -170,7 +202,7 @@ public class MainFragment extends Fragment implements
         mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
         mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
 
-
+        // Change the color of Resources
         int color = Color.parseColor("#68EFAD");
         mCalendarImageView.setImageResource(R.drawable.calendar);
         mCalendarImageView.setColorFilter(color);
@@ -213,6 +245,10 @@ public class MainFragment extends Fragment implements
         fragInfo.setFragmentToolBar(MainFragment.class.getSimpleName());
     }
 
+    /**
+     * Load data from TripDestination object to EditText when city cardview is clicked
+     * @param tripDestination
+     */
     @Override
     public void onMainCardViewClick(TripDestination tripDestination) {
         mDestinationAirportCode = tripDestination.getAirportCode();

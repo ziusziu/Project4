@@ -45,7 +45,13 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
     }
 
 
-
+    /**
+     * Inflate Calendar Layout
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -85,6 +91,10 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
         this.onDateRangeSelectedListener = callback;
     }
 
+    /**
+     * Handle clicks inputs to view
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         dismiss();
@@ -92,6 +102,9 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
                 endDatePicker.getDayOfMonth(),endDatePicker.getMonth(),endDatePicker.getYear());
     }
 
+    /**
+     * Interface to pass dates out of fragment
+     */
     public interface OnDateRangeSelectedListener {
         void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear);
     }
