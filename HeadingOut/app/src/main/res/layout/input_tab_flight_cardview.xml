@@ -79,6 +79,17 @@
 
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/input_tab_flight_cards_linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+
+        </LinearLayout>
+
+
         <ListView
             android:id="@+id/input_tab_flight_segments_listView"
             android:layout_width="wrap_content"

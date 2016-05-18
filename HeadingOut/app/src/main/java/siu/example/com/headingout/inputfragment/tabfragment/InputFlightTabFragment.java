@@ -23,12 +23,17 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.flights.Flights;
+import siu.example.com.headingout.model.flights.Leg;
+import siu.example.com.headingout.model.flights.Segment;
+import siu.example.com.headingout.model.flights.Slice;
+import siu.example.com.headingout.model.flights.TripOption;
 
 /**
  * Created by samsiu on 4/29/16.
@@ -75,7 +80,7 @@ public class InputFlightTabFragment extends Fragment {
         recyclerViewSetup();
         swipeFlightRefreshListener();
 
-        registerOttoBus();
+    //    registerOttoBus();
 
         setRecyclerViewFlightsDummyData();
 
@@ -170,6 +175,23 @@ public class InputFlightTabFragment extends Fragment {
 
     private void setRecyclerViewFlightsDummyData(){
         Flights flights = returnFlightsDummyData();
+        Log.d(TAG, "onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
+
+        // Loggind data Object
+        List<TripOption> tripOption = flights.getTrips().getTripOption();
+        for(TripOption trip : tripOption){
+            Log.d(TAG, "setRecyclerViewFlightsDummyData: SALETOTAL ***** " + trip.getSaleTotal());
+            List<Slice> slice = trip.getSlice();
+            for(Slice slice1 : slice){
+                List<Segment> segments = slice1.getSegment();
+                for(Segment segment : segments){
+                    Log.d(TAG, "setRecyclerViewFlightsDummyData: CARRIER ***** " + segment.getFlight().getCarrier());
+                    Log.d(TAG, "setRecyclerViewFlightsDummyData: NUMBER***** " + segment.getFlight().getNumber());
+                }
+            }
+        }
+
+
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
         mFlightRecyclerView.setAdapter(recyclerViewAdapter);
     }
@@ -196,8 +218,5 @@ public class InputFlightTabFragment extends Fragment {
         }
         return json;
     }
-
-
-
 }
 
