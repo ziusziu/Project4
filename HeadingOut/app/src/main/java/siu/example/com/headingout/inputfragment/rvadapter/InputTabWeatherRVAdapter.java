@@ -37,12 +37,8 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView weatherNameTextView, weatherSummaryTextView, weatherSunriseTimeTextView, weatherSunsetTimeTextView,
-                weatherPrecipIntensityTextView, weatherPrecipProbabilityTextView,
-                weatherHumidityTextView, weatherWindSpeedTextView, weatherVisibilityTextView,
-                weatherDewPointTextView, weatherTemperatureMinTextView,
-                weatherTemperatureMinTimeTextView, weatherTemperatureMaxTextView,
-                weatherTemperatureMaxTimeTextView, weatherTimeTextView, weatherAvgTempTextView;
+        TextView weatherNameTextView, weatherSummaryTextView,
+                weatherTimeTextView, weatherAvgTempTextView;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
@@ -51,18 +47,6 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
             weatherAvgTempTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_avgTemp_TextView);
             weatherNameTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_textView);
             weatherSummaryTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_summary_textView);
-//            weatherSunriseTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_sunriseTime_textView);
-//            weatherSunsetTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_sunsetTime_textView);
-//            weatherPrecipIntensityTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_precipIntensity_textView);
-//            weatherPrecipProbabilityTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_precipProbability_textView);
-//            weatherHumidityTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_humidity_textView);
-//            weatherWindSpeedTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_windSpeed_textView);
-//            weatherVisibilityTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_visibility_textView);
-//            weatherDewPointTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_dewPoint_textView);
-//            weatherTemperatureMinTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_temperatureMin_TextView);
-//            weatherTemperatureMinTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_temperatureMinTime_textView);
-//            weatherTemperatureMaxTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_temperatureMax_textView);
-//            weatherTemperatureMaxTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_temperatureMaxTime_textView);
         }
     }
 
@@ -98,20 +82,6 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         holder.weatherAvgTempTextView.setText(String.format("%.0f" + (char) 0x00B0, weatherAvg));
         holder.weatherSummaryTextView.setText(weather.getDaily().getData().get(position).getSummary());
 
-
-//        holder.weatherNameTextView.setText(String.valueOf(weather.getDaily().getData().size()));
-//        holder.weatherSunriseTimeTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getSunsetTime()));
-//        holder.weatherSunsetTimeTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getSunsetTime()));
-//        holder.weatherPrecipIntensityTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getPrecipIntensity()));
-//        holder.weatherPrecipProbabilityTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getPrecipProbability()));
-//        holder.weatherHumidityTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getHumidity()));
-//        holder.weatherWindSpeedTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getWindSpeed()));
-//        holder.weatherVisibilityTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getVisibility()));
-//        holder.weatherDewPointTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getDewPoint()));
-//        holder.weatherTemperatureMinTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getTemperatureMin()));
-//        holder.weatherTemperatureMinTimeTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getTemperatureMinTime()));
-//        holder.weatherTemperatureMaxTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getTemperatureMax()));
-//        holder.weatherTemperatureMaxTimeTextView.setText(String.valueOf(weather.getDaily().getData().get(position).getTemperatureMaxTime()));
         bus = createBus();
         bus.post(size);
     }
