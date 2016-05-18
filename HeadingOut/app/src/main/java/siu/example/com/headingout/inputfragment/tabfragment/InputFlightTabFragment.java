@@ -30,7 +30,6 @@ import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import siu.example.com.headingout.model.flights.Flights;
-import siu.example.com.headingout.model.flights.Leg;
 import siu.example.com.headingout.model.flights.Segment;
 import siu.example.com.headingout.model.flights.Slice;
 import siu.example.com.headingout.model.flights.TripOption;

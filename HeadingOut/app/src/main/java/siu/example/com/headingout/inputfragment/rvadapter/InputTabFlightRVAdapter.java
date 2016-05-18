@@ -32,23 +32,19 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        TextView flightOriginTextView, flightDestinationTextView,
-                flightSaleTotalTextView, flightDurationTextView;
+        TextView flightSaleTotalTextView, flightDurationTextView;
         LinearLayout flightCardsLinearLayout;
 
         FlightViewHolder(View itemView) {
             super(itemView);
             cardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
-            flightOriginTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_origin_textView);
-            flightDestinationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_destination_textView);
             flightSaleTotalTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_saleTotal_textView);
             flightDurationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_duration_textView);
             flightSegmentListView = (ListView) itemView.findViewById(R.id.input_tab_flight_segments_listView);
             flightCardsLinearLayout = (LinearLayout) itemView.findViewById(R.id.input_tab_flight_cards_linearLayout);
 
-//            flightIdTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_tripId_textView);
-//            flightNameTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_textView);
         }
+
     }
 
     public InputTabFlightRVAdapter(Flights flights){
@@ -70,8 +66,6 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     @Override
     public void onBindViewHolder(FlightViewHolder holder, int position) {
-        holder.flightOriginTextView.setText("ORIGIN ____ NEED TO GRAB FROM MAIN");
-        holder.flightDestinationTextView.setText("DESTINGATION ___ NEED TO GRAB FROM MAIN");
         holder.flightSaleTotalTextView.setText(flights.getTrips().getTripOption().get(position).getSaleTotal());
 
         int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
@@ -83,7 +77,6 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         List<Leg> listLeg;
 
         Context context = holder.flightCardsLinearLayout.getContext();
-
 
         for(Segment segment: listSegment){
             LinearLayout segmentLinearLayout = new LinearLayout(context);
@@ -153,14 +146,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
                 segmentConnectionTimeTextView.setText("Connection Time: " + connectionDurationString);
                 holder.flightCardsLinearLayout.addView(segmentConnectionTimeTextView);
             }
-
         }
-
-//
-//        FlightSegmentAdapter flightSegmentAdapter = new FlightSegmentAdapter(flightSegmentListView.getContext(), listSegment);
-//        flightSegmentListView.setAdapter(flightSegmentAdapter);
-
-
     }
 
     @Override
