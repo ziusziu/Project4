@@ -35,6 +35,8 @@ import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 
+import siu.example.com.headingout.model.airports.Airport;
+import siu.example.com.headingout.model.airports.AirportData;
 import siu.example.com.headingout.model.flights.Flights;
 
 import siu.example.com.headingout.model.forecast.Weather;
@@ -89,6 +91,7 @@ public class InputFragment extends Fragment{
     private HotWireHotels hotWireHotels;
     private Weather weather;
     private Flights flights;
+    private AirportData airport;
     //endregion
 
     private int size;
@@ -114,7 +117,7 @@ public class InputFragment extends Fragment{
 
         onFabContinueButtonClick();
 
-        //makeApiCall();
+        makeApiCall();
 
         return view;
     }
@@ -127,6 +130,7 @@ public class InputFragment extends Fragment{
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
+
         ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
                 mOriginAirportCode, mDestinationAirportCode,
                 startDate);
@@ -134,16 +138,16 @@ public class InputFragment extends Fragment{
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
 
-        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiManager.getHotWireApi(bus, hotwireApiKey);
 
-        /*
         // API to search for airports near a specified lat long
         String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        String distance = "5";
-        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
-        */
+        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
+                                      mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
+
+//        String distance = "5";
+//        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
+
     }
 
 
@@ -234,7 +238,18 @@ public class InputFragment extends Fragment{
         return flights;
     }
 
+    @Subscribe
+    public void onAirportData(AirportData airport){
+        this.airport = airport;
 
+        Log.d(TAG, "onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
+        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
+
+        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+        String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
+        String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
+        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
+    }
 
 
     /**

@@ -74,10 +74,20 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         holder.flightDurationTextView.setText(durationString);
         List<Segment> listSegment = flights.getTrips().getTripOption().get(position).getSlice().get(0).getSegment();
+
+        appendFlightData(holder, listSegment);
+
+    }
+
+    /**
+     * Programmatically add Flight Data to cardviews
+     * @param holder
+     * @param listSegment
+     */
+    private void appendFlightData(FlightViewHolder holder, List<Segment> listSegment){
         List<Leg> listLeg;
 
         Context context = holder.flightCardsLinearLayout.getContext();
-
         holder.flightCardsLinearLayout.removeAllViews();
 
         for(Segment segment: listSegment){
@@ -151,11 +161,17 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         }
     }
 
+
     @Override
     public int getItemCount() {
         return flights.getTrips().getTripOption().size();
     }
 
+    /**
+     * Converts minutes to a string in format "HH hours mm mins"
+     * @param duration
+     * @return
+     */
     private String convertMinToHours(int duration){
         Long longVal = new Long(duration);
         int hours = (int) longVal.longValue() / 60;

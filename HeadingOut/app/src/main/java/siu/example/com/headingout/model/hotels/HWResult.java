@@ -23,7 +23,7 @@ public class HWResult {
     String RecommendationPercentage;
     String Rooms;
     String SavingsPercentage;
-    List<String> SpecialTaxItems;
+    //List<HWSpecialItems> SpecialTaxItems;
     String StarRating;
 
 
@@ -97,7 +97,5 @@ public class HWResult {
         return SavingsPercentage;
     }
 
-    public List<String> getSpecialTaxItems() {
-        return SpecialTaxItems;
-    }
+
 }

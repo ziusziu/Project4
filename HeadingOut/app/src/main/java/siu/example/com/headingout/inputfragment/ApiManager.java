@@ -13,13 +13,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import siu.example.com.headingout.R;
+import siu.example.com.headingout.inputfragment.providers.FlightStatsAirportLocationService;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
 import siu.example.com.headingout.inputfragment.providers.ForecastService;
 import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;
 import siu.example.com.headingout.inputfragment.providers.GoogleQPExpressService;
 import siu.example.com.headingout.inputfragment.providers.HotwireService;
-import siu.example.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import siu.example.com.headingout.model.TestHotels;
+import siu.example.com.headingout.model.airports.AirportData;
 import siu.example.com.headingout.model.airports.Airports;
 import siu.example.com.headingout.model.flights.Flights;
 import siu.example.com.headingout.model.flights.postrequest.Passengers;
@@ -41,7 +43,8 @@ public class ApiManager {
     private static String mLongitude;
 
     private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
-    private static final String FLIGTHSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
+    private static final String FLIGHTSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
+    private static final String FLIGHTSTATS_API_LOCATION_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/";
     private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
     private static final String GOOGLE_QPEXPRESS_API_URL = "https://www.googleapis.com/qpxExpress/v1/trips/";
     private static final String HOTWIRE_API_URL = "http://api.hotwire.com/v1/search/";
@@ -51,19 +54,17 @@ public class ApiManager {
     static Retrofit retrofit;
     static Flights flights;
     static TestHotels testHotels;
+    static AirportData airport;
 
 
     // TODO change the input, Add StartDate, EndDate, State Code
-    public static void getHotWireApi(final Bus bus, String hotwireApiKey){
+    public static void getHotWireApi(final Bus bus, String hotwireApiKey, String startDate, String endDate, String destination){
 
         String responseFormat = "json";
-        String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
+        //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
         String rooms = "1";
         String adults = "2";
         String children = "0";
-        String startDate = "05/20/2016";
-        String endDate = "05/23/2016";
-
 
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
@@ -113,6 +114,49 @@ public class ApiManager {
 
     }
 
+    public static void getAirportLocation(final Bus bus, String flightStatsApiKey, String flightStatsAppId,
+                                          String airportCode, String year, String month, String day){
+        String codeType = "iata";
+
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(logging)
+                .build();
+
+        retrofit = new Retrofit.Builder()
+                .baseUrl(FLIGHTSTATS_API_LOCATION_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(client)
+                .build();
+
+        FlightStatsAirportLocationService service = retrofit.create(FlightStatsAirportLocationService.class);
+        Call<AirportData> call = service.getAirportLocation(codeType, airportCode, year, month, day, flightStatsAppId, flightStatsApiKey);
+        call.enqueue(new Callback<AirportData>() {
+            @Override
+            public void onResponse(Call<AirportData> call, Response<AirportData> response) {
+                if (response.isSuccessful()) {
+                    airport = response.body();
+                    Log.d(TAG, "onResponse: OnSuccessAirportData " + airport.getAirport().getCity());
+                    bus.post(airport);
+
+                } else {
+                    Log.d(TAG, "getAirportsApi:  RESPONSE UNSUCCESSFUL IN onResponse()  ==  " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AirportData> call, Throwable t) {
+                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+
+
+    }
+
+
+
 
     public static void getAirportsApi(final Bus bus,
                                       final String googlePlacesApiKey,
@@ -133,7 +177,7 @@ public class ApiManager {
                 .build();
 
         retrofit = new Retrofit.Builder()
-                .baseUrl(FLIGTHSTATS_API_URL)
+                .baseUrl(FLIGHTSTATS_API_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build();

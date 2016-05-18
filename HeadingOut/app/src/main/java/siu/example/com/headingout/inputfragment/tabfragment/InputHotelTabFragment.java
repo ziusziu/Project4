@@ -1,5 +1,7 @@
 package siu.example.com.headingout.inputfragment.tabfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -34,6 +36,32 @@ public class InputHotelTabFragment extends Fragment {
     private static RecyclerView mHotelRecyclerView;
     private InputTabHotelRVAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
+
+    //region SharedPreferences Constants
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String STARTDAY = "startDay";
+    public static final String STARTMONTH = "startMonth";
+    public static final String STARTYEAR = "startYear";
+    public static final String ENDDAY = "endDay";
+    public static final String ENDMONTH = "endMonth";
+    public static final String ENDYEAR = "endYear";
+    //endregion
+    //region SharedPreferences Variables
+    private static String mLatitude;
+    private static String mLongitude;
+    private static String mStartDay;
+    private static String mStartMonth;
+    private static String mStartYear;
+    private static String mEndDay;
+    private static String mEndMonth;
+    private static String mEndYear;
+    private static String forecastApiKey;
+    private static String mDestinationAirportCode;
+    private static String mOriginAirportCode;
+    //endregion
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -109,16 +137,40 @@ public class InputHotelTabFragment extends Fragment {
             public void run() {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
 
-                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
-                ApiManager.getHotWireApi(bus, hotwireApiKey);
+
+                String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+                String hotwireStartDate = mStartYear + "/" + mStartMonth + "/" + mStartDay;
+                String hotwireEndDate = mEndYear + "/" + mEndMonth + "/" + mEndDay;
+                ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestinationAirportCode);
 
                 //recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
+    }
+
+    /**
+     * Get the Shared Preferences
+     */
+    private void getSharedPreferences(){
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        mStartDay = sharedPref.getString(STARTDAY, "Default");
+        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
+        mStartYear = sharedPref.getString(STARTYEAR, "Default");
+        mEndDay = sharedPref.getString(ENDDAY, "Default");
+        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
+        mEndYear = sharedPref.getString(ENDYEAR, "Default");
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        mOriginAirportCode = "SFO";
+
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+
     }
 
     /**
