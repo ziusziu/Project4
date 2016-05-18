@@ -12,10 +12,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,14 +23,11 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
-import siu.example.com.headingout.model.FlightTest;
 import siu.example.com.headingout.model.flights.Flights;
 
 /**
@@ -40,17 +35,19 @@ import siu.example.com.headingout.model.flights.Flights;
  */
 public class InputFlightTabFragment extends Fragment {
     private static final String TAG = InputFlightTabFragment.class.getSimpleName();
-    public static final String ARG_PAGE = "ARG_PAGE";
 
+    public static final String ARG_PAGE = "ARG_PAGE";
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
 
-    private SwipeRefreshLayout mFlightSwipeRefreshLayout;
-
+    private static int mPage;
     private static String mDestinationAirportCode;
-    private int mPage;
+
+    private SwipeRefreshLayout mFlightSwipeRefreshLayout;
     private static RecyclerView mFlightRecyclerView;
-    private InputTabFlightRVAdapter recyclerViewAdapter;
+    private static InputTabFlightRVAdapter recyclerViewAdapter;
+    private static TextView mOrigin;
+    private static TextView mDestination;
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -71,81 +68,56 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
-        EditText flightEditText = (EditText) view.findViewById(R.id.input_flight_editText);
-        flightEditText.setText("Fragment #" + mPage);
-        flightEditText.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d(TAG, "onTouch: ====>>> Inside edit text");
-                return false;
-            }
 
+        registerOttoBus();
 
-
-        });
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-
-        TextView mainOrigin = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
-        TextView mainDestination = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
-
-        ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
-        int color = Color.parseColor("#BBFFFFFF");
-        mainAirplaneIcon.setColorFilter(color);
-
-        mainOrigin.setText("SFO");
-        mainDestination.setText(mDestinationAirportCode);
-        
-        mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
-
-
-        mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-        mFlightRecyclerView.setHasFixedSize(true);
-
-        //recyclerViewSetup();
-
+        initViews(view);
+        recyclerViewSetup();
         swipeFlightRefreshListener();
 
-
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
-        bus.register(this);
-
+        registerOttoBus();
 
         setRecyclerViewFlightsDummyData();
-
 
         return view;
     }
 
+    private void registerOttoBus(){
+        Bus bus = createBus();
+        bus.register(this);
+    }
 
+    private Bus createBus(){
+        // Register for bus events
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+        return bus;
+    }
+
+    private void initViews(View view){
+
+        mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
+        mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
+        mOrigin = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
+        mDestination = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
+
+        // Set Color of Icons
+        ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
+        int color = Color.parseColor("#BBFFFFFF");
+        mainAirplaneIcon.setColorFilter(color);
+
+        // Set Text to views
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+
+        mOrigin.setText("SFO");
+        mDestination.setText(mDestinationAirportCode);
+    }
 
     private void recyclerViewSetup(){
-        List<FlightTest> flightList = new ArrayList<>();
-
-        // Dummy Data
-        FlightTest flight = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight1 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight2 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight3 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        FlightTest flight4 = new FlightTest("AAL342", "American Airlines", "ORD" , "3", "MIA", "N");
-        flightList.add(flight);
-        flightList.add(flight1);
-        flightList.add(flight2);
-        flightList.add(flight3);
-        flightList.add(flight4);
-
-//
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-//        mFlightRecyclerView.setHasFixedSize(true);
-//        InputTabFlightRVAdapter recyclerViewAdapter = new InputTabFlightRVAdapter(flightList);
-//        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
+        mFlightRecyclerView.setHasFixedSize(true);
     }
 
     private void swipeFlightRefreshListener(){
@@ -157,12 +129,11 @@ public class InputFlightTabFragment extends Fragment {
         });
     }
 
-
     private void refreshFlightContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGTHS====");
+                Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGHTS====");
 
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();

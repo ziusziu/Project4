@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
@@ -22,8 +21,6 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -53,23 +50,15 @@ import siu.example.com.headingout.util.Utilities;
 public class InputFragment extends Fragment{
 
     private static final String TAG = InputFragment.class.getSimpleName();
+
+    // region View Declarations
     private static TabLayout mTabLayout;
     private static ViewPager mViewPager;
-    private FloatingActionButton mInputContinueFabButton;
+    private static FloatingActionButton mInputContinueFabButton;
     private static EditText mFlightEditText;
-    private static String forecastApiKey;
-    private static String mDestinationAirportCode;
-
-
-    private static String mLatitude;
-    private static String mLongitude;
-    private static String mStartDay;
-    private static String mStartMonth;
-    private static String mStartYear;
-    private static String mEndDay;
-    private static String mEndMonth;
-    private static String mEndYear;
-
+    public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
+    //endregion
+    //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
     public static final String LATITUDE = "latitude";
@@ -80,15 +69,27 @@ public class InputFragment extends Fragment{
     public static final String ENDDAY = "endDay";
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
-
-    public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
-
-    MapView mMapView;
-    private GoogleMap mMap;
-    private GoogleMap googleMap;
+    //endregion
+    //region SharedPreferences Variables
+    private static String mLatitude;
+    private static String mLongitude;
+    private static String mStartDay;
+    private static String mStartMonth;
+    private static String mStartYear;
+    private static String mEndDay;
+    private static String mEndMonth;
+    private static String mEndYear;
+    private static String forecastApiKey;
+    private static String mDestinationAirportCode;
+    private static String mOriginAirportCode;
+    //endregion
+    //region API Objects
+    private MapView mMapView;
+    private GoogleMap mGoogleMap;
     private HotWireHotels hotWireHotels;
     private Weather weather;
     private Flights flights;
+    //endregion
 
     private int size;
     private Bus bus;
@@ -102,27 +103,57 @@ public class InputFragment extends Fragment{
         }
         View view = inflater.inflate(R.layout.input_content, container, false);
 
+        createBus();
+
         initializeViews(view);
         initViewPager(view);
         initFab();
+        initGoogleMaps(view, savedInstanceState);
 
         getSharedPreferences();
-        createBus();
 
-        initGoogleMaps(view, savedInstanceState);
-        googleMap = mMapView.getMap();
         onFabContinueButtonClick();
 
-      //  makeApiCall();
+        //makeApiCall();
 
         return view;
-
-//        flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-//        flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-//        String distance = "5";
-//        ApiCaller.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
     }
 
+
+    private void makeApiCall(){
+
+        Log.d(TAG, "onCreateView: ====>>> InputFragment - makeApiCall");
+
+        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
+
+        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
+                mOriginAirportCode, mDestinationAirportCode,
+                startDate);
+
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+
+        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+        ApiManager.getHotWireApi(bus, hotwireApiKey);
+
+        /*
+        // API to search for airports near a specified lat long
+        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+        String distance = "5";
+        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
+        */
+    }
+
+
+    //--------------------------------------------------------------------------------------------
+    // ApiManger Posts Data Objects to Event Bus, after response is received after Retrofit API call
+    // InputFragment Subscribes to Objects
+    //   - InputFragment holds api data for the case when AdapterFragments are not created
+    //   - InputFragment holds api data to plot on google maps
+    // InputFragment then Produces them for the Fragments inside the PagerStateAdapter RecyclerView
+    //--------------------------------------------------------------------------------------------
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
         this.hotWireHotels = hotWireHotels;
@@ -133,24 +164,50 @@ public class InputFragment extends Fragment{
             //TODO put id into HashMap, for easy find
         }
 
-
-        // Gets the Lat Longs from API Data for plots
+        // Gets the api Lat, Longs and info for markers
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
-        for(HWNeighborhoods neighborhoods : hwNeighborHoods){
-            Log.d(TAG, "onHotelData: " + neighborhoods.getName());
-            String centroid = neighborhoods.getCentroid();
+        for(int position = 0; position < hwNeighborHoods.size(); position++){
+            Log.d(TAG, "onHotelData: " + hwNeighborHoods.get(position).getName());
+
+            // Pull Latitude and Longitude Data
+            String centroid = hwNeighborHoods.get(position).getCentroid();
             String[] centroidList = centroid.split("," , 2);
             double latitude = Double.parseDouble(centroidList[0]);
             double longitude = Double.parseDouble(centroidList[1]);
-            Log.d(TAG, "onHotelData: " + latitude);
-            Log.d(TAG, "onHotelData: " + longitude);
-            int i = 0;
-            String hwRefNum = hotWireHotels.getResult().get(i).getHWRefNumber();
-            i++;
 
+            // Pull Hotel Reference Number Data
+            String hwRefNum = hotWireHotels.getResult().get(position).getHWRefNumber();
+
+            // Plot Marker on Google Maps
             plotGoogleMaps(latitude, longitude, hwRefNum);
         }
+
     }
+
+    /**
+     * Plot markers on Google Maps
+     * @param latitude
+     * @param longitude
+     * @param HWRefNum
+     */
+    private void plotGoogleMaps(double latitude, double longitude, String HWRefNum){
+
+        // create marker
+        MarkerOptions marker = new MarkerOptions().position(
+                new LatLng(latitude, longitude)).title("HotWire Ref Num: " + HWRefNum);
+
+        // Changing marker icon
+        marker.icon(BitmapDescriptorFactory
+                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+
+        mGoogleMap.addMarker(marker);
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(latitude, longitude)).zoom(12).build();
+        mGoogleMap.animateCamera(CameraUpdateFactory
+                .newCameraPosition(cameraPosition));
+
+    }
+
 
     @Produce
     public HotWireHotels produceHotwireHotels() {
@@ -177,34 +234,32 @@ public class InputFragment extends Fragment{
         return flights;
     }
 
-    private void makeApiCall(){
 
-        Log.d(TAG, "onCreateView: ====>>> InputFragment - makeApiCall");
 
-        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
-        ApiManager.getQPExpressApi(bus, googlePlacesApiKey, "SFO", mDestinationAirportCode, startDate);
-
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
-
-        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        ApiManager.getHotWireApi(bus, hotwireApiKey);
-
-    }
-
+    /**
+     * Store FragmentPagerAdapter tab position to outState Bundle
+     * @param outState
+     */
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
     }
 
+    /**
+     * Declare layout views
+     * @param view
+     */
     private void initializeViews(View view){
         mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
         mInputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
     }
 
+    /**
+     * Initialize FragmentStatePagerAdapter
+     * @param view
+     */
     private void initViewPager(View view){
         mViewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
         mInputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
@@ -216,6 +271,9 @@ public class InputFragment extends Fragment{
         // adapter.setMyValue()
     }
 
+    /**
+     * Get the Shared Preferences
+     */
     private void getSharedPreferences(){
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
@@ -228,28 +286,31 @@ public class InputFragment extends Fragment{
         mEndMonth = sharedPref.getString(ENDMONTH, "Default");
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        mOriginAirportCode = "SFO";
 
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartDay);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndDay);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mEndYear);
 
     }
 
+    /**
+     * Create an Otto event bus
+     */
     private void createBus(){
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
         bus = headingOutApplication.provideBus();
         bus.register(this);
     }
 
+    /**
+     * Initialize Google Maps
+     * @param view
+     * @param savedInstanceState
+     */
     private void initGoogleMaps(View view, Bundle savedInstanceState){
         mMapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
         mMapView.onCreate(savedInstanceState);
         mMapView.onResume();// needed to get the map to display immediately
+        mGoogleMap = mMapView.getMap();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -265,29 +326,31 @@ public class InputFragment extends Fragment{
         super.onDestroyView();
     }
 
+    /**
+     * Initizlize FAB Button
+     */
     private void initFab(){
         setFabIconColor(mInputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
     }
 
-    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor){
+    /**
+     * Set the color of FAB Button
+     * @param searchFab
+     * @param fabColor
+     */
+    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor) {
         int color = Color.parseColor(fabColor);
         searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
         searchFab.setColorFilter(color);
     }
 
+    /**
+     * Switch to Detail Fragment when FAB button clicked
+     */
     private void onFabContinueButtonClick() {
         mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String[] searchTerms = {
-                        "Hello"//mFlightEditText.getText().toString(),
-                };
-
-                PreferenceManager.getDefaultSharedPreferences(getActivity())
-                        .edit()
-                        .putString(Utilities.SHARED_PREFERENCES_FLIGHTTERM, searchTerms[0])
-                        .apply();
-
                 DetailFragment detailFragment = new DetailFragment();
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -311,38 +374,22 @@ public class InputFragment extends Fragment{
 
     @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: ==>> InputFragment OnDestroy");
         super.onDestroy();
         mMapView.onDestroy();
     }
 
     @Override
     public void onPause() {
+        Log.d(TAG, "onPause: ==>> InputFragment OnPause");
         super.onPause();
         mMapView.onPause();
     }
 
+    //TODO REMOVE
     @Subscribe
     public void onSizeData(Integer size){
         this.size = size;
         Log.d(TAG, "onSizeData: === Posting Data from adapter" + size);
     }
-
-    private void plotGoogleMaps(double latitude, double longitude, String HWRefNum){
-
-        // create marker
-        MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("HotWire Ref Num: " + HWRefNum);
-
-        // Changing marker icon
-        marker.icon(BitmapDescriptorFactory
-                .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
-
-        googleMap.addMarker(marker);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitude, longitude)).zoom(12).build();
-        googleMap.animateCamera(CameraUpdateFactory
-                .newCameraPosition(cameraPosition));
-
-    }
-
 }

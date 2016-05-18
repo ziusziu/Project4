@@ -16,7 +16,6 @@ public class Utilities {
     public static final String POSITION = "POSITION";
     public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
     public static final String INTENT_FLIGHT_KEY = "location_terms";
-    public static final String SHARED_PREFERENCES_FLIGHTTERM = "shared_pref_location_term";
 
     /**
      * Hide the keyboard on activity load

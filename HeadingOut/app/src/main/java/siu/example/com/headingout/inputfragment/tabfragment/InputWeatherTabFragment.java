@@ -63,8 +63,6 @@ public class InputWeatherTabFragment extends Fragment {
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mLatitude = sharedPref.getString(LATITUDE, "Default");
         mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLatitude);
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mLongitude);
 
     }
 
@@ -76,8 +74,8 @@ public class InputWeatherTabFragment extends Fragment {
         initViews(view);
         initRecyclerView();
         swipeWeatherRefreshListener();
-        Bus bus = createBus();
-        bus.register(this);
+
+        registerOttoBus();
 
         return view;
     }
@@ -93,6 +91,11 @@ public class InputWeatherTabFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         mWeatherRecyclerView.setLayoutManager(gridLayoutManager);
         mWeatherRecyclerView.setHasFixedSize(true);
+    }
+
+    private void registerOttoBus(){
+        Bus bus = createBus();
+        bus.register(this);
     }
 
     private Bus createBus(){

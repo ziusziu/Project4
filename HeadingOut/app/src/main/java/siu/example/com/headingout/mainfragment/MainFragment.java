@@ -65,7 +65,7 @@ public class MainFragment extends Fragment implements
     private static String mEndYear;
     //endregion
 
-    //region ViewDeclarations
+    //region View Declarations
     private static Button mAddButton;
     private static RecyclerView mTripDestinationRecyclerView;
     private static RecyclerView mTripOriginRecyclerView;

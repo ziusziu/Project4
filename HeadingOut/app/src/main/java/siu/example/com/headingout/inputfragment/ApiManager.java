@@ -1,7 +1,5 @@
 package siu.example.com.headingout.inputfragment;
 
-
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.squareup.otto.Bus;
@@ -15,7 +13,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
 import siu.example.com.headingout.inputfragment.providers.ForecastService;
 import siu.example.com.headingout.inputfragment.providers.GoogleHotelService;

@@ -12,19 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.ApiManager;
 import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
-import siu.example.com.headingout.model.TestHotels;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
 
 /**
@@ -52,61 +47,48 @@ public class InputHotelTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
-        bus.register(this);
-
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_hotel_fragment, container, false);
-        TextView textView = (TextView) view.findViewById(R.id.input_hotel_editText);
-        textView.setText("Fragment #" + mPage);
+        Log.d(TAG, "onCreateView: Page of TabLayout " + mPage);
 
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
+        registerOttoBus();
 
-        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
-        mHotelRecyclerView.setHasFixedSize(true);
-
-        //recyclerViewSetup();
-
+        initViews(view);
+        recyclerViewSetup();
         swipeHotelRefreshListener();
-
 
         return view;
     }
 
+    private void registerOttoBus(){
+        Bus bus = createBus();
+        bus.register(this);
+    }
+
+    private Bus createBus(){
+        // Register for bus events
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        Bus bus = headingOutApplication.provideBus();
+        return bus;
+    }
+
+    private void initViews(View view){
+        mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
+        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
+
+    }
+
     private void recyclerViewSetup(){
-        List<TestHotels> hotelList = new ArrayList<>();
-
-        // Dummy Data
-        TestHotels hotel = new TestHotels("Hilton", "SF", "CA", "US", "5");
-        TestHotels hotel1 = new TestHotels("Hilton", "SF", "CA", "US", "5");
-        TestHotels hotel2 = new TestHotels("Hilton", "SF", "CA", "US", "5");
-        TestHotels hotel3 = new TestHotels("Hilton", "SF", "CA", "US", "5");
-        TestHotels hotel4 = new TestHotels("Hilton", "SF", "CA", "US", "5");
-        hotelList.add(hotel);
-        hotelList.add(hotel1);
-        hotelList.add(hotel2);
-        hotelList.add(hotel3);
-        hotelList.add(hotel4);
-
-
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-//        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
-//        mHotelRecyclerView.setHasFixedSize(true);
-//        recyclerViewAdapter = new InputTabHotelRVAdapter(hotelList);
-//        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
-
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
+        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
+        mHotelRecyclerView.setHasFixedSize(true);
     }
 
     private void swipeHotelRefreshListener(){
@@ -118,7 +100,9 @@ public class InputHotelTabFragment extends Fragment {
         });
     }
 
-
+    /**
+     * Pull down to refresh will make new API call
+     */
     private void refreshFlightContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -126,7 +110,7 @@ public class InputHotelTabFragment extends Fragment {
                 Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
 
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-                HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+                HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
                 ApiManager.getHotWireApi(bus, hotwireApiKey);
 
@@ -137,17 +121,13 @@ public class InputHotelTabFragment extends Fragment {
         }, 0);
     }
 
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
-    }
-
+    /**
+     * Listen to data from ApiManager Post or from Produce from InputFragment
+     * @param hotWireHotels
+     */
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
         Log.d(TAG, "onHotelData  SIZE " + hotWireHotels.getResult().size());
-
 
         progressBar.setVisibility(View.GONE);
         recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
@@ -155,4 +135,9 @@ public class InputHotelTabFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
+    }
 }
