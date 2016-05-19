@@ -71,6 +71,7 @@ public class InputFragment extends Fragment{
     public static final String ENDDAY = "endDay";
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
+    public static final String DESTINATION = "destination";
     //endregion
     //region SharedPreferences Variables
     private static String mLatitude;
@@ -84,6 +85,7 @@ public class InputFragment extends Fragment{
     private static String forecastApiKey;
     private static String mDestinationAirportCode;
     private static String mOriginAirportCode;
+    private static String mDestination;
     //endregion
     //region API Objects
     private MapView mMapView;
@@ -244,11 +246,17 @@ public class InputFragment extends Fragment{
 
         Log.d(TAG, "onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
+        mDestination = destination;
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(DESTINATION, destination);
+        editor.apply();
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
         String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
-        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
+        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
     }
 
 

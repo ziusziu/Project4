@@ -48,6 +48,7 @@ public class InputHotelTabFragment extends Fragment {
     public static final String ENDDAY = "endDay";
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
+    public static final String DESTINATION = "destination";
     //endregion
     //region SharedPreferences Variables
     private static String mLatitude;
@@ -61,6 +62,7 @@ public class InputHotelTabFragment extends Fragment {
     private static String forecastApiKey;
     private static String mDestinationAirportCode;
     private static String mOriginAirportCode;
+    private static String mDestination;
     //endregion
 
     public static InputHotelTabFragment newInstance(int page){
@@ -88,6 +90,7 @@ public class InputHotelTabFragment extends Fragment {
 
         registerOttoBus();
 
+        getSharedPreferences();
         initViews(view);
         recyclerViewSetup();
         swipeHotelRefreshListener();
@@ -141,9 +144,12 @@ public class InputHotelTabFragment extends Fragment {
                 Bus bus = headingOutApplication.provideBus();
 
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-                String hotwireStartDate = mStartYear + "/" + mStartMonth + "/" + mStartDay;
-                String hotwireEndDate = mEndYear + "/" + mEndMonth + "/" + mEndDay;
-                ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestinationAirportCode);
+                String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
+                String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
+
+                Log.d(TAG, "run: ====>>>>>> Pull Down Refresh  " + mDestination);
+
+                ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
 
                 //recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
@@ -168,7 +174,7 @@ public class InputHotelTabFragment extends Fragment {
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         mOriginAirportCode = "SFO";
-
+        mDestination = sharedPref.getString(DESTINATION, "default");
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
 
     }
