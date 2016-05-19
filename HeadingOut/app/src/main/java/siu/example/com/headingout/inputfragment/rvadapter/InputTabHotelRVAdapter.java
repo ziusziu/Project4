@@ -1,5 +1,6 @@
 package siu.example.com.headingout.inputfragment.rvadapter;
 
+import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import siu.example.com.headingout.R;
@@ -21,7 +23,9 @@ import siu.example.com.headingout.model.hotels.HotWireHotels;
  */
 public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRVAdapter.HotelViewHolder>{
 
+    public static Bundle hotelBundle;
     private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
+    private static ArrayList<Integer> hotelPositions;
 
     HotWireHotels hotels;
 
@@ -35,6 +39,8 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
 
         HotelViewHolder(View itemView) {
             super(itemView);
+
+            hotelPositions = new ArrayList<>();
             cardView = (CardView) itemView.findViewById(R.id.input_tab_hotel_fragment_cardView);
             hotelNameTextView = (TextView) itemView.findViewById(R.id.input_tab_hotel_name_textView);
             hotelCheckInDateTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_checkInDate_textView);
@@ -63,7 +69,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     }
 
     @Override
-    public void onBindViewHolder(final HotelViewHolder holder, int position) {
+    public void onBindViewHolder(final HotelViewHolder holder, final int position) {
         holder.hotelNameTextView.setText("HotWireRef: " + hotels.getResult().get(position).getHWRefNumber());
         holder.hotelCheckInDateTextView.setText(hotels.getResult().get(position).getCheckInDate());
         holder.hotelCheckOutDateTextView.setText(hotels.getResult().get(position).getCheckOutDate());
@@ -73,10 +79,17 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         Log.d(TAG, "onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
 
+        hotelBundle = new Bundle();
+        hotelBundle.putSerializable("HOTEL_SERIALIZABLE", hotels);
+
+
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.cardView.setCardBackgroundColor(R.color.colorPrimayLight);
+
+                hotelPositions.add(position);
+                hotelBundle.putIntegerArrayList("HOTEL_POSITION", hotelPositions);
             }
         });
 

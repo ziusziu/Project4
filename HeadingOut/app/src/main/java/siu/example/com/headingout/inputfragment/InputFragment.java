@@ -35,6 +35,7 @@ import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.detailfragment.DetailFragment;
 
+import siu.example.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import siu.example.com.headingout.model.airports.Airport;
 import siu.example.com.headingout.model.airports.AirportData;
 import siu.example.com.headingout.model.flights.Flights;
@@ -133,9 +134,9 @@ public class InputFragment extends Fragment{
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
 
-        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
-                mOriginAirportCode, mDestinationAirportCode,
-                startDate);
+//        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
+//                mOriginAirportCode, mDestinationAirportCode,
+//                startDate);
 
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
@@ -375,6 +376,8 @@ public class InputFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 DetailFragment detailFragment = new DetailFragment();
+                detailFragment.setArguments(InputTabHotelRVAdapter.hotelBundle);
+
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 fragmentTransaction.replace(R.id.home_fragment_container, detailFragment).addToBackStack(null);

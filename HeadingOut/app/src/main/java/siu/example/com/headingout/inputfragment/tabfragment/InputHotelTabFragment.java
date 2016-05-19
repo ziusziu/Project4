@@ -147,7 +147,7 @@ public class InputHotelTabFragment extends Fragment {
                 String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
                 String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
 
-                Log.d(TAG, "run: ====>>>>>> Pull Down Refresh  " + mDestination);
+                Log.d(TAG, "run: ====>>>>>> Pull Down Refresh  " + mDestination     );
 
                 ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
 

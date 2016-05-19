@@ -1,6 +1,7 @@
 package siu.example.com.headingout.model.hotels;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 
 
-public class HotWireHotels{
+public class HotWireHotels implements Serializable{
 
     HWErrors errors;
     HWMetaData MetaData;

@@ -5,11 +5,15 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 import siu.example.com.headingout.R;
+import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
 
@@ -31,6 +35,14 @@ public class DetailFragment extends Fragment{
         }
         View view = inflater.inflate(R.layout.detail_content, container, false);
         initViewPager(view);
+
+        Bundle hotelBundle = getArguments();
+        HotWireHotels hotels = (HotWireHotels) hotelBundle.getSerializable("HOTEL_SERIALIZABLE");
+        ArrayList<Integer> hotelPositions = hotelBundle.getIntegerArrayList("HOTEL_POSITION");
+
+        Log.d(TAG, "onCreateView: " + hotelPositions.get(0));
+        Log.d(TAG, "onCreateView: " + hotels.getResult().get(0).getHWRefNumber());
+
         // initGoogleMaps();
 
 

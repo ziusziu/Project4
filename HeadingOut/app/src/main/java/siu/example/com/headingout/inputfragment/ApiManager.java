@@ -13,7 +13,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import siu.example.com.headingout.R;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsAirportLocationService;
 import siu.example.com.headingout.inputfragment.providers.FlightStatsService;
 import siu.example.com.headingout.inputfragment.providers.ForecastService;
@@ -150,13 +149,7 @@ public class ApiManager {
                 Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
             }
         });
-
-
-
     }
-
-
-
 
     public static void getAirportsApi(final Bus bus,
                                       final String googlePlacesApiKey,
