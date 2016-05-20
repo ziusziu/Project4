@@ -21,6 +21,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -135,12 +137,15 @@ public class MainFragment extends Fragment implements
                                     int endDay, int endMonth, int endYear) {
         Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear +
                 " to : " + endDay + "-" + endMonth + "-" + endYear);
-        mStartDay = String.valueOf(startDay);
-        mStartMonth = String.valueOf(startMonth);
-        mStartYear = String.valueOf(startYear);
-        mEndDay = String.valueOf(endDay);
-        mEndMonth = String.valueOf(endMonth);
-        mEndYear = String.valueOf(endYear);
+
+        NumberFormat formatter = new DecimalFormat("00");
+
+        mStartDay = formatter.format(startDay);
+        mStartMonth = formatter.format(startMonth + 1);
+        mStartYear = formatter.format(startYear);
+        mEndDay = formatter.format(endDay);
+        mEndMonth = formatter.format(endMonth + 1);
+        mEndYear = formatter.format(endYear);
 
         mMainStartDateEditText.setText(mStartMonth+"/"+mStartDay+"/"+mStartYear);
         mMainEndDateEditText.setText(mEndMonth+"/"+mEndDay+"/"+mEndYear);

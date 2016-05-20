@@ -136,19 +136,21 @@ public class InputFragment extends Fragment{
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
 
+//        // Get Airport Data
 //        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
 //                mOriginAirportCode, mDestinationAirportCode,
 //                startDate);
-//
-//        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-//        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
-//
 
-//        // API that returns lat, long from airportcode
-//        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-//        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-//        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
-//                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
+        // Get Weather Data
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+
+
+        // API that returns lat, long from airportcode, then gets Hotel Data after location returned
+        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
+                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
 
           // API to search for airports near a specified lat long
 //        String distance = "5";
@@ -181,15 +183,19 @@ public class InputFragment extends Fragment{
 
             // Pull Latitude and Longitude Data
             String centroid = hwNeighborHoods.get(position).getCentroid();
-            String[] centroidList = centroid.split("," , 2);
+            String[] centroidList = centroid.split(",", 2);
             double latitude = Double.parseDouble(centroidList[0]);
             double longitude = Double.parseDouble(centroidList[1]);
 
             // Pull Hotel Reference Number Data
             String hwRefNum = hotWireHotels.getResult().get(position).getHWRefNumber();
+            String hwCurrency = hotWireHotels.getResult().get(position).getCurrencyCode();
+            String hwPrice = hotWireHotels.getResult().get(position).getTotalPrice();
+            String hwRating = hotWireHotels.getResult().get(position).getStarRating();
+
 
             // Plot Marker on Google Maps
-            plotGoogleMaps(latitude, longitude, hwRefNum);
+            plotGoogleMaps(latitude, longitude, hwRefNum, hwCurrency, hwPrice, hwRating);
         }
 
     }
@@ -198,13 +204,20 @@ public class InputFragment extends Fragment{
      * Plot markers on Google Maps
      * @param latitude
      * @param longitude
-     * @param HWRefNum
+     * @param hWRefNum
+     * @param hwCurrency
+     * @param hwPrice
+     * @param hwRating
      */
-    private void plotGoogleMaps(double latitude, double longitude, String HWRefNum){
+    private void plotGoogleMaps(double latitude, double longitude, String hWRefNum, String hwCurrency, String hwPrice, String hwRating){
+
+        String snippetText = "Price: " + hwCurrency+hwPrice + " | Rating " + hwRating;
 
         // create marker
         MarkerOptions marker = new MarkerOptions().position(
-                new LatLng(latitude, longitude)).title("HotWire Ref Num: " + HWRefNum);
+                new LatLng(latitude, longitude))
+                .title("HotWire Ref Num: " + hWRefNum)
+                .snippet(snippetText);
 
         // Changing marker icon
         marker.icon(BitmapDescriptorFactory
@@ -311,6 +324,9 @@ public class InputFragment extends Fragment{
         mStartDay = sharedPref.getString(STARTDAY, "Default");
         mStartMonth = sharedPref.getString(STARTMONTH, "Default");
         mStartYear = sharedPref.getString(STARTYEAR, "Default");
+        mEndDay = sharedPref.getString(ENDDAY, "Default");
+        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
+        mEndYear = sharedPref.getString(ENDYEAR, "Default");
 
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
