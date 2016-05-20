@@ -78,8 +78,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         Picasso.with(mContext)
                 .load(tripList.get(position).getUrl())  // Load image from URL
                 .placeholder(R.mipmap.ic_headingout)    // PlaceHolder Image
-                .resize(300,200)                        // Resize Image
-                .centerCrop()
+                .resize(500,350)                        // Resize Image
                 .into(holder.tripOriginImageView);      // Load image to view
 
         //When cardView is clicked send use interface to send TripDestination object to MainFragment

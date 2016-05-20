@@ -9,11 +9,13 @@
         <item
             android:id="@+id/nav_saved"
             android:icon="@drawable/ic_send_24dp"
-            android:title="Saved"/>
+            android:title="Saved"
+            android:visible="false"/>
         <item
             android:id="@+id/nav_send"
             android:icon="@drawable/ic_share_24dp"
-            android:title="Share"/>
+            android:title="Share"
+            android:visible="false"/>
     </group>
 
 </menu>

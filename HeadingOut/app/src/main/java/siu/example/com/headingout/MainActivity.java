@@ -61,12 +61,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void setFragmentToolBar(String fragmentName) {
         switch (fragmentName) {
             case MAIN_FRAGMENT:
-                actionBar.setTitle(fragmentName);
+                actionBar.setTitle("Search");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
                 initNavDrawer();
                 break;
             case INPUT_FRAGMENT:
-                actionBar.setTitle(fragmentName);
+                actionBar.setTitle("Results");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
                 initNavDrawer();
                 break;

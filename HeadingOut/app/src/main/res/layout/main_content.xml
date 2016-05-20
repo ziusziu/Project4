@@ -1,123 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="20dp"
-        android:text="I want to go"
-        android:textSize="15dp"/>
-
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text="From"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/main_origin_autocomplete_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ems="10"
-            android:hint="Origin"
-            android:text="SFO"
-            android:textColorHint="@color/colorPrimayLight"/>
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_origin_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="15dp"
-            android:text="To"/>
-
-        <AutoCompleteTextView
-            android:id="@+id/main_destination_autocomplete_textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:ems="10"
-            android:hint="Destination"
-            android:textColorHint="@color/colorPrimayLight"/>
-
-    </LinearLayout>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_destination_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="30dp"
-            android:text="on dates: "/>
-
-
-        <ImageView
-            android:id="@+id/main_calendar_imageView"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:layout_marginTop="20dp"
-            android:backgroundTint="@color/colorAccentDark"
-            android:clickable="true" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/main_calendar_imageView"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_horizontal"
+                android:backgroundTint="@color/colorAccentDark"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  On: "
+                android:visibility="gone"
+                android:textSize="15dp"/>
+
+            <EditText
+                android:id="@+id/main_startDate_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ems="5"
+                android:hint="Start Date"
+                android:textColorHint="@color/colorPrimayLight" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" to "
+                android:textSize="15dp"/>
+
+            <EditText
+                android:id="@+id/main_endDate_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ems="5"
+                android:hint="End Date"
+                android:textColorHint="@color/colorPrimayLight" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="From: "/>
+
+            <AutoCompleteTextView
+                android:id="@+id/main_origin_autocomplete_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ems="10"
+                android:hint="Origin"
+                android:text="SFO"
+                android:textColorHint="@color/colorPrimayLight"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_origin_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="15dp"
+                android:text="  To: "/>
+
+            <AutoCompleteTextView
+                android:id="@+id/main_destination_autocomplete_textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ems="10"
+                android:hint="Destination"
+                android:textColorHint="@color/colorPrimayLight"/>
+
+        </LinearLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_destination_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/main_addLocation_button"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:backgroundTint="@color/colorAccent"
+            android:textColor="@color/colorAccentDark"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:text="Go!"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="Saved Trips"
+            android:visibility="gone"
+            android:textSize="15dp"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/main_savedTrips_recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/main_addLocation_button"
-        android:layout_width="50dp"
-        android:layout_height="40dp"
-        android:backgroundTint="@color/colorAccent"
-        android:textColor="@color/colorAccentDark"
-        android:layout_gravity="center_horizontal"
-        android:visibility="gone"
-        android:text="Go!"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Saved Trips"
-        android:visibility="gone"
-        android:textSize="15dp"/>
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_savedTrips_recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/main_goButton_fab"
@@ -125,6 +148,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:fabSize="mini"/>
+        app:fabSize="normal"/>
 
-</LinearLayout>
+</FrameLayout>

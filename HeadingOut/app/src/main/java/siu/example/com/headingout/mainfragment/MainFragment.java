@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.text.SimpleDateFormat;
@@ -76,6 +77,8 @@ public class MainFragment extends Fragment implements
     private static AutoCompleteTextView mDestinationAutoCompleteTextView;
     private static AutoCompleteTextView mOriginAutoCompleteTextView;
     private static FloatingActionButton mMainGoButtonFAB;
+    private static EditText mMainStartDateEditText;
+    private static EditText mMainEndDateEditText;
     //endregion
 
     @Nullable
@@ -93,6 +96,29 @@ public class MainFragment extends Fragment implements
         setCalendarClickListener();
 
         return view;
+    }
+
+    /**
+     * Initialize Views
+     * @param view
+     */
+    private void initializeViews(View view){
+        mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
+        mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
+        mTripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
+        mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
+        mDestinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
+        mOriginAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
+        mMainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
+        mMainStartDateEditText = (EditText)view.findViewById(R.id.main_startDate_editText);
+        mMainEndDateEditText = (EditText)view.findViewById(R.id.main_endDate_editText);
+
+        // Change the color of Resources
+        int color = Color.parseColor("#68EFAD");
+        mCalendarImageView.setImageResource(R.drawable.calendar);
+        mCalendarImageView.setColorFilter(color);
+        mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
+
     }
 
     /**
@@ -115,6 +141,9 @@ public class MainFragment extends Fragment implements
         mEndDay = String.valueOf(endDay);
         mEndMonth = String.valueOf(endMonth);
         mEndYear = String.valueOf(endYear);
+
+        mMainStartDateEditText.setText(mStartMonth+"/"+mStartDay+"/"+mStartYear);
+        mMainEndDateEditText.setText(mEndMonth+"/"+mEndDay+"/"+mEndYear);
     }
 
     private void recyclerViewSetup(){
@@ -123,7 +152,7 @@ public class MainFragment extends Fragment implements
         LinearLayoutManager destinationLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager originLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mTripDestinationRecyclerView.setLayoutManager(destinationLinearLayoutManager);
+        mTripDestinationRecyclerView.setLayoutManager(gridLayoutManager);
         mTripDestinationRecyclerView.setHasFixedSize(true);
 
         MainTripRVAdapter recyclerDestinationViewAdapter = new MainTripRVAdapter(tripList, this);
@@ -145,7 +174,7 @@ public class MainFragment extends Fragment implements
                 saveSharedPreferences();
 
                 checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
-                mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
+
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();
@@ -159,6 +188,8 @@ public class MainFragment extends Fragment implements
      * Store objects to shared preferences
      */
     private void saveSharedPreferences(){
+        mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
+
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
@@ -197,27 +228,6 @@ public class MainFragment extends Fragment implements
                 dateRangePickerFragment.show(getActivity().getSupportFragmentManager(), "datePicker");
             }
         });
-
-    }
-
-    /**
-     * Initialize Views
-     * @param view
-     */
-    private void initializeViews(View view){
-        mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
-        mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
-        mTripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
-        mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
-        mDestinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
-        mOriginAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
-        mMainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
-
-        // Change the color of Resources
-        int color = Color.parseColor("#68EFAD");
-        mCalendarImageView.setImageResource(R.drawable.calendar);
-        mCalendarImageView.setColorFilter(color);
-        mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
 
     }
 
