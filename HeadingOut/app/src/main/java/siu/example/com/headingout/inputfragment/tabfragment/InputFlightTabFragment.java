@@ -43,9 +43,17 @@ public class InputFlightTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+    public static final String ORIGINAIRPORTCODE = "originAirportCode";
+    public static final String ENDDAY = "endDay";
+    public static final String ENDMONTH = "endMonth";
+    public static final String ENDYEAR = "endYear";
 
     private static int mPage;
     private static String mDestinationAirportCode;
+    private static String mOriginAirportCode;
+    private static String mEndDay;
+    private static String mEndMonth;
+    private static String mEndYear;
 
     private SwipeRefreshLayout mFlightSwipeRefreshLayout;
     private static RecyclerView mFlightRecyclerView;
@@ -113,8 +121,14 @@ public class InputFlightTabFragment extends Fragment {
         // Set Text to views
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "JFK");
+        mEndDay = sharedPref.getString(ENDDAY, "Default");
+        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
+        mEndYear = sharedPref.getString(ENDYEAR, "Default");
 
-        mOrigin.setText("SFO");
+        Log.d(TAG, "initViews: mOriginAirportCode " + mOriginAirportCode);
+
+        mOrigin.setText(mOriginAirportCode);
         mDestination.setText(mDestinationAirportCode);
     }
 
@@ -143,12 +157,10 @@ public class InputFlightTabFragment extends Fragment {
                 Bus bus = headingOutApplication.provideBus();
                 bus.register(this);
 
-                String origin = "BOS";
-                String destination = "LAX";
-                String date = "2016-07-10";
+                String date = mEndYear + "-" + mEndMonth + "-" + mEndDay; // yyyy-MM-dd
 
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-                ApiManager.getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
+                ApiManager.getQPExpressApi(bus, googlePlacesApiKey, mOriginAirportCode, mDestinationAirportCode, date);
 
                 recyclerViewSetup();
                 mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);

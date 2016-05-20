@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -74,6 +75,7 @@ public class MainFragment extends Fragment implements
     private static ImageView mCalendarImageView;
     private static AutoCompleteTextView mDestinationAutoCompleteTextView;
     private static AutoCompleteTextView mOriginAutoCompleteTextView;
+    private static FloatingActionButton mMainGoButtonFAB;
     //endregion
 
     @Nullable
@@ -82,7 +84,9 @@ public class MainFragment extends Fragment implements
         View view = inflater.inflate(R.layout.main_content, container, false);
 
         initializeViews(view);
-        setAddButtonListener();
+        initFab();
+        //setAddButtonListener();
+        setMainGoFABListener();
         recyclerViewSetup();
 
         setDefaultDates();
@@ -134,13 +138,14 @@ public class MainFragment extends Fragment implements
     /**
      * Store sharedPreferences and switch out fragment when button is clicked
      */
-    private void setAddButtonListener(){
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+    private void setMainGoFABListener(){
+        mMainGoButtonFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveSharedPreferences();
 
                 checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
+                mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();
@@ -206,14 +211,13 @@ public class MainFragment extends Fragment implements
         mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
         mDestinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
         mOriginAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
+        mMainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
 
         // Change the color of Resources
         int color = Color.parseColor("#68EFAD");
         mCalendarImageView.setImageResource(R.drawable.calendar);
         mCalendarImageView.setColorFilter(color);
         mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
-
-        mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
 
     }
 
@@ -262,5 +266,45 @@ public class MainFragment extends Fragment implements
         mDestinationAutoCompleteTextView.setText(mDestinationAirportCode);
         mLatitude = Double.parseDouble(tripDestination.getLatitude());
         mLongitude = Double.parseDouble(tripDestination.getLongitude());
+    }
+
+    /**
+     * Initizlize FAB Button
+     */
+    private void initFab(){
+        setFabIconColor(mMainGoButtonFAB, Utilities.FAB_BUTTON_COLOR);
+    }
+
+    /**
+     * Set the color of FAB Button
+     * @param searchFab
+     * @param fabColor
+     */
+    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor) {
+        int color = Color.parseColor(fabColor);
+        //searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
+        searchFab.setImageResource(R.drawable.icon_search);
+        searchFab.setColorFilter(color);
+    }
+
+
+    /**
+     * Store sharedPreferences and switch out fragment when button is clicked
+     */
+    private void setAddButtonListener(){
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveSharedPreferences();
+
+                checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
+                mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
+
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                InputFragment inputFragment = new InputFragment();
+                fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                fragmentTransaction.commit();
+            }
+        });
     }
 }

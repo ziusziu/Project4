@@ -139,17 +139,18 @@ public class InputFragment extends Fragment{
 //        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
 //                mOriginAirportCode, mDestinationAirportCode,
 //                startDate);
+//
+//        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+//        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+//
 
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+//        // API that returns lat, long from airportcode
+//        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+//        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+//        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
+//                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
 
-
-        // API to search for airports near a specified lat long
-        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
-                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
-
+          // API to search for airports near a specified lat long
 //        String distance = "5";
 //        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
 
@@ -248,13 +249,15 @@ public class InputFragment extends Fragment{
         this.airport = airport;
 
         Log.d(TAG, "onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
+        // Create destination in format "<city>,<state>" for HotwireSearch
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
         mDestination = destination;
 
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        //WHY IS THIS HERE?
+/*        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(DESTINATION, destination);
-        editor.apply();
+        editor.apply();*/
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
@@ -308,13 +311,11 @@ public class InputFragment extends Fragment{
         mStartDay = sharedPref.getString(STARTDAY, "Default");
         mStartMonth = sharedPref.getString(STARTMONTH, "Default");
         mStartYear = sharedPref.getString(STARTYEAR, "Default");
-        mEndDay = sharedPref.getString(ENDDAY, "Default");
-        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
-        mEndYear = sharedPref.getString(ENDYEAR, "Default");
+
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
 
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + mOriginAirportCode);
 
     }
 
