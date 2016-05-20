@@ -43,6 +43,7 @@ public class MainFragment extends Fragment implements
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+    public static final String ORIGINAIRPORTCODE = "originAirportCode";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -55,6 +56,7 @@ public class MainFragment extends Fragment implements
 
     //region SharedPreferences Objects
     private static String mDestinationAirportCode;
+    private static String mOriginAirportCode;
     private static double mLatitude;
     private static double mLongitude;
     private static String mStartDay;
@@ -70,7 +72,8 @@ public class MainFragment extends Fragment implements
     private static RecyclerView mTripDestinationRecyclerView;
     private static RecyclerView mTripOriginRecyclerView;
     private static ImageView mCalendarImageView;
-    private static AutoCompleteTextView mAutoCompleteTextView;
+    private static AutoCompleteTextView mDestinationAutoCompleteTextView;
+    private static AutoCompleteTextView mOriginAutoCompleteTextView;
     //endregion
 
     @Nullable
@@ -137,7 +140,7 @@ public class MainFragment extends Fragment implements
             public void onClick(View v) {
                 saveSharedPreferences();
 
-                checkAutoCompleteTextInput(mAutoCompleteTextView);
+                checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();
@@ -154,6 +157,7 @@ public class MainFragment extends Fragment implements
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
+        editor.putString(ORIGINAIRPORTCODE, mOriginAirportCode);
         editor.putString(LATITUDE, Double.toString(mLatitude));
         editor.putString(LONGITUDE, Double.toString(mLongitude));
         editor.putString(STARTDAY, mStartDay);
@@ -200,13 +204,16 @@ public class MainFragment extends Fragment implements
         mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
         mTripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
         mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
-        mAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_autocomplete_textView);
+        mDestinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
+        mOriginAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
 
         // Change the color of Resources
         int color = Color.parseColor("#68EFAD");
         mCalendarImageView.setImageResource(R.drawable.calendar);
         mCalendarImageView.setColorFilter(color);
         mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
+
+        mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
 
     }
 
@@ -252,7 +259,7 @@ public class MainFragment extends Fragment implements
     @Override
     public void onMainCardViewClick(TripDestination tripDestination) {
         mDestinationAirportCode = tripDestination.getAirportCode();
-        mAutoCompleteTextView.setText(mDestinationAirportCode);
+        mDestinationAutoCompleteTextView.setText(mDestinationAirportCode);
         mLatitude = Double.parseDouble(tripDestination.getLatitude());
         mLongitude = Double.parseDouble(tripDestination.getLongitude());
     }

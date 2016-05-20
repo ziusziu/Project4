@@ -65,6 +65,7 @@ public class InputFragment extends Fragment{
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+    public static final String ORIGINAIRPORTCODE = "originAirportCode";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String STARTDAY = "startDay";
@@ -311,7 +312,7 @@ public class InputFragment extends Fragment{
         mEndMonth = sharedPref.getString(ENDMONTH, "Default");
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        mOriginAirportCode = "SFO";
+        mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
 
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
 
