@@ -1,6 +1,7 @@
 package siu.example.com.headingout.inputfragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -146,7 +147,7 @@ public class InputFragment extends Fragment{
         String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
         ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
-                                      mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
+                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
 
 //        String distance = "5";
 //        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
@@ -364,7 +365,8 @@ public class InputFragment extends Fragment{
      */
     protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor) {
         int color = Color.parseColor(fabColor);
-        searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
+        //searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
+        searchFab.setImageResource(R.drawable.ic_share_24dp);
         searchFab.setColorFilter(color);
     }
 
@@ -375,13 +377,23 @@ public class InputFragment extends Fragment{
         mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DetailFragment detailFragment = new DetailFragment();
-                detailFragment.setArguments(InputTabHotelRVAdapter.hotelBundle);
+                String description = "Description";
+                String title = "Title";
+                String location = "Location";
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, description);
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title + ": " + location);
 
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment).addToBackStack(null);
-                fragmentTransaction.commit();
+                v.getContext().startActivity(Intent.createChooser(intent, "Share to"));
+
+//                DetailFragment detailFragment = new DetailFragment();
+//                detailFragment.setArguments(InputTabHotelRVAdapter.hotelBundle);
+//
+//                FragmentManager fragmentManager = getFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment).addToBackStack(null);
+//                fragmentTransaction.commit();
             }
         });
     }
