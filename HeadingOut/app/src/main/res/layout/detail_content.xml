@@ -9,7 +9,7 @@
         android:id="@+id/detail_tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:tabBackground="@color/colorPrimayLight"
+        app:tabBackground="@color/colorPrimaryLight"
         app:tabIndicatorColor="@color/colorAccent"
         android:fadeScrollbars="true"
         android:scrollbarDefaultDelayBeforeFade="1"

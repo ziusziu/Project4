@@ -223,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     protected int getLayoutResource() {
-        return R.layout.activity_home;
+        return R.layout.activity_main;
     }
 
     protected int getDrawerLayoutResource() {

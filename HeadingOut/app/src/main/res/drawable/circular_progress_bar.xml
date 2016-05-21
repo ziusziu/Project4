@@ -12,7 +12,7 @@
         android:thicknessRatio="7.0">
 
         <gradient
-            android:centerColor="@color/colorPrimayLight"
+            android:centerColor="@color/colorPrimaryLight"
             android:endColor="@color/colorAccent"
             android:startColor="@color/colorAccentDark"
             android:angle="0"

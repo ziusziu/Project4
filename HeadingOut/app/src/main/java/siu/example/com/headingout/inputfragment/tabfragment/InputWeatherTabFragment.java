@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -38,12 +39,16 @@ public class InputWeatherTabFragment extends Fragment {
 
     private static String mLatitude;
     private static String mLongitude;
+    private static String mDestinationAirportCode;
+
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
 
     private static RecyclerView mWeatherRecyclerView;
     private InputTabWeatherRVAdapter recyclerViewAdapter;
+    private TextView mDestinationTextView;
 
     private static String forecastApiKey;
 
@@ -59,11 +64,6 @@ public class InputWeatherTabFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPage = getArguments().getInt(ARG_PAGE);
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-
     }
 
     @Nullable
@@ -73,6 +73,7 @@ public class InputWeatherTabFragment extends Fragment {
 
         initViews(view);
         initRecyclerView();
+        getSharedPreferences();
         swipeWeatherRefreshListener();
 
         registerOttoBus();
@@ -84,6 +85,7 @@ public class InputWeatherTabFragment extends Fragment {
     private void initViews(View view){
         mWeatherSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_weather_fragment_swipe_refresh_layout);
         mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
+        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_weather_destination_textView);
    //     mSpinner = (ProgressBar)view.findViewById(R.id.input_tab_weather_fragment_progressBar);
     }
 
@@ -103,6 +105,15 @@ public class InputWeatherTabFragment extends Fragment {
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
         Bus bus = headingOutApplication.provideBus();
         return bus;
+    }
+
+    private void getSharedPreferences(){
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        mLatitude = sharedPref.getString(LATITUDE, "Default");
+        mLongitude = sharedPref.getString(LONGITUDE, "Default");
+        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+
+        mDestinationTextView.setText(mDestinationAirportCode);
     }
 
 
@@ -127,7 +138,7 @@ public class InputWeatherTabFragment extends Fragment {
 
                 ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
                 //recyclerViewSetup();
-                mWeatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
+                mWeatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 mWeatherSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);

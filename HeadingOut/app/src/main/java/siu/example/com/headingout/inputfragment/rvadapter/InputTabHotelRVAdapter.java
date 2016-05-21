@@ -86,7 +86,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.cardView.setCardBackgroundColor(R.color.colorPrimayLight);
+                holder.cardView.setCardBackgroundColor(R.color.colorPrimaryLight);
 
                 hotelPositions.add(position);
                 hotelBundle.putIntegerArrayList("HOTEL_POSITION", hotelPositions);

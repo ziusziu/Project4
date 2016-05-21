@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
+
 
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -36,6 +38,7 @@ public class InputHotelTabFragment extends Fragment {
     private static RecyclerView mHotelRecyclerView;
     private InputTabHotelRVAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
+    private TextView mDestinationTextView;
 
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -88,10 +91,11 @@ public class InputHotelTabFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        registerOttoBus();
-
-        getSharedPreferences();
         initViews(view);
+
+        registerOttoBus();
+        getSharedPreferences();
+
         recyclerViewSetup();
         swipeHotelRefreshListener();
 
@@ -113,6 +117,7 @@ public class InputHotelTabFragment extends Fragment {
     private void initViews(View view){
         mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
         mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
+        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_hotel_destination_textView);
 
     }
 
@@ -152,7 +157,7 @@ public class InputHotelTabFragment extends Fragment {
                 ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
 
                 //recyclerViewSetup();
-                mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
+                mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 mHotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -177,6 +182,7 @@ public class InputHotelTabFragment extends Fragment {
         mDestination = sharedPref.getString(DESTINATION, "default");
         Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
 
+        mDestinationTextView.setText(mDestinationAirportCode);
     }
 
     /**

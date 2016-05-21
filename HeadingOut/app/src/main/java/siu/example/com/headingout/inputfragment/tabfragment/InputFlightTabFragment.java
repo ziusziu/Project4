@@ -58,8 +58,8 @@ public class InputFlightTabFragment extends Fragment {
     private SwipeRefreshLayout mFlightSwipeRefreshLayout;
     private static RecyclerView mFlightRecyclerView;
     private static InputTabFlightRVAdapter recyclerViewAdapter;
-    private static TextView mOrigin;
-    private static TextView mDestination;
+    private static TextView mOriginTextView;
+    private static TextView mDestinationTextView;
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -110,8 +110,8 @@ public class InputFlightTabFragment extends Fragment {
 
         mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
         mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
-        mOrigin = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
-        mDestination = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
+        mOriginTextView = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
+        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
 
         // Set Color of Icons
         ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
@@ -128,8 +128,8 @@ public class InputFlightTabFragment extends Fragment {
 
         Log.d(TAG, "initViews: mOriginAirportCode " + mOriginAirportCode);
 
-        mOrigin.setText(mOriginAirportCode);
-        mDestination.setText(mDestinationAirportCode);
+        mOriginTextView.setText(mOriginAirportCode);
+        mDestinationTextView.setText(mDestinationAirportCode);
     }
 
     private void recyclerViewSetup(){
@@ -163,7 +163,7 @@ public class InputFlightTabFragment extends Fragment {
                 ApiManager.getQPExpressApi(bus, googlePlacesApiKey, mOriginAirportCode, mDestinationAirportCode, date);
 
                 recyclerViewSetup();
-                mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimayLight, R.color.colorAccent, R.color.colorAccentDark);
+                mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 mFlightSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);

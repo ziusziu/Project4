@@ -40,7 +40,7 @@
                 android:singleLine="true"
                 android:ems="5"
                 android:hint="Start Date"
-                android:textColorHint="@color/colorPrimayLight" />
+                android:textColorHint="@color/colorPrimaryLight" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -55,7 +55,7 @@
                 android:singleLine="true"
                 android:ems="5"
                 android:hint="End Date"
-                android:textColorHint="@color/colorPrimayLight" />
+                android:textColorHint="@color/colorPrimaryLight" />
 
         </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:ems="10"
                 android:hint="Origin"
                 android:text="SFO"
-                android:textColorHint="@color/colorPrimayLight"/>
+                android:textColorHint="@color/colorPrimaryLight"/>
 
         </LinearLayout>
 
@@ -108,7 +108,7 @@
                 android:singleLine="true"
                 android:ems="10"
                 android:hint="Destination"
-                android:textColorHint="@color/colorPrimayLight"/>
+                android:textColorHint="@color/colorPrimaryLight"/>
 
         </LinearLayout>
 

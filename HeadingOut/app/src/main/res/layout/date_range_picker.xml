@@ -16,6 +16,7 @@
 
             <TabWidget
                 android:id="@android:id/tabs"
+                android:tabStripEnabled="true"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content" />
 
@@ -33,6 +34,8 @@
 
                     <DatePicker
                         android:id="@+id/start_date_picker"
+                        android:theme="@style/MyCalendarView"
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
 
@@ -47,6 +50,8 @@
 
                     <DatePicker
                         android:id="@+id/end_date_picker"
+                        android:theme="@style/MyCalendarView"
+                        android:layout_gravity="center_horizontal"
                         android:layout_width="fill_parent"
                         android:layout_height="wrap_content" />
                 </LinearLayout>
@@ -55,8 +60,10 @@
 
             <Button
                 android:id="@+id/but_set_time_range"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:background="#B9F6CA"
                 android:text="@string/but_done" />
         </LinearLayout>
     </TabHost>

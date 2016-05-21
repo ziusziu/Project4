@@ -42,8 +42,11 @@ import siu.example.com.headingout.model.airports.AirportData;
 import siu.example.com.headingout.model.flights.Flights;
 
 import siu.example.com.headingout.model.forecast.Weather;
+import siu.example.com.headingout.model.forecast.WeatherDetailDaily;
+import siu.example.com.headingout.model.forecast.WeatherInfoDaily;
 import siu.example.com.headingout.model.hotels.HWAmenities;
 import siu.example.com.headingout.model.hotels.HWNeighborhoods;
+import siu.example.com.headingout.model.hotels.HWResult;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
 import siu.example.com.headingout.util.FragmentUtil;
 import siu.example.com.headingout.util.Utilities;
@@ -122,6 +125,11 @@ public class InputFragment extends Fragment{
 
         onFabContinueButtonClick();
 
+        // Get Weather Data
+//        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+//        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+
+
         makeApiCall();
 
         return view;
@@ -136,10 +144,10 @@ public class InputFragment extends Fragment{
         String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
 
 
-//        // Get Airport Data
-//        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
-//                mOriginAirportCode, mDestinationAirportCode,
-//                startDate);
+        // Get Airport Data
+        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
+                mOriginAirportCode, mDestinationAirportCode,
+                startDate);
 
         // Get Weather Data
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
@@ -395,9 +403,66 @@ public class InputFragment extends Fragment{
         mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String description = "Description";
-                String title = "Title";
-                String location = "Location";
+
+
+//                List<HWResult> hotWireResults = hotWireHotels.getResult();
+//                for(HWResult result : hotWireResults){
+//                    String destination = mDestination;
+//                    String hwRefNumber = result.getHWRefNumber();
+//                    String hwStartDate = result.getCheckInDate();
+//                    String hwEndDate = result.getCheckOutDate();
+//                    String hwNights = result.getNights();
+//                    String hwCurrency = result.getCurrencyCode();
+//                    String hwPrice = result.getTotalPrice();
+//                    String hwLink = result.getDeepLink();
+//                }
+
+                List<WeatherInfoDaily> weatherInfoDaily = weather.getDaily().getData();
+                String weatherDescription = "";
+                for(WeatherInfoDaily weatherDaily: weatherInfoDaily){
+                    weatherDaily.getTime();
+
+                    String weatherTime = "Date: " + "";
+                    String weatherSummary = "Summary: "+ weatherDaily.getSummary();
+
+                    String weatherHumidity = "Humidity: " + String.valueOf(weatherDaily.getHumidity());
+                    String weatherDewPoint = "Dew Point: " + String.valueOf(weatherDaily.getDewPoint());
+                    String weatherOzone = "Ozone: " + String.valueOf(weatherDaily.getOzone());
+
+                    String weatherSunRise = "Sunrise: " + String.valueOf(weatherDaily.getSunriseTime());
+                    String weatherSunSet = "Sunset: " + String.valueOf(weatherDaily.getSunsetTime());
+
+                    String weatherPrecipIntensity = "Precipitation Intensity: " + String.valueOf(weatherDaily.getPrecipIntensity());
+                    String weatherPrecipProbability = "Precipitation Probability: " + String.valueOf(weatherDaily.getPrecipProbability());
+
+                    String weatherTempMax = "Temperature Max: " + String.valueOf(weatherDaily.getApparentTemperatureMax());
+                    String weatherTempMaxTime = "Temperature Max Time: " + String.valueOf(weatherDaily.getApparentTemperatureMaxTime());
+
+                    String weatherTempMin = "Temperature Min: " + String.valueOf(weatherDaily.getApparentTemperatureMin());
+                    String weatherTempMinTime = "Temperature Min Time: " + String.valueOf(weatherDaily.getApparentTemperatureMinTime());
+
+                    weatherDescription = weatherDescription + "\n" +
+                                                weatherTime + "\n" +
+                                                weatherSummary + "\n" +
+                                                weatherHumidity + "\n" +
+                                                weatherDewPoint + "\n" +
+                                                weatherOzone + "\n" +
+                                                weatherSunRise + "\n" +
+                                                weatherSunSet + "\n" +
+                                                weatherPrecipIntensity + "\n" +
+                                                weatherPrecipProbability + "\n" +
+                                                weatherTempMax + "\n" +
+                                                weatherTempMaxTime + "\n" +
+                                                weatherTempMin + "\n" +
+                                                weatherTempMinTime + "\n";
+                }
+
+
+                String startDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
+                String endDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
+                String description = weatherDescription;
+                String title = "HeadingOut: " + mOriginAirportCode + " | " + startDate + " to " + endDate ;
+                String location = mDestination;
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, description);

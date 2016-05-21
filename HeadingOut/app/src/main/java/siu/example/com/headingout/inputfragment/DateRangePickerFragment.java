@@ -10,6 +10,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.TabHost;
+import android.widget.TabWidget;
+import android.widget.TextView;
 
 import siu.example.com.headingout.R;
 
@@ -67,11 +69,9 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
         TabHost.TabSpec startDatePage = tabHost.newTabSpec("start");
         startDatePage.setContent(R.id.start_date_group);
         startDatePage.setIndicator(getString(R.string.title_tab_start_date));
-
         TabHost.TabSpec endDatePage = tabHost.newTabSpec("end");
         endDatePage.setContent(R.id.end_date_group);
         endDatePage.setIndicator(getString(R.string.ttile_tab_end_date));
-
         tabHost.addTab(startDatePage);
         tabHost.addTab(endDatePage);
         return root;
