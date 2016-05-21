@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
-    tools:context="siu.example.com.headingout.SplashActivity">
+    tools:context="app.ga.com.headingout.SplashActivity">
 
     <TextView
         android:id="@+id/splash_textView"

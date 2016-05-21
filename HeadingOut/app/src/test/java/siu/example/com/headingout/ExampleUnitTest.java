@@ -1,4 +1,4 @@
-package siu.example.com.headingout;
+package app.ga.com.headingout;
 
 import org.junit.Test;
 
