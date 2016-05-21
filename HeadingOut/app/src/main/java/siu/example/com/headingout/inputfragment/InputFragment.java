@@ -30,6 +30,8 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
@@ -41,6 +43,8 @@ import siu.example.com.headingout.model.airports.Airport;
 import siu.example.com.headingout.model.airports.AirportData;
 import siu.example.com.headingout.model.flights.Flights;
 
+import siu.example.com.headingout.model.flights.Leg;
+import siu.example.com.headingout.model.flights.Segment;
 import siu.example.com.headingout.model.forecast.Weather;
 import siu.example.com.headingout.model.forecast.WeatherDetailDaily;
 import siu.example.com.headingout.model.forecast.WeatherInfoDaily;
@@ -78,6 +82,9 @@ public class InputFragment extends Fragment{
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
     public static final String DESTINATION = "destination";
+    public static final String FLIGHTPOSITION = "flightPosition";
+    public static final String HOTELPOSITION = "hotelPosition";
+    public static final String WEATHERPOSITION = "weatherPosition";
     //endregion
     //region SharedPreferences Variables
     private static String mLatitude;
@@ -92,6 +99,9 @@ public class InputFragment extends Fragment{
     private static String mDestinationAirportCode;
     private static String mOriginAirportCode;
     private static String mDestination;
+    private static int mFlightPosition;
+    private static int mHotelPosition;
+    private static int mWeatherPosition;
     //endregion
     //region API Objects
     private MapView mMapView;
@@ -125,11 +135,6 @@ public class InputFragment extends Fragment{
 
         onFabContinueButtonClick();
 
-        // Get Weather Data
-//        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-//        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
-
-
         makeApiCall();
 
         return view;
@@ -149,6 +154,7 @@ public class InputFragment extends Fragment{
                 mOriginAirportCode, mDestinationAirportCode,
                 startDate);
 
+        Log.d(TAG, "makeApiCall: latitude " + mLatitude);
         // Get Weather Data
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
@@ -159,6 +165,7 @@ public class InputFragment extends Fragment{
         String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
         ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
                 mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
+
 
           // API to search for airports near a specified lat long
 //        String distance = "5";
@@ -274,12 +281,6 @@ public class InputFragment extends Fragment{
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
         mDestination = destination;
 
-        //WHY IS THIS HERE?
-/*        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(DESTINATION, destination);
-        editor.apply();*/
-
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
         String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
@@ -335,6 +336,9 @@ public class InputFragment extends Fragment{
         mEndDay = sharedPref.getString(ENDDAY, "Default");
         mEndMonth = sharedPref.getString(ENDMONTH, "Default");
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
+        mFlightPosition = sharedPref.getInt(FLIGHTPOSITION, 0);
+        mHotelPosition = sharedPref.getInt(HOTELPOSITION, 0);
+        mWeatherPosition = sharedPref.getInt(WEATHERPOSITION, 0);
 
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
@@ -404,64 +408,140 @@ public class InputFragment extends Fragment{
             @Override
             public void onClick(View v) {
 
+                String flightDescription = "FLIGHT";
+                String flightTotalCost = "Price: " + flights.getTrips().getTripOption().get(mFlightPosition).getSaleTotal();
+                int duration = flights.getTrips().getTripOption().get(mFlightPosition).getSlice().get(0).getDuration();
+                String flightDuration = "Total Duration: " + convertMinToHours(duration);
 
-//                List<HWResult> hotWireResults = hotWireHotels.getResult();
-//                for(HWResult result : hotWireResults){
-//                    String destination = mDestination;
-//                    String hwRefNumber = result.getHWRefNumber();
-//                    String hwStartDate = result.getCheckInDate();
-//                    String hwEndDate = result.getCheckOutDate();
-//                    String hwNights = result.getNights();
-//                    String hwCurrency = result.getCurrencyCode();
-//                    String hwPrice = result.getTotalPrice();
-//                    String hwLink = result.getDeepLink();
-//                }
+                List<Leg> listLeg;
+                List<Segment> listSegment = flights.getTrips().getTripOption().get(mFlightPosition).getSlice().get(0).getSegment();
+                String flightStops = "Stops: " + String.valueOf(listSegment.size() - 1);
 
-                List<WeatherInfoDaily> weatherInfoDaily = weather.getDaily().getData();
-                String weatherDescription = "";
-                for(WeatherInfoDaily weatherDaily: weatherInfoDaily){
-                    weatherDaily.getTime();
+                flightDescription = flightDescription + "\n" +
+                        flightTotalCost + "\n" +
+                        flightDuration + "\n" +
+                        flightStops + "\n";
 
-                    String weatherTime = "Date: " + "";
-                    String weatherSummary = "Summary: "+ weatherDaily.getSummary();
+                String flightSegmentDescription = "";
+                for (Segment segment : listSegment) {
+                    String flightCarrier = segment.getFlight().getCarrier();
+                    String flightNumber = segment.getFlight().getNumber();
+                    String flightInfo = "Flight: " + flightCarrier + flightNumber;
+                    String flightCabin = "Cabin: " + segment.getCabin();
+                    String segmentDuration = "Flight Duration: " + convertMinToHours(segment.getDuration());
+                    listLeg = segment.getLeg();
+                    String departureTime = "";
+                    String arrivalTime = "";
+                    String origin = "";
+                    String originTerminal = "";
+                    String destination = "";
+                    String destinationTerminal = "";
+                    for (Leg leg : listLeg) {
+                        origin = "Departing From: " + leg.getOrigin();
+                        originTerminal = "Departing Terminal: " + leg.getOriginTerminal();
+                        departureTime = "Departing: " + leg.getDepartureTime().substring(0, leg.getDepartureTime().length() - 6);
+                        destination = "Arriving To: " + leg.getDestination();
+                        destinationTerminal = "Arriving Terminal: " + leg.getDestinationTerminal();
+                        arrivalTime = "Arriving: " + leg.getArrivalTime().substring(0, leg.getArrivalTime().length() - 6);
+                    }
 
-                    String weatherHumidity = "Humidity: " + String.valueOf(weatherDaily.getHumidity());
-                    String weatherDewPoint = "Dew Point: " + String.valueOf(weatherDaily.getDewPoint());
-                    String weatherOzone = "Ozone: " + String.valueOf(weatherDaily.getOzone());
+                    String connectionDuration = "";
+                    if(segment.getConnectionDuration() != 0 ){
+                        connectionDuration = "Connection Time: " + convertMinToHours(segment.getConnectionDuration());
+                    }
 
-                    String weatherSunRise = "Sunrise: " + String.valueOf(weatherDaily.getSunriseTime());
-                    String weatherSunSet = "Sunset: " + String.valueOf(weatherDaily.getSunsetTime());
+                    flightSegmentDescription = flightSegmentDescription + "\n" +
+                            flightInfo + "\n" +
+                            flightCabin + "\n" +
+                            segmentDuration + "\n" +
+                            origin + "\n" +
+                            originTerminal + "\n" +
+                            departureTime + "\n" +
+                            destination + "\n" +
+                            destinationTerminal + "\n" +
+                            arrivalTime + "\n" +
+                            "\n" + connectionDuration + "\n";
 
-                    String weatherPrecipIntensity = "Precipitation Intensity: " + String.valueOf(weatherDaily.getPrecipIntensity());
-                    String weatherPrecipProbability = "Precipitation Probability: " + String.valueOf(weatherDaily.getPrecipProbability());
-
-                    String weatherTempMax = "Temperature Max: " + String.valueOf(weatherDaily.getApparentTemperatureMax());
-                    String weatherTempMaxTime = "Temperature Max Time: " + String.valueOf(weatherDaily.getApparentTemperatureMaxTime());
-
-                    String weatherTempMin = "Temperature Min: " + String.valueOf(weatherDaily.getApparentTemperatureMin());
-                    String weatherTempMinTime = "Temperature Min Time: " + String.valueOf(weatherDaily.getApparentTemperatureMinTime());
-
-                    weatherDescription = weatherDescription + "\n" +
-                                                weatherTime + "\n" +
-                                                weatherSummary + "\n" +
-                                                weatherHumidity + "\n" +
-                                                weatherDewPoint + "\n" +
-                                                weatherOzone + "\n" +
-                                                weatherSunRise + "\n" +
-                                                weatherSunSet + "\n" +
-                                                weatherPrecipIntensity + "\n" +
-                                                weatherPrecipProbability + "\n" +
-                                                weatherTempMax + "\n" +
-                                                weatherTempMaxTime + "\n" +
-                                                weatherTempMin + "\n" +
-                                                weatherTempMinTime + "\n";
                 }
+
+                flightDescription = flightDescription + flightSegmentDescription;
+
+                String hotelDescription = "HOTWIRE_HOTEL ";
+                HWResult result = hotWireHotels.getResult().get(mHotelPosition);
+                String destination = "Destination: " + mDestination;
+                String hwRefNumber = "HotWire Reference: " + result.getHWRefNumber();
+                String hwStartDate = "Check In: " + result.getCheckInDate();
+                String hwEndDate = "Check Out: " + result.getCheckOutDate();
+                String hwNights = "Nights: " + result.getNights();
+                String hwCurrency = result.getCurrencyCode();
+                String hwPrice = result.getTotalPrice();
+                String price = "Price: " + hwCurrency + hwPrice;
+                String hwLink = "DeepLink: " + result.getDeepLink();
+                hotelDescription = hotelDescription + "\n" +
+                        destination + "\n" +
+                        hwRefNumber + "\n" +
+                        hwStartDate + "\n" +
+                        hwEndDate + "\n" +
+                        hwNights + "\n" +
+                        price + "\n" +
+                        hwLink + "\n";
+
+
+                String weatherDescription = "WEATHER ";
+                WeatherInfoDaily weatherDaily = weather.getDaily().getData().get(mWeatherPosition);
+
+                int time = weatherDaily.getTime();
+                String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
+
+                String weatherTime = "Date: " + formattedTime;
+                String weatherSummary = "Summary: " + weatherDaily.getSummary();
+
+                String weatherHumidity = "Humidity: " + String.valueOf(weatherDaily.getHumidity());
+                String weatherDewPoint = "Dew Point: " + String.valueOf(weatherDaily.getDewPoint());
+                String weatherOzone = "Ozone: " + String.valueOf(weatherDaily.getOzone());
+
+
+                String weatherSunRise = "Sunrise: " + String.valueOf(weatherDaily.getSunriseTime());
+                String weatherSunSet = "Sunset: " + String.valueOf(weatherDaily.getSunsetTime());
+
+                String weatherPrecipIntensity = "Precipitation Intensity: " + String.valueOf(weatherDaily.getPrecipIntensity());
+                String weatherPrecipProbability = "Precipitation Probability: " + String.valueOf(weatherDaily.getPrecipProbability());
+
+                String weatherTempMax = "Temperature Max: " + String.valueOf(weatherDaily.getApparentTemperatureMax());
+                String weatherTempMaxTime = "Temperature Max Time: " + String.valueOf(weatherDaily.getApparentTemperatureMaxTime());
+
+                String weatherTempMin = "Temperature Min: " + String.valueOf(weatherDaily.getApparentTemperatureMin());
+                String weatherTempMinTime = "Temperature Min Time: " + String.valueOf(weatherDaily.getApparentTemperatureMinTime());
+
+                weatherDescription = weatherDescription + "\n" +
+                        weatherTime + "\n" +
+                        weatherSummary + "\n" +
+                        weatherHumidity + "\n" +
+                        weatherDewPoint + "\n" +
+                        //                                    weatherOzone + "\n" +
+                        //weatherSunRise + "\n" +
+                        //weatherSunSet + "\n" +
+                        //                                    weatherPrecipIntensity + "\n" +
+                        //                                    weatherPrecipProbability + "\n" +
+                        weatherTempMax + "\n" +
+                        //                                   weatherTempMaxTime + "\n" +
+                        weatherTempMin + "\n" +
+                        //                                   weatherTempMinTime + "\n";
+                        "";
 
 
                 String startDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
                 String endDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
-                String description = weatherDescription;
-                String title = "HeadingOut: " + mOriginAirportCode + " | " + startDate + " to " + endDate ;
+
+                String startDescription = "Hello,\nBelow are your trip details: \n";
+                String endDescription = "Sincerely, \n HeadingOut Team";
+
+                String description = startDescription + "\n" +
+                                     flightDescription + "\n" +
+                                     hotelDescription + "\n" +
+                                     weatherDescription + "\n" +
+                                     endDescription;
+                String title = "HeadingOut: " + mOriginAirportCode + " | " + startDate + " to " + endDate;
                 String location = mDestination;
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
@@ -513,4 +593,20 @@ public class InputFragment extends Fragment{
         this.size = size;
         Log.d(TAG, "onSizeData: === Posting Data from adapter" + size);
     }
+
+
+    /**
+     * Converts minutes to a string in format "HH hours mm mins"
+     * @param duration
+     * @return
+     */
+    private String convertMinToHours(int duration){
+        Long longVal = new Long(duration);
+        int hours = (int) longVal.longValue() / 60;
+        int mins = (int) longVal.longValue() - (hours * 60);
+        String durationString = hours + " hours " + mins + " mins ";
+        Log.d(TAG, "onCreateView: hours " + durationString);
+        return durationString;
+    }
+
 }

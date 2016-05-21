@@ -9,7 +9,7 @@ import java.util.List;
  */
 
 
-public class HotWireHotels implements Serializable{
+public class HotWireHotels{
 
     HWErrors errors;
     HWMetaData MetaData;

@@ -1,6 +1,7 @@
 package siu.example.com.headingout.inputfragment.rvadapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -11,18 +12,13 @@ import android.widget.TextView;
 
 import com.squareup.otto.Bus;
 
-import org.w3c.dom.Text;
-
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import siu.example.com.headingout.HeadingOutApplication;
 import siu.example.com.headingout.MainActivity;
 import siu.example.com.headingout.R;
 import siu.example.com.headingout.model.forecast.Weather;
-import siu.example.com.headingout.model.forecast.WeatherInfoDaily;
 
 /**
  * Created by samsiu on 5/9/16.
@@ -31,18 +27,23 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     private static final String TAG = InputTabWeatherRVAdapter.class.getSimpleName();
 
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String WEATHERPOSITION = "weatherPosition";
+
+    private static SharedPreferences mSharedPref;
+
     Weather weather;
     Context mContext;
     Bus bus;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
+        CardView weatherCardView;
         TextView weatherNameTextView, weatherSummaryTextView,
                 weatherTimeTextView, weatherAvgTempTextView;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.input_tab_weather_fragment_cardView);
+            weatherCardView = (CardView) itemView.findViewById(R.id.input_tab_weather_fragment_cardView);
             weatherTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_time_textView);
             weatherAvgTempTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_avgTemp_TextView);
             weatherNameTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_textView);
@@ -64,11 +65,12 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_weather_cardview, parent, false);
         WeatherViewHolder weatherViewHolder = new WeatherViewHolder(view);
+        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return weatherViewHolder;
     }
 
     @Override
-    public void onBindViewHolder(WeatherViewHolder holder, int position) {
+    public void onBindViewHolder(WeatherViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: inside RV Adapter " + weather.getDaily().getData().size());
         Integer size = weather.getDaily().getData().size();
 
@@ -81,6 +83,16 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         holder.weatherTimeTextView.setText(formattedTime);
         holder.weatherAvgTempTextView.setText(String.format("%.0f" + (char) 0x00B0, weatherAvg));
         holder.weatherSummaryTextView.setText(weather.getDaily().getData().get(position).getSummary());
+
+
+        holder.weatherCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = mSharedPref.edit();
+                editor.putInt(WEATHERPOSITION, position);
+                editor.apply();
+            }
+        });
 
         bus = createBus();
         bus.post(size);

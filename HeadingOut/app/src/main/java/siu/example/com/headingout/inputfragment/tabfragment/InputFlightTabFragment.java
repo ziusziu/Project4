@@ -87,9 +87,8 @@ public class InputFlightTabFragment extends Fragment {
         recyclerViewSetup();
         swipeFlightRefreshListener();
 
-    //    registerOttoBus();
 
-        setRecyclerViewFlightsDummyData();
+        //setRecyclerViewFlightsDummyData();
 
         return view;
     }

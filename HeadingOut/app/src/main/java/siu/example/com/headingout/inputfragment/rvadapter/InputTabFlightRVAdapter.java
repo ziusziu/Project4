@@ -1,6 +1,7 @@
 package siu.example.com.headingout.inputfragment.rvadapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -25,19 +26,24 @@ import siu.example.com.headingout.model.flights.Segment;
  */
 public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlightRVAdapter.FlightViewHolder>{
 
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String FLIGHTPOSITION = "flightPosition";
+
+    private static SharedPreferences mSharedPref;
+
     private static final String TAG = InputTabFlightRVAdapter.class.getSimpleName();
     Flights flights;
 
     public static ListView flightSegmentListView;
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
+        CardView flightCardView;
         TextView flightSaleTotalTextView, flightDurationTextView;
         LinearLayout flightCardsLinearLayout;
 
         FlightViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
+            flightCardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
             flightSaleTotalTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_saleTotal_textView);
             flightDurationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_duration_textView);
             flightSegmentListView = (ListView) itemView.findViewById(R.id.input_tab_flight_segments_listView);
@@ -60,12 +66,13 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     public FlightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_flight_cardview, parent, false);
         FlightViewHolder flightViewHolder = new FlightViewHolder(view);
+        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return flightViewHolder;
     }
 
 
     @Override
-    public void onBindViewHolder(FlightViewHolder holder, int position) {
+    public void onBindViewHolder(FlightViewHolder holder, final int position) {
         holder.flightSaleTotalTextView.setText(flights.getTrips().getTripOption().get(position).getSaleTotal());
 
         int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
@@ -74,6 +81,16 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         holder.flightDurationTextView.setText(durationString);
         List<Segment> listSegment = flights.getTrips().getTripOption().get(position).getSlice().get(0).getSegment();
+
+        holder.flightCardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreferences.Editor editor = mSharedPref.edit();
+                editor.putInt(FLIGHTPOSITION, position);
+                editor.apply();
+            }
+        });
+
 
         appendFlightData(holder, listSegment);
 

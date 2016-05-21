@@ -1,5 +1,7 @@
 package siu.example.com.headingout.inputfragment.rvadapter;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -11,17 +13,19 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import siu.example.com.headingout.R;
-import siu.example.com.headingout.model.TestHotels;
-import siu.example.com.headingout.model.hotels.HWNeighborhoods;
 import siu.example.com.headingout.model.hotels.HotWireHotels;
 
 /**
  * Created by samsiu on 5/2/16.
  */
 public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRVAdapter.HotelViewHolder>{
+
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String HOTELPOSITION = "hotelPosition";
+
+    private static SharedPreferences mSharedPref;
 
     public static Bundle hotelBundle;
     private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
@@ -30,7 +34,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     HotWireHotels hotels;
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
+        CardView hotelCardView;
         TextView hotelCheckInDateTextView, hotelCheckOutDateTextView, hotelNightsTextView,
                 hotelCurrencyCodeTextView, hotelTotalPriceTextView;
         RatingBar hotelRatingBar;
@@ -41,7 +45,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
             super(itemView);
 
             hotelPositions = new ArrayList<>();
-            cardView = (CardView) itemView.findViewById(R.id.input_tab_hotel_fragment_cardView);
+            hotelCardView = (CardView) itemView.findViewById(R.id.input_tab_hotel_fragment_cardView);
             hotelNameTextView = (TextView) itemView.findViewById(R.id.input_tab_hotel_name_textView);
             hotelCheckInDateTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_checkInDate_textView);
             hotelCheckOutDateTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_checkOutDate_textView);
@@ -65,6 +69,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     public HotelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_hotel_cardview, parent, false);
         HotelViewHolder HotelViewHolder = new HotelViewHolder(view);
+        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return HotelViewHolder;
     }
 
@@ -79,17 +84,13 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         Log.d(TAG, "onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
 
-        hotelBundle = new Bundle();
-        hotelBundle.putSerializable("HOTEL_SERIALIZABLE", hotels);
-
-
-        holder.cardView.setOnClickListener(new View.OnClickListener() {
+        holder.hotelCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.cardView.setCardBackgroundColor(R.color.colorPrimaryLight);
+                holder.hotelCardView.setCardBackgroundColor(R.color.colorPrimaryLight);
 
                 hotelPositions.add(position);
-                hotelBundle.putIntegerArrayList("HOTEL_POSITION", hotelPositions);
+                hotelBundle.putInt(HOTELPOSITION, position);
             }
         });
 
