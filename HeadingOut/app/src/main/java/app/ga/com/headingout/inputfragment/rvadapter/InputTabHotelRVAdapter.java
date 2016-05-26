@@ -84,15 +84,15 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         Log.d(TAG, "onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
 
-        holder.hotelCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.hotelCardView.setCardBackgroundColor(R.color.colorPrimaryLight);
-
-                hotelPositions.add(position);
-                hotelBundle.putInt(HOTELPOSITION, position);
-            }
-        });
+//        holder.hotelCardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                holder.hotelCardView.setCardBackgroundColor(R.color.colorPrimaryLight);
+//
+//                hotelPositions.add(position);
+//                hotelBundle.putInt(HOTELPOSITION, position);
+//            }
+//        });
 
     }
 

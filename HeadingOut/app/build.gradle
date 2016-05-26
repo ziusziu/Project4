@@ -1,9 +1,16 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        configrelease {
+            keyAlias 'configrelease'
+            keyPassword 'headingout1!'
+            storeFile file('/Users/samsiu/Desktop/android.jks')
+            storePassword 'headingout1!'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.3"
-
     defaultConfig {
         applicationId "siu.example.com.headingout"
         minSdkVersion 16
@@ -17,39 +24,36 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.configrelease
+        }
+        debug {
         }
     }
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:design:23.2.1'
-    compile 'com.android.support:multidex:1.0.0'
-    compile 'com.android.support:support-v4:23.3.0'
-
-    compile 'com.android.support:cardview-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
-
     //Play Services for Maps Api
+    //Play Sercies Location Api
+    //Api
+    // Espresso Testing
+    androidTestCompile 'com.android.support:support-annotations:24.0.0-alpha2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
+    compile 'com.android.support:appcompat-v7:24.0.0-alpha2'
+    compile 'com.android.support:design:24.0.0-alpha2'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.android.support:support-v4:24.0.0-alpha2'
+    compile 'com.android.support:cardview-v7:24.0.0-alpha2'
+    compile 'com.android.support:recyclerview-v7:24.0.0-alpha2'
     compile 'com.google.android.gms:play-services-maps:8.4.0'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-identity:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
-
-    //Play Sercies Location Api
     compile 'com.google.android.gms:play-services-location:8.4.0'
-
-    //Api
     compile 'com.squareup.retrofit2:retrofit:2.0.1'
     compile 'com.squareup.retrofit2:converter-gson:2.0.1'
     compile 'com.squareup.okhttp3:logging-interceptor:3.0.1'
-
     compile 'com.squareup:otto:1.3.8'
     compile 'com.squareup.picasso:picasso:2.3.3'
-
-    // Espresso Testing
-    androidTestCompile 'com.android.support:support-annotations:23.3.0'
-    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.1'
 }

@@ -85,14 +85,14 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         holder.weatherSummaryTextView.setText(weather.getDaily().getData().get(position).getSummary());
 
 
-        holder.weatherCardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                SharedPreferences.Editor editor = mSharedPref.edit();
-                editor.putInt(WEATHERPOSITION, position);
-                editor.apply();
-            }
-        });
+//        holder.weatherCardView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                SharedPreferences.Editor editor = mSharedPref.edit();
+//                editor.putInt(WEATHERPOSITION, position);
+//                editor.apply();
+//            }
+//        });
 
         bus = createBus();
         bus.post(size);

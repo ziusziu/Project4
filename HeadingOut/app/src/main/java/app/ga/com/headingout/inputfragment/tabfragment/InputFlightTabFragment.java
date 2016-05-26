@@ -81,9 +81,12 @@ public class InputFlightTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
 
+        initViews(view);
+        getSharedPreferences();
+
         registerOttoBus();
 
-        initViews(view);
+
         recyclerViewSetup();
         swipeFlightRefreshListener();
 
@@ -117,6 +120,15 @@ public class InputFlightTabFragment extends Fragment {
         int color = Color.parseColor("#BBFFFFFF");
         mainAirplaneIcon.setColorFilter(color);
 
+        getSharedPreferences();
+
+        Log.d(TAG, "initViews: mOriginAirportCode " + mOriginAirportCode);
+
+        mOriginTextView.setText(mOriginAirportCode);
+        mDestinationTextView.setText(mDestinationAirportCode);
+    }
+
+    private void getSharedPreferences(){
         // Set Text to views
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
@@ -124,11 +136,6 @@ public class InputFlightTabFragment extends Fragment {
         mEndDay = sharedPref.getString(ENDDAY, "Default");
         mEndMonth = sharedPref.getString(ENDMONTH, "Default");
         mEndYear = sharedPref.getString(ENDYEAR, "Default");
-
-        Log.d(TAG, "initViews: mOriginAirportCode " + mOriginAirportCode);
-
-        mOriginTextView.setText(mOriginAirportCode);
-        mDestinationTextView.setText(mDestinationAirportCode);
     }
 
     private void recyclerViewSetup(){
