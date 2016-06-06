@@ -57,11 +57,11 @@ public class InputFragment extends Fragment{
     private static final String TAG = InputFragment.class.getSimpleName();
 
     // region View Declarations
-    private static TabLayout mTabLayout;
-    private static ViewPager mViewPager;
-    private static FloatingActionButton mInputContinueFabButton;
-    private static EditText mFlightEditText;
-    public static InputTabsFragmentPagerAdapter mInputTabsFragmentPagerAdapter;
+    private static TabLayout tabLayout;
+    private static ViewPager viewPager;
+    private static FloatingActionButton inputContinueFabButton;
+    private static EditText flightEditText;
+    public static InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter;
     //endregion
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -81,25 +81,25 @@ public class InputFragment extends Fragment{
     public static final String WEATHERPOSITION = "weatherPosition";
     //endregion
     //region SharedPreferences Variables
-    private static String mLatitude;
-    private static String mLongitude;
-    private static String mStartDay;
-    private static String mStartMonth;
-    private static String mStartYear;
-    private static String mEndDay;
-    private static String mEndMonth;
-    private static String mEndYear;
+    private static String latitude;
+    private static String longitude;
+    private static String startDay;
+    private static String startMonth;
+    private static String startYear;
+    private static String endDay;
+    private static String endMonth;
+    private static String endYear;
     private static String forecastApiKey;
-    private static String mDestinationAirportCode;
-    private static String mOriginAirportCode;
-    private static String mDestination;
-    private static int mFlightPosition;
-    private static int mHotelPosition;
-    private static int mWeatherPosition;
+    private static String destinationAirportCode;
+    private static String originAirportCode;
+    private static String destinationSharedPref;
+    private static int flightPosition;
+    private static int hotelPosition;
+    private static int weatherPosition;
     //endregion
     //region API Objects
-    private MapView mMapView;
-    private GoogleMap mGoogleMap;
+    private MapView mapView;
+    private GoogleMap googleMap;
     private HotWireHotels hotWireHotels;
     private Weather weather;
     private Flights flights;
@@ -114,7 +114,7 @@ public class InputFragment extends Fragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(savedInstanceState != null){
             int tabPagePosition = savedInstanceState.getInt(Utilities.POSITION);
-            mViewPager.setCurrentItem(tabPagePosition);
+            viewPager.setCurrentItem(tabPagePosition);
         }
         View view = inflater.inflate(R.layout.input_content, container, false);
 
@@ -140,25 +140,25 @@ public class InputFragment extends Fragment{
         Log.d(TAG, "onCreateView: ====>>> InputFragment - makeApiCall");
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-        String startDate = mStartYear + "-" + mStartMonth + "-" + mStartDay;
+        String startDate = startYear + "-" + startMonth + "-" + startDay;
 
 
         // Get Airport Data
         ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
-                mOriginAirportCode, mDestinationAirportCode,
+                originAirportCode, destinationAirportCode,
                 startDate);
 
-        Log.d(TAG, "makeApiCall: latitude " + mLatitude);
+        Log.d(TAG, "makeApiCall: latitude " + latitude);
         // Get Weather Data
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+        ApiManager.getWeatherApi(bus, forecastApiKey, latitude, longitude);
 
 
         // API that returns lat, long from airportcode, then gets Hotel Data after location returned
         String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
         ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
-                mDestinationAirportCode, mStartYear, mStartMonth, mStartDay);
+                destinationAirportCode, startYear, startMonth, startDay);
 
 
           // API to search for airports near a specified lat long
@@ -232,10 +232,10 @@ public class InputFragment extends Fragment{
         marker.icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
-        mGoogleMap.addMarker(marker);
+        googleMap.addMarker(marker);
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude)).zoom(12).build();
-        mGoogleMap.animateCamera(CameraUpdateFactory
+        googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
 
     }
@@ -273,12 +273,12 @@ public class InputFragment extends Fragment{
         Log.d(TAG, "onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
         // Create destination in format "<city>,<state>" for HotwireSearch
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
-        mDestination = destination;
+        destinationSharedPref = destination;
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
-        String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
-        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
+        String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
+        String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
+        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destinationSharedPref);
     }
 
 
@@ -289,7 +289,7 @@ public class InputFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
+        outState.putInt(Utilities.POSITION, tabLayout.getSelectedTabPosition());
     }
 
     /**
@@ -297,8 +297,8 @@ public class InputFragment extends Fragment{
      * @param view
      */
     private void initializeViews(View view){
-        mFlightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
-        mInputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
+        flightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
+        inputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
     }
 
     /**
@@ -306,11 +306,11 @@ public class InputFragment extends Fragment{
      * @param view
      */
     private void initViewPager(View view){
-        mViewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
-        mInputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        mViewPager.setAdapter(mInputTabsFragmentPagerAdapter);
-        mTabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
-        mTabLayout.setupWithViewPager(mViewPager);
+        viewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
+        inputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+        viewPager.setAdapter(inputTabsFragmentPagerAdapter);
+        tabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
         //mTabLayout.setScrollbarFadingEnabled(true);
 
         // adapter.setMyValue()
@@ -322,22 +322,22 @@ public class InputFragment extends Fragment{
     private void getSharedPreferences(){
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        mStartDay = sharedPref.getString(STARTDAY, "Default");
-        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
-        mStartYear = sharedPref.getString(STARTYEAR, "Default");
-        mEndDay = sharedPref.getString(ENDDAY, "Default");
-        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
-        mEndYear = sharedPref.getString(ENDYEAR, "Default");
-        mFlightPosition = sharedPref.getInt(FLIGHTPOSITION, 0);
-        mHotelPosition = sharedPref.getInt(HOTELPOSITION, 0);
-        mWeatherPosition = sharedPref.getInt(WEATHERPOSITION, 0);
+        latitude = sharedPref.getString(LATITUDE, "Default");
+        longitude = sharedPref.getString(LONGITUDE, "Default");
+        startDay = sharedPref.getString(STARTDAY, "Default");
+        startMonth = sharedPref.getString(STARTMONTH, "Default");
+        startYear = sharedPref.getString(STARTYEAR, "Default");
+        endDay = sharedPref.getString(ENDDAY, "Default");
+        endMonth = sharedPref.getString(ENDMONTH, "Default");
+        endYear = sharedPref.getString(ENDYEAR, "Default");
+        flightPosition = sharedPref.getInt(FLIGHTPOSITION, 0);
+        hotelPosition = sharedPref.getInt(HOTELPOSITION, 0);
+        weatherPosition = sharedPref.getInt(WEATHERPOSITION, 0);
 
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
+        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
 
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + mOriginAirportCode);
+        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + originAirportCode);
 
     }
 
@@ -356,10 +356,10 @@ public class InputFragment extends Fragment{
      * @param savedInstanceState
      */
     private void initGoogleMaps(View view, Bundle savedInstanceState){
-        mMapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
-        mMapView.onCreate(savedInstanceState);
-        mMapView.onResume();// needed to get the map to display immediately
-        mGoogleMap = mMapView.getMap();
+        mapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
+        mapView.onCreate(savedInstanceState);
+        mapView.onResume();// needed to get the map to display immediately
+        googleMap = mapView.getMap();
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -379,7 +379,7 @@ public class InputFragment extends Fragment{
      * Initizlize FAB Button
      */
     private void initFab(){
-        setFabIconColor(mInputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
+        setFabIconColor(inputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
     }
 
     /**
@@ -398,17 +398,17 @@ public class InputFragment extends Fragment{
      * Switch to Detail Fragment when FAB button clicked
      */
     private void onFabContinueButtonClick() {
-        mInputContinueFabButton.setOnClickListener(new View.OnClickListener() {
+        inputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 String flightDescription = "FLIGHT";
-                String flightTotalCost = "Price: " + flights.getTrips().getTripOption().get(mFlightPosition).getSaleTotal();
-                int duration = flights.getTrips().getTripOption().get(mFlightPosition).getSlice().get(0).getDuration();
+                String flightTotalCost = "Price: " + flights.getTrips().getTripOption().get(flightPosition).getSaleTotal();
+                int duration = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getDuration();
                 String flightDuration = "Total Duration: " + convertMinToHours(duration);
 
                 List<Leg> listLeg;
-                List<Segment> listSegment = flights.getTrips().getTripOption().get(mFlightPosition).getSlice().get(0).getSegment();
+                List<Segment> listSegment = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getSegment();
                 String flightStops = "Stops: " + String.valueOf(listSegment.size() - 1);
 
                 flightDescription = flightDescription + "\n" +
@@ -440,7 +440,7 @@ public class InputFragment extends Fragment{
                     }
 
                     String connectionDuration = "";
-                    if(segment.getConnectionDuration() != 0 ){
+                    if (segment.getConnectionDuration() != 0) {
                         connectionDuration = "Connection Time: " + convertMinToHours(segment.getConnectionDuration());
                     }
 
@@ -461,8 +461,8 @@ public class InputFragment extends Fragment{
                 flightDescription = flightDescription + flightSegmentDescription;
 
                 String hotelDescription = "HOTWIRE_HOTEL ";
-                HWResult result = hotWireHotels.getResult().get(mHotelPosition);
-                String destination = "Destination: " + mDestination;
+                HWResult result = hotWireHotels.getResult().get(hotelPosition);
+                String destination = "Destination: " + destinationSharedPref;
                 String hwRefNumber = "HotWire Reference: " + result.getHWRefNumber();
                 String hwStartDate = "Check In: " + result.getCheckInDate();
                 String hwEndDate = "Check Out: " + result.getCheckOutDate();
@@ -482,7 +482,7 @@ public class InputFragment extends Fragment{
 
 
                 String weatherDescription = "WEATHER ";
-                WeatherInfoDaily weatherDaily = weather.getDaily().getData().get(mWeatherPosition);
+                WeatherInfoDaily weatherDaily = weather.getDaily().getData().get(weatherPosition);
 
                 int time = weatherDaily.getTime();
                 String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
@@ -524,19 +524,19 @@ public class InputFragment extends Fragment{
                         "";
 
 
-                String startDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
-                String endDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
+                String startDate = startMonth + "/" + startDay + "/" + startYear;
+                String endDate = endMonth + "/" + endDay + "/" + endYear;
 
                 String startDescription = "Hello,\nBelow are your trip details: \n";
                 String endDescription = "Sincerely, \n HeadingOut Team";
 
                 String description = startDescription + "\n" +
-                                     flightDescription + "\n" +
-                                     hotelDescription + "\n" +
-                                     weatherDescription + "\n" +
-                                     endDescription;
-                String title = "HeadingOut: " + mOriginAirportCode + " | " + startDate + " to " + endDate;
-                String location = mDestination;
+                        flightDescription + "\n" +
+                        hotelDescription + "\n" +
+                        weatherDescription + "\n" +
+                        endDescription;
+                String title = "HeadingOut: " + originAirportCode + " | " + startDate + " to " + endDate;
+                String location = destinationSharedPref;
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, description);
@@ -563,7 +563,7 @@ public class InputFragment extends Fragment{
 
         Log.d(TAG, "onResume: ===>>>>  InputFragment On RESUME");
 
-        mMapView.onResume();
+        mapView.onResume();
     }
 
 
@@ -571,14 +571,14 @@ public class InputFragment extends Fragment{
     public void onDestroy() {
         Log.d(TAG, "onDestroy: ==>> InputFragment OnDestroy");
         super.onDestroy();
-        mMapView.onDestroy();
+        mapView.onDestroy();
     }
 
     @Override
     public void onPause() {
         Log.d(TAG, "onPause: ==>> InputFragment OnPause");
         super.onPause();
-        mMapView.onPause();
+        mapView.onPause();
     }
 
     //TODO REMOVE

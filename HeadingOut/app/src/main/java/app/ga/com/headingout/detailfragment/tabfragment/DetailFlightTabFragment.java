@@ -22,8 +22,8 @@ import app.ga.com.headingout.model.FlightTest;
 public class DetailFlightTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
-    private int mPage;
-    private static RecyclerView mFlightRecyclerView;
+    private int page;
+    private static RecyclerView flightRecyclerView;
 
     public static DetailFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -36,7 +36,7 @@ public class DetailFlightTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(ARG_PAGE);
 
     }
 
@@ -44,7 +44,7 @@ public class DetailFlightTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_tab_flight_fragment, container, false);
-        mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.detail_tab_flight_fragment_recyclerView);
+        flightRecyclerView = (RecyclerView)view.findViewById(R.id.detail_tab_flight_fragment_recyclerView);
 
         recyclerViewSetup();
 
@@ -68,10 +68,10 @@ public class DetailFlightTabFragment extends Fragment {
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-        mFlightRecyclerView.setHasFixedSize(true);
+        flightRecyclerView.setLayoutManager(linearLayoutManager);
+        flightRecyclerView.setHasFixedSize(true);
         DetailTabFlightRVAdapter recyclerViewAdapter = new DetailTabFlightRVAdapter(flightList);
-        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+        flightRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 

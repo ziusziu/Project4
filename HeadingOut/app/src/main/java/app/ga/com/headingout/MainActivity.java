@@ -28,8 +28,8 @@ import app.ga.com.headingout.util.Utilities;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentUtil {
 
     private static final String TAG = "BaseActivity";
-    private static Toolbar mToolBar;
-    private static ActionBarDrawerToggle mDrawerToggle;
+    private static Toolbar toolBar;
+    private static ActionBarDrawerToggle drawerToggle;
     private static FragmentManager fragmentManager;
     private static MainFragment mainFragment;
     private static InputFragment inputFragment;
@@ -71,16 +71,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 initNavDrawer();
                 break;
             case DETAIL_FRAGMENT:
-                mDrawerToggle.setDrawerIndicatorEnabled(false);
+                drawerToggle.setDrawerIndicatorEnabled(false);
                 setActionBarIcon(R.drawable.ic_arrow_back_24dp);
                 actionBar.setTitle(fragmentName);
-                mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+                toolBar.setNavigationOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         //TODO Fix MainFragment Icon becomes back arrow when Home clicked in InputFragment
                         Log.d(TAG, "onClick: ActionBarArrow was clicked");
                         setActionBarIcon(R.drawable.ic_menu_24dp);
-                        mDrawerToggle.setDrawerIndicatorEnabled(true);
+                        drawerToggle.setDrawerIndicatorEnabled(true);
                         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                         InputFragment inputFragment = new InputFragment();
                         fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
@@ -99,12 +99,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      */
     private void initNavDrawer() {
         DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
-        mDrawerToggle = new ActionBarDrawerToggle(this, drawer,
-                mToolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerToggle = new ActionBarDrawerToggle(this, drawer,
+                toolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
-        drawer.addDrawerListener(mDrawerToggle);
-        drawer.removeDrawerListener(mDrawerToggle);
-        mDrawerToggle.syncState();
+        drawer.addDrawerListener(drawerToggle);
+        drawer.removeDrawerListener(drawerToggle);
+        drawerToggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(getNavViewResource());
         navigationView.setNavigationItemSelectedListener(this);
@@ -192,8 +192,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void initActionBar(){
-        mToolBar = (Toolbar) findViewById(getToolBarResource());
-        setSupportActionBar(mToolBar);
+        toolBar = (Toolbar) findViewById(getToolBarResource());
+        setSupportActionBar(toolBar);
         actionBar = getSupportActionBar();
         actionBar.setTitle(MAIN_FRAGMENT);
     }
@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int color = Color.parseColor("#FFFFFF");
         Drawable iconDrawable = ResourcesCompat.getDrawable(getResources(), iconResource, null);
         iconDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        mToolBar.setNavigationIcon(iconDrawable);
+        toolBar.setNavigationIcon(iconDrawable);
     }
 
     protected int getLayoutResource() {

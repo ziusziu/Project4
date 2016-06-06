@@ -23,15 +23,15 @@ import app.ga.com.headingout.util.Utilities;
 public class DetailFragment extends Fragment{
 
     private static final String TAG = DetailFragment.class.getSimpleName();
-    private static TabLayout mTabLayout;
-    private static ViewPager mViewPager;
+    private static TabLayout tabLayout;
+    private static ViewPager viewPager;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(savedInstanceState != null){
             int tabPagePosition = savedInstanceState.getInt(Utilities.POSITION);
-            mViewPager.setCurrentItem(tabPagePosition);
+            viewPager.setCurrentItem(tabPagePosition);
         }
         View view = inflater.inflate(R.layout.detail_content, container, false);
         initViewPager(view);
@@ -60,18 +60,18 @@ public class DetailFragment extends Fragment{
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(Utilities.POSITION, mTabLayout.getSelectedTabPosition());
+        outState.putInt(Utilities.POSITION, tabLayout.getSelectedTabPosition());
     }
 
     private void initViewPager(View view){
-        mViewPager = (ViewPager)view.findViewById(R.id.detail_viewPager);
-        mViewPager.setAdapter(new DetailTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
+        viewPager = (ViewPager)view.findViewById(R.id.detail_viewPager);
+        viewPager.setAdapter(new DetailTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager()));
 
-        mTabLayout = (TabLayout)view.findViewById(R.id.detail_tabLayout);
-        mTabLayout.setupWithViewPager(mViewPager);
+        tabLayout = (TabLayout)view.findViewById(R.id.detail_tabLayout);
+        tabLayout.setupWithViewPager(viewPager);
 
 
-        //mTabLayout.setScrollbarFadingEnabled(true);
+        //tabLayout.setScrollbarFadingEnabled(true);
 
     }
 

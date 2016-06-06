@@ -59,28 +59,28 @@ public class MainFragment extends Fragment implements
     //endregion
 
     //region SharedPreferences Objects
-    private static String mDestinationAirportCode;
-    private static String mOriginAirportCode;
-    private static double mLatitude;
-    private static double mLongitude;
-    private static String mStartDay;
-    private static String mStartMonth;
-    private static String mStartYear;
-    private static String mEndDay;
-    private static String mEndMonth;
-    private static String mEndYear;
+    private static String destinationAirportCode;
+    private static String originAirportCode;
+    private static double latitude;
+    private static double longitude;
+    private static String startDay;
+    private static String startMonth;
+    private static String startYear;
+    private static String endDay;
+    private static String endMonth;
+    private static String endYear;
     //endregion
 
     //region View Declarations
-    private static Button mAddButton;
-    private static RecyclerView mTripDestinationRecyclerView;
-    private static RecyclerView mTripOriginRecyclerView;
-    private static ImageView mCalendarImageView;
-    private static AutoCompleteTextView mDestinationAutoCompleteTextView;
-    private static AutoCompleteTextView mOriginAutoCompleteTextView;
-    private static FloatingActionButton mMainGoButtonFAB;
-    private static EditText mMainStartDateEditText;
-    private static EditText mMainEndDateEditText;
+    private static Button addButton;
+    private static RecyclerView tripDestinationRecyclerView;
+    private static RecyclerView tripOriginRecyclerView;
+    private static ImageView calendarImageView;
+    private static AutoCompleteTextView destinationAutoCompleteTextView;
+    private static AutoCompleteTextView originAutoCompleteTextView;
+    private static FloatingActionButton mainGoButtonFAB;
+    private static EditText mainStartDateEditText;
+    private static EditText mainEndDateEditText;
     //endregion
 
     @Nullable
@@ -105,21 +105,21 @@ public class MainFragment extends Fragment implements
      * @param view
      */
     private void initializeViews(View view){
-        mCalendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
-        mAddButton = (Button)view.findViewById(R.id.main_addLocation_button);
-        mTripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
-        mTripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
-        mDestinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
-        mOriginAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
-        mMainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
-        mMainStartDateEditText = (EditText)view.findViewById(R.id.main_startDate_editText);
-        mMainEndDateEditText = (EditText)view.findViewById(R.id.main_endDate_editText);
+        calendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
+        addButton = (Button)view.findViewById(R.id.main_addLocation_button);
+        tripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
+        tripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
+        destinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
+        originAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
+        mainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
+        mainStartDateEditText = (EditText)view.findViewById(R.id.main_startDate_editText);
+        mainEndDateEditText = (EditText)view.findViewById(R.id.main_endDate_editText);
 
         // Change the color of Resources
         int color = Color.parseColor("#68EFAD");
-        mCalendarImageView.setImageResource(R.drawable.calendar);
-        mCalendarImageView.setColorFilter(color);
-        mAddButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
+        calendarImageView.setImageResource(R.drawable.calendar);
+        calendarImageView.setColorFilter(color);
+        addButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
 
     }
 
@@ -140,15 +140,15 @@ public class MainFragment extends Fragment implements
 
         NumberFormat formatter = new DecimalFormat("00");
 
-        mStartDay = formatter.format(startDay);
-        mStartMonth = formatter.format(startMonth + 1);
-        mStartYear = formatter.format(startYear);
-        mEndDay = formatter.format(endDay);
-        mEndMonth = formatter.format(endMonth + 1);
-        mEndYear = formatter.format(endYear);
+        MainFragment.startDay = formatter.format(startDay);
+        MainFragment.startMonth = formatter.format(startMonth + 1);
+        MainFragment.startYear = formatter.format(startYear);
+        MainFragment.endDay = formatter.format(endDay);
+        MainFragment.endMonth = formatter.format(endMonth + 1);
+        MainFragment.endYear = formatter.format(endYear);
 
-        mMainStartDateEditText.setText(mStartMonth+"/"+mStartDay+"/"+mStartYear);
-        mMainEndDateEditText.setText(mEndMonth+"/"+mEndDay+"/"+mEndYear);
+        mainStartDateEditText.setText(MainFragment.startMonth + "/" + MainFragment.startDay + "/" + MainFragment.startYear);
+        mainEndDateEditText.setText(MainFragment.endMonth + "/" + MainFragment.endDay + "/" + MainFragment.endYear);
     }
 
     private void recyclerViewSetup(){
@@ -157,15 +157,15 @@ public class MainFragment extends Fragment implements
         LinearLayoutManager destinationLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         LinearLayoutManager originLinearLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mTripDestinationRecyclerView.setLayoutManager(gridLayoutManager);
-        mTripDestinationRecyclerView.setHasFixedSize(true);
+        tripDestinationRecyclerView.setLayoutManager(gridLayoutManager);
+        tripDestinationRecyclerView.setHasFixedSize(true);
 
         MainTripRVAdapter recyclerDestinationViewAdapter = new MainTripRVAdapter(tripList, this);
-        mTripDestinationRecyclerView.setAdapter(recyclerDestinationViewAdapter);
+        tripDestinationRecyclerView.setAdapter(recyclerDestinationViewAdapter);
 
         MainTripRVAdapter recyclerOriginViewAdapter = new MainTripRVAdapter(tripList, this);
-        mTripOriginRecyclerView.setLayoutManager(originLinearLayoutManager);
-        mTripOriginRecyclerView.setAdapter(recyclerOriginViewAdapter);
+        tripOriginRecyclerView.setLayoutManager(originLinearLayoutManager);
+        tripOriginRecyclerView.setAdapter(recyclerOriginViewAdapter);
 
     }
 
@@ -173,12 +173,12 @@ public class MainFragment extends Fragment implements
      * Store sharedPreferences and switch out fragment when button is clicked
      */
     private void setMainGoFABListener(){
-        mMainGoButtonFAB.setOnClickListener(new View.OnClickListener() {
+        mainGoButtonFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveSharedPreferences();
 
-                checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
+                checkAutoCompleteTextInput(destinationAutoCompleteTextView);
 
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
@@ -193,20 +193,20 @@ public class MainFragment extends Fragment implements
      * Store objects to shared preferences
      */
     private void saveSharedPreferences(){
-        mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
+        originAirportCode = originAutoCompleteTextView.getText().toString();
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(DESTINATIONAIRPORTCODE, mDestinationAirportCode);
-        editor.putString(ORIGINAIRPORTCODE, mOriginAirportCode);
-        editor.putString(LATITUDE, Double.toString(mLatitude));
-        editor.putString(LONGITUDE, Double.toString(mLongitude));
-        editor.putString(STARTDAY, mStartDay);
-        editor.putString(STARTMONTH, mStartMonth);
-        editor.putString(STARTYEAR, mStartYear);
-        editor.putString(ENDDAY, mEndDay);
-        editor.putString(ENDMONTH, mEndMonth);
-        editor.putString(ENDYEAR, mEndYear);
+        editor.putString(DESTINATIONAIRPORTCODE, destinationAirportCode);
+        editor.putString(ORIGINAIRPORTCODE, originAirportCode);
+        editor.putString(LATITUDE, Double.toString(latitude));
+        editor.putString(LONGITUDE, Double.toString(longitude));
+        editor.putString(STARTDAY, startDay);
+        editor.putString(STARTMONTH, startMonth);
+        editor.putString(STARTYEAR, startYear);
+        editor.putString(ENDDAY, endDay);
+        editor.putString(ENDMONTH, endMonth);
+        editor.putString(ENDYEAR, endYear);
         editor.apply();
     }
 
@@ -226,7 +226,7 @@ public class MainFragment extends Fragment implements
      * Set listener to show dateRangePickerFragment
      */
     private void setCalendarClickListener(){
-        mCalendarImageView.setOnClickListener(new View.OnClickListener() {
+        calendarImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DateRangePickerFragment dateRangePickerFragment = DateRangePickerFragment.newInstance(MainFragment.this, false);
@@ -247,21 +247,21 @@ public class MainFragment extends Fragment implements
         SimpleDateFormat yearFormatter = new SimpleDateFormat("yyyy");
 
         currentDate.add(currentDate.DATE, 1); // Tomorrow's Date
-        mStartDay = dayFormatter.format(currentDate.getTime());
-        mStartMonth = monthFormatter.format(currentDate.getTime());
-        mStartYear = yearFormatter.format(currentDate.getTime());
+        startDay = dayFormatter.format(currentDate.getTime());
+        startMonth = monthFormatter.format(currentDate.getTime());
+        startYear = yearFormatter.format(currentDate.getTime());
 
         currentDate.add(currentDate.DATE, 1); // Day After's Date
-        mEndDay = dayFormatter.format(currentDate.getTime());
-        mEndMonth = monthFormatter.format(currentDate.getTime());
-        mEndYear = yearFormatter.format(currentDate.getTime());
+        endDay = dayFormatter.format(currentDate.getTime());
+        endMonth = monthFormatter.format(currentDate.getTime());
+        endYear = yearFormatter.format(currentDate.getTime());
 
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartDay);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartMonth);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mStartYear);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndDay);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndMonth);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + mEndYear);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startDay);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startMonth);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startYear);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endDay);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endMonth);
+        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endYear);
     }
 
     @Override
@@ -277,17 +277,17 @@ public class MainFragment extends Fragment implements
      */
     @Override
     public void onMainCardViewClick(TripDestination tripDestination) {
-        mDestinationAirportCode = tripDestination.getAirportCode();
-        mDestinationAutoCompleteTextView.setText(mDestinationAirportCode);
-        mLatitude = Double.parseDouble(tripDestination.getLatitude());
-        mLongitude = Double.parseDouble(tripDestination.getLongitude());
+        destinationAirportCode = tripDestination.getAirportCode();
+        destinationAutoCompleteTextView.setText(destinationAirportCode);
+        latitude = Double.parseDouble(tripDestination.getLatitude());
+        longitude = Double.parseDouble(tripDestination.getLongitude());
     }
 
     /**
      * Initizlize FAB Button
      */
     private void initFab(){
-        setFabIconColor(mMainGoButtonFAB, Utilities.FAB_BUTTON_COLOR);
+        setFabIconColor(mainGoButtonFAB, Utilities.FAB_BUTTON_COLOR);
     }
 
     /**
@@ -307,13 +307,13 @@ public class MainFragment extends Fragment implements
      * Store sharedPreferences and switch out fragment when button is clicked
      */
     private void setAddButtonListener(){
-        mAddButton.setOnClickListener(new View.OnClickListener() {
+        addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveSharedPreferences();
 
-                checkAutoCompleteTextInput(mDestinationAutoCompleteTextView);
-                mOriginAirportCode = mOriginAutoCompleteTextView.getText().toString();
+                checkAutoCompleteTextInput(destinationAutoCompleteTextView);
+                originAirportCode = originAutoCompleteTextView.getText().toString();
 
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                 InputFragment inputFragment = new InputFragment();

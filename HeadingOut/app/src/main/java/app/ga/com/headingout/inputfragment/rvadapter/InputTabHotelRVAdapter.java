@@ -25,7 +25,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String HOTELPOSITION = "hotelPosition";
 
-    private static SharedPreferences mSharedPref;
+    private static SharedPreferences sharedPref;
 
     public static Bundle hotelBundle;
     private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
@@ -69,7 +69,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     public HotelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_hotel_cardview, parent, false);
         HotelViewHolder HotelViewHolder = new HotelViewHolder(view);
-        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return HotelViewHolder;
     }
 

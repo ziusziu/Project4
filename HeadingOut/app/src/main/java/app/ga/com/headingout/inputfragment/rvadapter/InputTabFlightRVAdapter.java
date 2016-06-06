@@ -29,7 +29,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String FLIGHTPOSITION = "flightPosition";
 
-    private static SharedPreferences mSharedPref;
+    private static SharedPreferences sharedPref;
 
     private static final String TAG = InputTabFlightRVAdapter.class.getSimpleName();
     Flights flights;
@@ -66,7 +66,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     public FlightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_flight_cardview, parent, false);
         FlightViewHolder flightViewHolder = new FlightViewHolder(view);
-        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return flightViewHolder;
     }
 
@@ -85,7 +85,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         holder.flightCardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences.Editor editor = mSharedPref.edit();
+                SharedPreferences.Editor editor = sharedPref.edit();
                 editor.putInt(FLIGHTPOSITION, position);
                 editor.apply();
             }

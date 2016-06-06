@@ -30,7 +30,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String WEATHERPOSITION = "weatherPosition";
 
-    private static SharedPreferences mSharedPref;
+    private static SharedPreferences sharedPref;
 
     Weather weather;
     Context mContext;
@@ -65,7 +65,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_weather_cardview, parent, false);
         WeatherViewHolder weatherViewHolder = new WeatherViewHolder(view);
-        mSharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
         return weatherViewHolder;
     }
 
@@ -88,7 +88,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 //        holder.weatherCardView.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {
-//                SharedPreferences.Editor editor = mSharedPref.edit();
+//                SharedPreferences.Editor editor = sharedPref.edit();
 //                editor.putInt(WEATHERPOSITION, position);
 //                editor.apply();
 //            }

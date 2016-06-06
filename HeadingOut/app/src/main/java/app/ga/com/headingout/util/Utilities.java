@@ -15,7 +15,7 @@ import app.ga.com.headingout.model.TripDestination;
 public class Utilities {
     public static final String POSITION = "POSITION";
     public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
-    public static final String INTENT_FLIGHT_KEY = "location_terms";
+    public static final String INTENT_FLIGHT_KEY = "locationTerms";
 
     /**
      * Hide the keyboard on activity load
@@ -43,7 +43,6 @@ public class Utilities {
         String urlChicago = "https://upload.wikimedia.org/wikipedia/commons/2/26/Chicago_Theatre_blend.jpg";
         String urlVegas = "https://upload.wikimedia.org/wikipedia/commons/2/2b/Las_Vegas%2C_Planet_Hollywood.jpg";
 
-        // Dummy Data
         TripDestination trip1 = new TripDestination("Los Angeles (LAX)", "LAX", "33.941446", "-118.408702", urlLA);
         TripDestination trip2 = new TripDestination("Washington D.C. (DCA)", "DCA", "38.851125", "-77.040350", urlDC);
         TripDestination trip3 = new TripDestination("New York City (JFK)", "JFK", "40.641189", "-73.778214", urlNYC);

@@ -25,7 +25,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     private static final String TAG = MainTripRVAdapter.class.getSimpleName();
     private final List<TripDestination> tripList;
     private final OnMainCardViewClickListener listener;
-    private static Context mContext;
+    private static Context context;
 
     /**
      * Create listener that returns TripDestination object on click
@@ -61,7 +61,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     public TripViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.main_trip_item_cardview, parent, false);
         TripViewHolder tripViewHolder = new TripViewHolder(view);
-        mContext = parent.getContext();
+        context = parent.getContext();
         return tripViewHolder;
     }
 
@@ -75,7 +75,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
         holder.tripOriginImageView.setVisibility(View.VISIBLE);
 
-        Picasso.with(mContext)
+        Picasso.with(context)
                 .load(tripList.get(position).getUrl())  // Load image from URL
                 .placeholder(R.mipmap.ic_headingout)    // PlaceHolder Image
                 .resize(500,350)                        // Resize Image

@@ -22,8 +22,8 @@ import app.ga.com.headingout.model.TestHotels;
 public class DetailHotelTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
 
-    private int mPage;
-    private static RecyclerView mHotelRecyclerView;
+    private int page;
+    private static RecyclerView hotelRecyclerView;
 
     public static DetailHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -36,7 +36,7 @@ public class DetailHotelTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(ARG_PAGE);
 
     }
 
@@ -45,7 +45,7 @@ public class DetailHotelTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.detail_tab_hotel_fragment, container, false);
 
-        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.detail_tab_hotel_fragment_recyclerView);
+        hotelRecyclerView = (RecyclerView)view.findViewById(R.id.detail_tab_hotel_fragment_recyclerView);
 
         recyclerViewSetup();
 
@@ -69,10 +69,10 @@ public class DetailHotelTabFragment extends Fragment {
 
 
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
-        mHotelRecyclerView.setHasFixedSize(true);
+        hotelRecyclerView.setLayoutManager(linearLayoutManager);
+        hotelRecyclerView.setHasFixedSize(true);
         DetailTabHotelRVAdapter recyclerViewAdapter = new DetailTabHotelRVAdapter(hotelList);
-        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
+        hotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
