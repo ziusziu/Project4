@@ -3,7 +3,6 @@ package app.ga.com.headingout.mainfragment;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,13 +15,13 @@ import java.util.List;
 
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.TripDestination;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 4/29/16.
  */
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
-    private static final String TAG = MainTripRVAdapter.class.getSimpleName();
     private final List<TripDestination> tripList;
     private final OnMainCardViewClickListener listener;
     private static Context context;
@@ -85,7 +84,7 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: CARD CLICKED NUMBER ===>> " + position);
+                Timber.d("onClick: CARD CLICKED NUMBER ===>> " + position);
                 //Gets the TripDestination at position and sends to MainFragment
                 listener.onMainCardViewClick(tripList.get(position));
             }

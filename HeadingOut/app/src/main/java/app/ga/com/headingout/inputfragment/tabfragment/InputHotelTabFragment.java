@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,12 +24,12 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.ApiManager;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 4/29/16.
  */
 public class InputHotelTabFragment extends Fragment {
-    private static final String TAG = InputHotelTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
     private SwipeRefreshLayout mHotelSwipeRefreshLayout;
 
@@ -86,7 +85,7 @@ public class InputHotelTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_hotel_fragment, container, false);
-        Log.d(TAG, "onCreateView: Page of TabLayout " + mPage);
+        Timber.d("onCreateView: Page of TabLayout " + mPage);
 
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -143,7 +142,7 @@ public class InputHotelTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Hotels====");
+                Timber.d("run: ===>>> PULLING TO REFRESH Hotels====");
 
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
@@ -152,7 +151,7 @@ public class InputHotelTabFragment extends Fragment {
                 String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
                 String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
 
-                Log.d(TAG, "run: ====>>>>>> Pull Down Refresh  " + mDestination     );
+                Timber.d("run: ====>>>>>> Pull Down Refresh  " + mDestination);
 
                 ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
 
@@ -180,7 +179,7 @@ public class InputHotelTabFragment extends Fragment {
         mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         mOriginAirportCode = "SFO";
         mDestination = sharedPref.getString(DESTINATION, "default");
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
 
         mDestinationTextView.setText(mDestinationAirportCode);
     }
@@ -191,7 +190,7 @@ public class InputHotelTabFragment extends Fragment {
      */
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
-        Log.d(TAG, "onHotelData  SIZE " + hotWireHotels.getResult().size());
+        Timber.d("onHotelData  SIZE " + hotWireHotels.getResult().size());
 
         progressBar.setVisibility(View.GONE);
         recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
@@ -202,6 +201,6 @@ public class InputHotelTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
+        Timber.d("onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
     }
 }

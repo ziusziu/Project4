@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +15,7 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/4/16.
@@ -40,8 +40,8 @@ public class DetailFragment extends Fragment{
         HotWireHotels hotels = (HotWireHotels) hotelBundle.getSerializable("HOTEL_SERIALIZABLE");
         ArrayList<Integer> hotelPositions = hotelBundle.getIntegerArrayList("HOTEL_POSITION");
 
-        Log.d(TAG, "onCreateView: " + hotelPositions.get(0));
-        Log.d(TAG, "onCreateView: " + hotels.getResult().get(0).getHWRefNumber());
+        Timber.d("onCreateView: " + hotelPositions.get(0));
+        Timber.d("onCreateView: " + hotels.getResult().get(0).getHWRefNumber());
 
         // initGoogleMaps();
 

@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,12 +22,12 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.ApiManager;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import app.ga.com.headingout.model.forecast.Weather;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/9/16.
  */
 public class InputWeatherTabFragment extends Fragment {
-    private static final String TAG = InputWeatherTabFragment.class.getSimpleName();
     public static final String ARG_PAGE = "ARG_PAGE";
 
     private SwipeRefreshLayout mWeatherSwipeRefreshLayout;
@@ -131,7 +130,7 @@ public class InputWeatherTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: ===>>> PULLING TO REFRESH Weather====");
+                Timber.d("run: ===>>> PULLING TO REFRESH Weather====");
 
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
                 Bus bus = createBus();
@@ -147,18 +146,18 @@ public class InputWeatherTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: INPUT------WEATHER----TABFRAGMENT ===>>> resuming");
+        Timber.d("onResume: INPUT------WEATHER----TABFRAGMENT ===>>> resuming");
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "onDestroy: INPUT----WEATHER--- TABFRAGMENT ===>>>> onDestroy");
+        Timber.d("onDestroy: INPUT----WEATHER--- TABFRAGMENT ===>>>> onDestroy");
     }
 
     @Subscribe
     public void onWeatherData(Weather weather){
-        Log.d(TAG, "onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
+        Timber.d("onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
         recyclerViewAdapter = new InputTabWeatherRVAdapter(weather, getContext());
         mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
    //     mSpinner.setVisibility(View.GONE);

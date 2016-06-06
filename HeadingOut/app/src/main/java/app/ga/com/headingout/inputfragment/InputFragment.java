@@ -10,7 +10,6 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,6 +47,7 @@ import app.ga.com.headingout.model.hotels.HWResult;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/4/16.
@@ -137,7 +137,7 @@ public class InputFragment extends Fragment{
 
     private void makeApiCall(){
 
-        Log.d(TAG, "onCreateView: ====>>> InputFragment - makeApiCall");
+        Timber.d("onCreateView: ====>>> InputFragment - makeApiCall");
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = startYear + "-" + startMonth + "-" + startDay;
@@ -148,7 +148,7 @@ public class InputFragment extends Fragment{
                 originAirportCode, destinationAirportCode,
                 startDate);
 
-        Log.d(TAG, "makeApiCall: latitude " + latitude);
+        Timber.d("makeApiCall: latitude " + latitude);
         // Get Weather Data
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiManager.getWeatherApi(bus, forecastApiKey, latitude, longitude);
@@ -181,14 +181,14 @@ public class InputFragment extends Fragment{
 
         List<HWAmenities> hwAmenities = hotWireHotels.getMetaData().getHotelMetaData().getAmenities();
         for(HWAmenities amenities: hwAmenities){
-            Log.d(TAG, "onHotelData: " + amenities.getName());
+            Timber.d("onHotelData: " + amenities.getName());
             //TODO put id into HashMap, for easy find
         }
 
         // Gets the api Lat, Longs and info for markers
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
         for(int position = 0; position < hwNeighborHoods.size(); position++){
-            Log.d(TAG, "onHotelData: " + hwNeighborHoods.get(position).getName());
+            Timber.d("onHotelData: " + hwNeighborHoods.get(position).getName());
 
             // Pull Latitude and Longitude Data
             String centroid = hwNeighborHoods.get(position).getCentroid();
@@ -270,7 +270,7 @@ public class InputFragment extends Fragment{
     public void onAirportData(AirportData airport){
         this.airport = airport;
 
-        Log.d(TAG, "onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
+        Timber.d("onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
         // Create destination in format "<city>,<state>" for HotwireSearch
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
         destinationSharedPref = destination;
@@ -337,7 +337,7 @@ public class InputFragment extends Fragment{
         destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
         originAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
 
-        Log.d(TAG, "INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + originAirportCode);
+        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + originAirportCode);
 
     }
 
@@ -370,7 +370,7 @@ public class InputFragment extends Fragment{
 
     @Override
     public void onDestroyView() {
-        Log.d(TAG, "INPUTFRAGMENT View Destroyed");
+        Timber.d("INPUTFRAGMENT View Destroyed");
         bus.unregister(this);
         super.onDestroyView();
     }
@@ -561,7 +561,7 @@ public class InputFragment extends Fragment{
         FragmentUtil fragInfo = (FragmentUtil)getActivity();
         fragInfo.setFragmentToolBar(InputFragment.class.getSimpleName());
 
-        Log.d(TAG, "onResume: ===>>>>  InputFragment On RESUME");
+        Timber.d("onResume: ===>>>>  InputFragment On RESUME");
 
         mapView.onResume();
     }
@@ -569,14 +569,14 @@ public class InputFragment extends Fragment{
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: ==>> InputFragment OnDestroy");
+        Timber.d("onDestroy: ==>> InputFragment OnDestroy");
         super.onDestroy();
         mapView.onDestroy();
     }
 
     @Override
     public void onPause() {
-        Log.d(TAG, "onPause: ==>> InputFragment OnPause");
+        Timber.d("onPause: ==>> InputFragment OnPause");
         super.onPause();
         mapView.onPause();
     }
@@ -585,7 +585,7 @@ public class InputFragment extends Fragment{
     @Subscribe
     public void onSizeData(Integer size){
         this.size = size;
-        Log.d(TAG, "onSizeData: === Posting Data from adapter" + size);
+        Timber.d("onSizeData: === Posting Data from adapter" + size);
     }
 
 
@@ -599,7 +599,7 @@ public class InputFragment extends Fragment{
         int hours = (int) longVal.longValue() / 60;
         int mins = (int) longVal.longValue() - (hours * 60);
         String durationString = hours + " hours " + mins + " mins ";
-        Log.d(TAG, "onCreateView: hours " + durationString);
+        Timber.d("onCreateView: hours " + durationString);
         return durationString;
     }
 

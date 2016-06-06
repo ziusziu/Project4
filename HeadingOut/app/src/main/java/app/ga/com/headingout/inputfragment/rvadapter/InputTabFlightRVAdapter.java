@@ -20,6 +20,7 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Leg;
 import app.ga.com.headingout.model.flights.Segment;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/2/16.
@@ -31,7 +32,6 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     private static SharedPreferences sharedPref;
 
-    private static final String TAG = InputTabFlightRVAdapter.class.getSimpleName();
     Flights flights;
 
     public static ListView flightSegmentListView;
@@ -77,7 +77,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
         String durationString = convertMinToHours(duration);
-        Log.d(TAG, "onCreateView: hours " + durationString);
+        Timber.d("onCreateView: hours " + durationString);
 
         holder.flightDurationTextView.setText(durationString);
         List<Segment> listSegment = flights.getTrips().getTripOption().get(position).getSlice().get(0).getSegment();
@@ -194,7 +194,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         int hours = (int) longVal.longValue() / 60;
         int mins = (int) longVal.longValue() - (hours * 60);
         String durationString = hours + " hours " + mins + " mins ";
-        Log.d(TAG, "onCreateView: hours " + durationString);
+        Timber.d("onCreateView: hours " + durationString);
         return durationString;
     }
 

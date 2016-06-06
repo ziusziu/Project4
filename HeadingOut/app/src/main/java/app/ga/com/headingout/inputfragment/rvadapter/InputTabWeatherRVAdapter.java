@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,13 +18,12 @@ import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.forecast.Weather;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/9/16.
  */
 public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeatherRVAdapter.WeatherViewHolder> {
-
-    private static final String TAG = InputTabWeatherRVAdapter.class.getSimpleName();
 
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String WEATHERPOSITION = "weatherPosition";
@@ -71,7 +69,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     @Override
     public void onBindViewHolder(WeatherViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: inside RV Adapter " + weather.getDaily().getData().size());
+        Timber.d("onBindViewHolder: inside RV Adapter " + weather.getDaily().getData().size());
         Integer size = weather.getDaily().getData().size();
 
         int time = weather.getDaily().getData().get(position).getTime();

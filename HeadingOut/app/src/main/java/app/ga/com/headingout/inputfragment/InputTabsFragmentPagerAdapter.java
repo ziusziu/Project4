@@ -12,7 +12,6 @@ import app.ga.com.headingout.inputfragment.tabfragment.InputWeatherTabFragment;
  * Created by samsiu on 4/29/16.
  */
 public class InputTabsFragmentPagerAdapter extends FragmentStatePagerAdapter {
-    private static final String TAG = InputTabsFragmentPagerAdapter.class.getSimpleName();
 
     final int PAGE_COUNT = 3;
     private String tabTitles[] = new String[]{"FLIGHT", "HOTELS", "WEATHER"};

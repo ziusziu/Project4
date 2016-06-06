@@ -33,12 +33,12 @@ import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Segment;
 import app.ga.com.headingout.model.flights.Slice;
 import app.ga.com.headingout.model.flights.TripOption;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 4/29/16.
  */
 public class InputFlightTabFragment extends Fragment {
-    private static final String TAG = InputFlightTabFragment.class.getSimpleName();
 
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -122,7 +122,7 @@ public class InputFlightTabFragment extends Fragment {
 
         getSharedPreferences();
 
-        Log.d(TAG, "initViews: mOriginAirportCode " + mOriginAirportCode);
+        Timber.d("initViews: mOriginAirportCode " + mOriginAirportCode);
 
         mOriginTextView.setText(mOriginAirportCode);
         mDestinationTextView.setText(mDestinationAirportCode);
@@ -157,7 +157,7 @@ public class InputFlightTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: ===>>> PULLING TO REFRESH FLIGHTS====");
+                Timber.d("run: ===>>> PULLING TO REFRESH FLIGHTS====");
 
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
                 Bus bus = headingOutApplication.provideBus();
@@ -178,12 +178,12 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.d(TAG, "onResume: INPUT----FLIGHT-----TABFRAGMENT ===>>> resuming");
+        Timber.d("onResume: INPUT----FLIGHT-----TABFRAGMENT ===>>> resuming");
     }
 
     @Subscribe
     public void onFlightData(Flights flights){
-        Log.d(TAG, "onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
+        Timber.d("onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
 
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
         mFlightRecyclerView.setAdapter(recyclerViewAdapter);
@@ -192,18 +192,18 @@ public class InputFlightTabFragment extends Fragment {
 
     private void setRecyclerViewFlightsDummyData(){
         Flights flights = returnFlightsDummyData();
-        Log.d(TAG, "onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
+        Timber.d("onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
 
         // Loggind data Object
         List<TripOption> tripOption = flights.getTrips().getTripOption();
         for(TripOption trip : tripOption){
-            Log.d(TAG, "setRecyclerViewFlightsDummyData: SALETOTAL ***** " + trip.getSaleTotal());
+            Timber.d("setRecyclerViewFlightsDummyData: SALETOTAL ***** " + trip.getSaleTotal());
             List<Slice> slice = trip.getSlice();
             for(Slice slice1 : slice){
                 List<Segment> segments = slice1.getSegment();
                 for(Segment segment : segments){
-                    Log.d(TAG, "setRecyclerViewFlightsDummyData: CARRIER ***** " + segment.getFlight().getCarrier());
-                    Log.d(TAG, "setRecyclerViewFlightsDummyData: NUMBER***** " + segment.getFlight().getNumber());
+                    Timber.d("setRecyclerViewFlightsDummyData: CARRIER ***** " + segment.getFlight().getCarrier());
+                    Timber.d("setRecyclerViewFlightsDummyData: NUMBER***** " + segment.getFlight().getNumber());
                 }
             }
         }
@@ -216,7 +216,7 @@ public class InputFlightTabFragment extends Fragment {
     private Flights returnFlightsDummyData(){
         Gson gson = new Gson();
         Flights sampleFlights = gson.fromJson(loadJSONFromAsset("QPXExpressJSON.json"), Flights.class);
-        Log.d(TAG, "onCreateView: ===>>> TEST DATA " + sampleFlights.getTrips().getTripOption().size());
+        Timber.d("onCreateView: ===>>> TEST DATA " + sampleFlights.getTrips().getTripOption().size());
         return sampleFlights;
     }
 

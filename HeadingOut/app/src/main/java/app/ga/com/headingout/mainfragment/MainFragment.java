@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +33,7 @@ import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.model.TripDestination;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/3/16.
@@ -41,8 +41,6 @@ import app.ga.com.headingout.util.Utilities;
 public class MainFragment extends Fragment implements
         DateRangePickerFragment.OnDateRangeSelectedListener,
         MainTripRVAdapter.OnMainCardViewClickListener{
-
-    private static String TAG = MainFragment.class.getSimpleName();
 
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -135,7 +133,7 @@ public class MainFragment extends Fragment implements
     @Override
     public void onDateRangeSelected(int startDay, int startMonth, int startYear,
                                     int endDay, int endMonth, int endYear) {
-        Log.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear +
+        Timber.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear +
                 " to : " + endDay + "-" + endMonth + "-" + endYear);
 
         NumberFormat formatter = new DecimalFormat("00");
@@ -256,12 +254,12 @@ public class MainFragment extends Fragment implements
         endMonth = monthFormatter.format(currentDate.getTime());
         endYear = yearFormatter.format(currentDate.getTime());
 
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startDay);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startMonth);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + startYear);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endDay);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endMonth);
-        Log.d(TAG, "MAIN FRAGMENT CREATED======>>>>>>>> " + endYear);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + startDay);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + startMonth);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + startYear);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + endDay);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + endMonth);
+        Timber.d("MAIN FRAGMENT CREATED======>>>>>>>> " + endYear);
     }
 
     @Override

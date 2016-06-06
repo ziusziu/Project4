@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/2/16.
@@ -28,7 +29,6 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     private static SharedPreferences sharedPref;
 
     public static Bundle hotelBundle;
-    private static final String TAG = InputTabHotelRVAdapter.class.getSimpleName();
     private static ArrayList<Integer> hotelPositions;
 
     HotWireHotels hotels;
@@ -81,7 +81,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         holder.hotelNightsTextView.setText(" (" + hotels.getResult().get(position).getNights() + " Nights)");
         holder.hotelCurrencyCodeTextView.setText(hotels.getResult().get(position).getCurrencyCode());
         holder.hotelTotalPriceTextView.setText(hotels.getResult().get(position).getTotalPrice());
-        Log.d(TAG, "onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
+        Timber.d("onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
 
 //        holder.hotelCardView.setOnClickListener(new View.OnClickListener() {
