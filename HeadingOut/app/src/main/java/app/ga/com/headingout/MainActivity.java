@@ -23,6 +23,7 @@ import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.mainfragment.MainFragment;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentUtil {
@@ -42,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutResource());
+
+        ButterKnife.bind(this);
 
         Utilities.hideKeyboard(this);
 

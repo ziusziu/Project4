@@ -15,6 +15,8 @@ import java.util.List;
 
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.TripDestination;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -34,15 +36,13 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     }
 
     public static class TripViewHolder extends RecyclerView.ViewHolder{
-        CardView cardView;
-        TextView tripNameTextView;
-        ImageView tripOriginImageView;
+        @BindView(R.id.main_trip_item_cardView) CardView cardView;
+        @BindView(R.id.main_card_tripItem_textView) TextView tripNameTextView;
+        @BindView(R.id.main_card_city_imageView) ImageView tripOriginImageView;
 
         TripViewHolder(View itemView){
             super(itemView);
-            cardView = (CardView)itemView.findViewById(R.id.main_trip_item_cardView);
-            tripNameTextView = (TextView)itemView.findViewById(R.id.main_card_tripItem_textView);
-            tripOriginImageView = (ImageView)itemView.findViewById(R.id.main_card_city_imageView);
+            ButterKnife.bind(this, itemView);
         }
     }
 

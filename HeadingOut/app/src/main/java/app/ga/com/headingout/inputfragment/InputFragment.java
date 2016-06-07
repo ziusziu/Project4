@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -47,6 +46,9 @@ import app.ga.com.headingout.model.hotels.HWResult;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -54,13 +56,11 @@ import timber.log.Timber;
  */
 public class InputFragment extends Fragment{
 
-    private static final String TAG = InputFragment.class.getSimpleName();
+    @BindView(R.id.input_continue_fab) FloatingActionButton inputContinueFabButton;
 
     // region View Declarations
     private static TabLayout tabLayout;
     private static ViewPager viewPager;
-    private static FloatingActionButton inputContinueFabButton;
-    private static EditText flightEditText;
     public static InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter;
     //endregion
     //region SharedPreferences Constants
@@ -108,6 +108,7 @@ public class InputFragment extends Fragment{
 
     private int size;
     private Bus bus;
+    private Unbinder unbinder;
 
     @Nullable
     @Override
@@ -118,9 +119,10 @@ public class InputFragment extends Fragment{
         }
         View view = inflater.inflate(R.layout.input_content, container, false);
 
+        unbinder = ButterKnife.bind(this, view);
+
         createBus();
 
-        initializeViews(view);
         initViewPager(view);
         initFab();
         initGoogleMaps(view, savedInstanceState);
@@ -293,15 +295,6 @@ public class InputFragment extends Fragment{
     }
 
     /**
-     * Declare layout views
-     * @param view
-     */
-    private void initializeViews(View view){
-        flightEditText = (EditText)view.findViewById(R.id.input_flight_editText);
-        inputContinueFabButton = (FloatingActionButton)view.findViewById(R.id.input_continue_fab);
-    }
-
-    /**
      * Initialize FragmentStatePagerAdapter
      * @param view
      */
@@ -373,6 +366,7 @@ public class InputFragment extends Fragment{
         Timber.d("INPUTFRAGMENT View Destroyed");
         bus.unregister(this);
         super.onDestroyView();
+        unbinder.unbind();
     }
 
     /**
@@ -602,5 +596,4 @@ public class InputFragment extends Fragment{
         Timber.d("onCreateView: hours " + durationString);
         return durationString;
     }
-
 }

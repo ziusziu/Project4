@@ -2,6 +2,7 @@ package app.ga.com.headingout.inputfragment.rvadapter;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.forecast.Weather;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -35,17 +38,15 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     Bus bus;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
-        CardView weatherCardView;
-        TextView weatherNameTextView, weatherSummaryTextView,
-                weatherTimeTextView, weatherAvgTempTextView;
+        @Nullable @BindView(R.id.input_tab_flight_fragment_cardView) CardView weatherCardView;
+        @BindView(R.id.input_tab_weather_time_textView) TextView weatherTimeTextView;
+        @BindView(R.id.input_tab_weather_avgTemp_TextView) TextView weatherAvgTempTextView;
+        @BindView(R.id.input_tab_weather_textView) TextView weatherNameTextView;
+        @BindView(R.id.input_tab_weather_summary_textView) TextView weatherSummaryTextView;
 
         WeatherViewHolder(View itemView) {
             super(itemView);
-            weatherCardView = (CardView) itemView.findViewById(R.id.input_tab_weather_fragment_cardView);
-            weatherTimeTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_time_textView);
-            weatherAvgTempTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_avgTemp_TextView);
-            weatherNameTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_textView);
-            weatherSummaryTextView = (TextView) itemView.findViewById(R.id.input_tab_weather_summary_textView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
@@ -107,6 +108,5 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         Bus bus = headingOutApplication.provideBus();
         return bus;
     }
-
 
 }

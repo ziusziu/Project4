@@ -12,6 +12,9 @@ import android.widget.DatePicker;
 import android.widget.TabHost;
 
 import app.ga.com.headingout.R;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * A DialogFragment that show 2 date pickers.
@@ -20,13 +23,17 @@ import app.ga.com.headingout.R;
  */
 public class DateRangePickerFragment extends DialogFragment implements View.OnClickListener{
 
+    @BindView(R.id.tabHost) TabHost tabHost;
+    @BindView(R.id.but_set_time_range) Button butSetDateRange;
+    @BindView(R.id.start_date_picker) DatePicker startDatePicker;
+    @BindView(R.id.end_date_picker) DatePicker endDatePicker;
+
+
     private OnDateRangeSelectedListener onDateRangeSelectedListener;
 
-    private TabHost tabHost;
-    private DatePicker startDatePicker;
-    private DatePicker endDatePicker;
-    private Button butSetDateRange;
     boolean is24HourMode;
+
+    private Unbinder unbinder;
 
     public DateRangePickerFragment() {
         // Required empty public constructor
@@ -55,12 +62,10 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.date_range_picker, container, false);
+        View view = inflater.inflate(R.layout.date_range_picker, container, false);
+        unbinder = ButterKnife.bind(this, view);
+
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        tabHost = (TabHost) root.findViewById(R.id.tabHost);
-        butSetDateRange = (Button) root.findViewById(R.id.but_set_time_range);
-        startDatePicker = (DatePicker) root.findViewById(R.id.start_date_picker);
-        endDatePicker = (DatePicker) root.findViewById(R.id.end_date_picker);
         butSetDateRange.setOnClickListener(this);
         tabHost.findViewById(R.id.tabHost);
         tabHost.setup();
@@ -72,7 +77,7 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
         endDatePage.setIndicator(getString(R.string.ttile_tab_end_date));
         tabHost.addTab(startDatePage);
         tabHost.addTab(endDatePage);
-        return root;
+        return view;
 
     }
 
@@ -107,4 +112,9 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
         void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

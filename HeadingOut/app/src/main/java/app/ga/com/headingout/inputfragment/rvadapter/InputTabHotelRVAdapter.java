@@ -3,9 +3,9 @@ package app.ga.com.headingout.inputfragment.rvadapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +16,8 @@ import java.util.ArrayList;
 
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
@@ -34,25 +36,20 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     HotWireHotels hotels;
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
-        CardView hotelCardView;
-        TextView hotelCheckInDateTextView, hotelCheckOutDateTextView, hotelNightsTextView,
-                hotelCurrencyCodeTextView, hotelTotalPriceTextView;
-        RatingBar hotelRatingBar;
 
-        TextView hotelNameTextView;
+        @Nullable @BindView(R.id.input_tab_hotel_fragment_cardView) CardView hotelCardView;
+        @BindView(R.id.input_tab_hotel_name_textView) TextView hotelNameTextView;
+        @BindView(R.id.input_tab_hotel_checkInDate_textView) TextView hotelCheckInDateTextView;
+        @BindView(R.id.input_tab_hotel_checkOutDate_textView) TextView hotelCheckOutDateTextView;
+        @BindView(R.id.input_tab_hotel_nights_textView) TextView hotelNightsTextView;
+        @BindView(R.id.input_tab_hotel_currencyCode_textView) TextView hotelCurrencyCodeTextView;
+        @BindView(R.id.input_tab_hotel_totalPrice_textView) TextView hotelTotalPriceTextView;
+        @BindView(R.id.input_tab_hotel_ratingBar) RatingBar hotelRatingBar;
 
         HotelViewHolder(View itemView) {
             super(itemView);
-
+            ButterKnife.bind(this, itemView);
             hotelPositions = new ArrayList<>();
-            hotelCardView = (CardView) itemView.findViewById(R.id.input_tab_hotel_fragment_cardView);
-            hotelNameTextView = (TextView) itemView.findViewById(R.id.input_tab_hotel_name_textView);
-            hotelCheckInDateTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_checkInDate_textView);
-            hotelCheckOutDateTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_checkOutDate_textView);
-            hotelNightsTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_nights_textView);
-            hotelCurrencyCodeTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_currencyCode_textView);
-            hotelTotalPriceTextView = (TextView)itemView.findViewById(R.id.input_tab_hotel_totalPrice_textView);
-            hotelRatingBar = (RatingBar) itemView.findViewById(R.id.input_tab_hotel_ratingBar);
         }
     }
 

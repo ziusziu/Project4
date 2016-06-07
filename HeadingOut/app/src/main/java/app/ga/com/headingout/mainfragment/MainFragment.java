@@ -33,6 +33,10 @@ import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.model.TripDestination;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import butterknife.BindDrawable;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -41,6 +45,16 @@ import timber.log.Timber;
 public class MainFragment extends Fragment implements
         DateRangePickerFragment.OnDateRangeSelectedListener,
         MainTripRVAdapter.OnMainCardViewClickListener{
+
+    @BindView(R.id.main_calendar_imageView) ImageView calendarImageView;
+    @BindView(R.id.main_addLocation_button) Button addButton;
+    @BindView(R.id.main_destination_recyclerView) RecyclerView tripDestinationRecyclerView;
+    @BindView(R.id.main_origin_recyclerView) RecyclerView tripOriginRecyclerView;
+    @BindView(R.id.main_destination_autocomplete_textView) AutoCompleteTextView destinationAutoCompleteTextView;
+    @BindView(R.id.main_origin_autocomplete_textView) AutoCompleteTextView originAutoCompleteTextView;
+    @BindView(R.id.main_goButton_fab) FloatingActionButton mainGoButtonFAB;
+    @BindView(R.id.main_startDate_editText) EditText mainStartDateEditText;
+    @BindView(R.id.main_endDate_editText) EditText mainEndDateEditText;
 
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -70,23 +84,27 @@ public class MainFragment extends Fragment implements
     //endregion
 
     //region View Declarations
-    private static Button addButton;
-    private static RecyclerView tripDestinationRecyclerView;
-    private static RecyclerView tripOriginRecyclerView;
-    private static ImageView calendarImageView;
-    private static AutoCompleteTextView destinationAutoCompleteTextView;
-    private static AutoCompleteTextView originAutoCompleteTextView;
-    private static FloatingActionButton mainGoButtonFAB;
-    private static EditText mainStartDateEditText;
-    private static EditText mainEndDateEditText;
+//    private static Button addButton;
+//    private static RecyclerView tripDestinationRecyclerView;
+//    private static RecyclerView tripOriginRecyclerView;
+//    private static ImageView calendarImageView;
+//    private static AutoCompleteTextView destinationAutoCompleteTextView;
+//    private static AutoCompleteTextView originAutoCompleteTextView;
+//    private static FloatingActionButton mainGoButtonFAB;
+//    private static EditText mainStartDateEditText;
+//    private static EditText mainEndDateEditText;
     //endregion
+
+    private Unbinder unbinder;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.main_content, container, false);
 
-        initializeViews(view);
+        unbinder = ButterKnife.bind(this, view);
+
+        initializeViews();
         initFab();
         //setAddButtonListener();
         setMainGoFABListener();
@@ -100,25 +118,14 @@ public class MainFragment extends Fragment implements
 
     /**
      * Initialize Views
-     * @param view
      */
-    private void initializeViews(View view){
-        calendarImageView = (ImageView)view.findViewById(R.id.main_calendar_imageView);
-        addButton = (Button)view.findViewById(R.id.main_addLocation_button);
-        tripDestinationRecyclerView = (RecyclerView)view.findViewById(R.id.main_destination_recyclerView);
-        tripOriginRecyclerView = (RecyclerView)view.findViewById(R.id.main_origin_recyclerView);
-        destinationAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_destination_autocomplete_textView);
-        originAutoCompleteTextView = (AutoCompleteTextView)view.findViewById(R.id.main_origin_autocomplete_textView);
-        mainGoButtonFAB = (FloatingActionButton)view.findViewById(R.id.main_goButton_fab);
-        mainStartDateEditText = (EditText)view.findViewById(R.id.main_startDate_editText);
-        mainEndDateEditText = (EditText)view.findViewById(R.id.main_endDate_editText);
-
+    private void initializeViews(){
         // Change the color of Resources
         int color = Color.parseColor("#68EFAD");
         calendarImageView.setImageResource(R.drawable.calendar);
         calendarImageView.setColorFilter(color);
-        addButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
 
+        addButton.getBackground().setColorFilter(color, PorterDuff.Mode.LIGHTEN);
     }
 
     /**
@@ -319,5 +326,11 @@ public class MainFragment extends Fragment implements
                 fragmentTransaction.commit();
             }
         });
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

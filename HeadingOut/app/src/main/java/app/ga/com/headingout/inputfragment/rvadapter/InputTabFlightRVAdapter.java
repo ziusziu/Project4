@@ -3,6 +3,7 @@ package app.ga.com.headingout.inputfragment.rvadapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +21,9 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Leg;
 import app.ga.com.headingout.model.flights.Segment;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -34,21 +38,18 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     Flights flights;
 
-    public static ListView flightSegmentListView;
+    private static Unbinder unbinder;
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
-        CardView flightCardView;
-        TextView flightSaleTotalTextView, flightDurationTextView;
-        LinearLayout flightCardsLinearLayout;
+
+        @Nullable @BindView(R.id.input_tab_flight_fragment_cardView) CardView flightCardView;
+        @BindView(R.id.input_tab_flight_saleTotal_textView) TextView flightSaleTotalTextView;
+        @BindView(R.id.input_tab_flight_duration_textView) TextView flightDurationTextView;
+        @BindView(R.id.input_tab_flight_cards_linearLayout) LinearLayout flightCardsLinearLayout;
 
         FlightViewHolder(View itemView) {
             super(itemView);
-            flightCardView = (CardView) itemView.findViewById(R.id.input_tab_flight_fragment_cardView);
-            flightSaleTotalTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_saleTotal_textView);
-            flightDurationTextView = (TextView) itemView.findViewById(R.id.input_tab_flight_duration_textView);
-            flightSegmentListView = (ListView) itemView.findViewById(R.id.input_tab_flight_segments_listView);
-            flightCardsLinearLayout = (LinearLayout) itemView.findViewById(R.id.input_tab_flight_cards_linearLayout);
-
+            unbinder = ButterKnife.bind(this, itemView);
         }
 
     }
