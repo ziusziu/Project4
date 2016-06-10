@@ -24,11 +24,13 @@ import javax.inject.Named;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
-import app.ga.com.headingout.inputfragment.DaggerNetComponent;
 import app.ga.com.headingout.inputfragment.NetComponent;
 import app.ga.com.headingout.inputfragment.providers.HotwireService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,13 +42,11 @@ import timber.log.Timber;
  */
 public class InputHotelTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
-    private SwipeRefreshLayout mHotelSwipeRefreshLayout;
 
     private int page;
-    private static RecyclerView hotelRecyclerView;
     private InputTabHotelRVAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
-    private TextView destinationTextView;
+
 
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -80,6 +80,12 @@ public class InputHotelTabFragment extends Fragment {
     private NetComponent netComponent;
     @Inject @Named("Hotwire") Retrofit retrofit;
 
+    @BindView(R.id.input_tab_hotel_fragment_swipe_refresh_layout) SwipeRefreshLayout hotelSwipeRefreshLayout;
+    @BindView(R.id.input_tab_hotel_fragment_recyclerView) RecyclerView hotelRecyclerView;
+    @BindView(R.id.input_tab_hotel_destination_textView) TextView destinationTextView;
+
+    Unbinder unbinder;
+
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -103,9 +109,10 @@ public class InputHotelTabFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
+        unbinder = ButterKnife.bind(this, view);
+
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        initViews(view);
 
         registerOttoBus();
         getSharedPreferences();
@@ -121,18 +128,17 @@ public class InputHotelTabFragment extends Fragment {
         bus.register(this);
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     private Bus createBus(){
         // Register for bus events
         HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
         Bus bus = headingOutApplication.provideBus();
         return bus;
-    }
-
-    private void initViews(View view){
-        mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
-        hotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
-        destinationTextView = (TextView)view.findViewById(R.id.input_tab_hotel_destination_textView);
-
     }
 
     private void recyclerViewSetup(){
@@ -142,7 +148,7 @@ public class InputHotelTabFragment extends Fragment {
     }
 
     private void swipeHotelRefreshListener(){
-        mHotelSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        hotelSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshFlightContent();
@@ -211,8 +217,8 @@ public class InputHotelTabFragment extends Fragment {
 
 
                 //recyclerViewSetup();
-                mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
-                mHotelSwipeRefreshLayout.setRefreshing(false);
+                hotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
+                hotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
     }
