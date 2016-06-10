@@ -21,6 +21,7 @@ import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
@@ -79,7 +80,7 @@ public class InputHotelTabFragment extends Fragment {
 
     private HotWireHotels hotels;
     private NetComponent netComponent;
-    @Inject Retrofit retrofit;
+    @Inject @Named("Hotwire") Retrofit retrofit;
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
