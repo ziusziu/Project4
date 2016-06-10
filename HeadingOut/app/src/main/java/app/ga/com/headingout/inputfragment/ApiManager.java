@@ -29,6 +29,7 @@ import app.ga.com.headingout.model.flights.postrequest.Request;
 import app.ga.com.headingout.model.flights.postrequest.RequestJson;
 import app.ga.com.headingout.model.forecast.Weather;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/9/16.
@@ -97,13 +98,13 @@ public class ApiManager {
                     // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
 
                 } else {
-                    Log.d(TAG, "onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<HotWireHotels> call, Throwable t) {
-                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
+                Timber.d("onFailure: onFailure UNSUCCESSFUL");
                 t.printStackTrace();
             }
         });

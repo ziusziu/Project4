@@ -140,7 +140,7 @@ public class MainFragment extends Fragment implements
     @Override
     public void onDateRangeSelected(int startDay, int startMonth, int startYear,
                                     int endDay, int endMonth, int endYear) {
-        Timber.d("range : ", "from: " + startDay + "-" + startMonth + "-" + startYear +
+        Timber.d("range : "+ "from: " + startDay + "-" + startMonth + "-" + startYear +
                 " to : " + endDay + "-" + endMonth + "-" + endYear);
 
         NumberFormat formatter = new DecimalFormat("00");

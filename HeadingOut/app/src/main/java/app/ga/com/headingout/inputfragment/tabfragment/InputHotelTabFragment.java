@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,11 +20,20 @@ import android.widget.TextView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.ApiManager;
+import app.ga.com.headingout.inputfragment.DaggerNetComponent;
+import app.ga.com.headingout.inputfragment.NetComponent;
+import app.ga.com.headingout.inputfragment.providers.HotwireService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 /**
@@ -67,6 +77,10 @@ public class InputHotelTabFragment extends Fragment {
     private static String mDestination;
     //endregion
 
+    private HotWireHotels hotels;
+    private NetComponent netComponent;
+    @Inject Retrofit retrofit;
+
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -89,6 +103,9 @@ public class InputHotelTabFragment extends Fragment {
 
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
+
+        netComponent = DaggerNetComponent.create();
+        netComponent.inject(this);
 
         initViews(view);
 
@@ -145,7 +162,7 @@ public class InputHotelTabFragment extends Fragment {
                 Timber.d("run: ===>>> PULLING TO REFRESH Hotels====");
 
                 HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
-                Bus bus = headingOutApplication.provideBus();
+                final Bus bus = headingOutApplication.provideBus();
 
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
                 String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
@@ -153,7 +170,47 @@ public class InputHotelTabFragment extends Fragment {
 
                 Timber.d("run: ====>>>>>> Pull Down Refresh  " + mDestination);
 
-                ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
+                //ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
+
+
+                String responseFormat = "json";
+                //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
+                String rooms = "1";
+                String adults = "2";
+                String children = "0";
+
+
+                HotwireService service = retrofit.create(HotwireService.class);
+                Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
+                        responseFormat,
+                        mDestination,
+                        rooms,
+                        adults,
+                        children,
+                        hotwireStartDate,
+                        hotwireEndDate);
+                call.enqueue(new Callback<HotWireHotels>() {
+                    @Override
+                    public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
+                        if (response.isSuccessful()) {
+                            hotels = response.body();
+
+                            bus.post(hotels);
+                            //inputTabsFragmentPagerAdapter.setHotels(hotels);
+                            // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
+
+                        } else {
+                            Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<HotWireHotels> call, Throwable t) {
+                        Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                        t.printStackTrace();
+                    }
+                });
+
 
                 //recyclerViewSetup();
                 mHotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);

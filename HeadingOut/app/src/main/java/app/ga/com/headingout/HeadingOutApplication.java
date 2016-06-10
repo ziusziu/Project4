@@ -23,10 +23,12 @@ public class HeadingOutApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
+
     }
 
     public Bus provideBus() {
         return bus;
     }
+
 
 }
