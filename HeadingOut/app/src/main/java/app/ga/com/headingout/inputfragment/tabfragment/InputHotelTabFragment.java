@@ -9,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import javax.inject.Named;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
-import app.ga.com.headingout.inputfragment.ApiManager;
 import app.ga.com.headingout.inputfragment.DaggerNetComponent;
 import app.ga.com.headingout.inputfragment.NetComponent;
 import app.ga.com.headingout.inputfragment.providers.HotwireService;
@@ -44,11 +42,11 @@ public class InputHotelTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
     private SwipeRefreshLayout mHotelSwipeRefreshLayout;
 
-    private int mPage;
-    private static RecyclerView mHotelRecyclerView;
+    private int page;
+    private static RecyclerView hotelRecyclerView;
     private InputTabHotelRVAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
-    private TextView mDestinationTextView;
+    private TextView destinationTextView;
 
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
@@ -64,18 +62,18 @@ public class InputHotelTabFragment extends Fragment {
     public static final String DESTINATION = "destination";
     //endregion
     //region SharedPreferences Variables
-    private static String mLatitude;
-    private static String mLongitude;
-    private static String mStartDay;
-    private static String mStartMonth;
-    private static String mStartYear;
-    private static String mEndDay;
-    private static String mEndMonth;
-    private static String mEndYear;
+    private static String latitude;
+    private static String longitude;
+    private static String startDay;
+    private static String startMonth;
+    private static String startYear;
+    private static String endDay;
+    private static String endMonth;
+    private static String endYear;
     private static String forecastApiKey;
-    private static String mDestinationAirportCode;
-    private static String mOriginAirportCode;
-    private static String mDestination;
+    private static String destinationAirportCode;
+    private static String originAirportCode;
+    private static String destination;
     //endregion
 
     private HotWireHotels hotels;
@@ -93,14 +91,14 @@ public class InputHotelTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mPage = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(ARG_PAGE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_hotel_fragment, container, false);
-        Timber.d("onCreateView: Page of TabLayout " + mPage);
+        Timber.d("onCreateView: Page of TabLayout " + page);
 
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
@@ -133,15 +131,15 @@ public class InputHotelTabFragment extends Fragment {
 
     private void initViews(View view){
         mHotelSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_hotel_fragment_swipe_refresh_layout);
-        mHotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
-        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_hotel_destination_textView);
+        hotelRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_hotel_fragment_recyclerView);
+        destinationTextView = (TextView)view.findViewById(R.id.input_tab_hotel_destination_textView);
 
     }
 
     private void recyclerViewSetup(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mHotelRecyclerView.setLayoutManager(linearLayoutManager);
-        mHotelRecyclerView.setHasFixedSize(true);
+        hotelRecyclerView.setLayoutManager(linearLayoutManager);
+        hotelRecyclerView.setHasFixedSize(true);
     }
 
     private void swipeHotelRefreshListener(){
@@ -166,12 +164,12 @@ public class InputHotelTabFragment extends Fragment {
                 final Bus bus = headingOutApplication.provideBus();
 
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-                String hotwireStartDate = mStartMonth + "/" + mStartDay + "/" + mStartYear;
-                String hotwireEndDate = mEndMonth + "/" + mEndDay + "/" + mEndYear;
+                String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
+                String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
 
-                Timber.d("run: ====>>>>>> Pull Down Refresh  " + mDestination);
+                Timber.d("run: ====>>>>>> Pull Down Refresh  " + destination);
 
-                //ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, mDestination);
+                //ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
 
 
                 String responseFormat = "json";
@@ -184,7 +182,7 @@ public class InputHotelTabFragment extends Fragment {
                 HotwireService service = retrofit.create(HotwireService.class);
                 Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
                         responseFormat,
-                        mDestination,
+                        destination,
                         rooms,
                         adults,
                         children,
@@ -226,20 +224,20 @@ public class InputHotelTabFragment extends Fragment {
     private void getSharedPreferences(){
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        mStartDay = sharedPref.getString(STARTDAY, "Default");
-        mStartMonth = sharedPref.getString(STARTMONTH, "Default");
-        mStartYear = sharedPref.getString(STARTYEAR, "Default");
-        mEndDay = sharedPref.getString(ENDDAY, "Default");
-        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
-        mEndYear = sharedPref.getString(ENDYEAR, "Default");
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        mOriginAirportCode = "SFO";
-        mDestination = sharedPref.getString(DESTINATION, "default");
-        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> " + mStartYear);
+        latitude = sharedPref.getString(LATITUDE, "Default");
+        longitude = sharedPref.getString(LONGITUDE, "Default");
+        startDay = sharedPref.getString(STARTDAY, "Default");
+        startMonth = sharedPref.getString(STARTMONTH, "Default");
+        startYear = sharedPref.getString(STARTYEAR, "Default");
+        endDay = sharedPref.getString(ENDDAY, "Default");
+        endMonth = sharedPref.getString(ENDMONTH, "Default");
+        endYear = sharedPref.getString(ENDYEAR, "Default");
+        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = "SFO";
+        destination = sharedPref.getString(DESTINATION, "default");
+        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> " + startYear);
 
-        mDestinationTextView.setText(mDestinationAirportCode);
+        destinationTextView.setText(destinationAirportCode);
     }
 
     /**
@@ -252,7 +250,7 @@ public class InputHotelTabFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
         recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
-        mHotelRecyclerView.setAdapter(recyclerViewAdapter);
+        hotelRecyclerView.setAdapter(recyclerViewAdapter);
 
     }
 
