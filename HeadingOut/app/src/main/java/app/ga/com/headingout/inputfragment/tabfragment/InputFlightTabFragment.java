@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +32,9 @@ import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Segment;
 import app.ga.com.headingout.model.flights.Slice;
 import app.ga.com.headingout.model.flights.TripOption;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -42,6 +44,7 @@ public class InputFlightTabFragment extends Fragment {
 
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String PLACESPREFERENCES = "placesPreferences";
+
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
     public static final String ORIGINAIRPORTCODE = "originAirportCode";
     public static final String ENDDAY = "endDay";
@@ -49,17 +52,20 @@ public class InputFlightTabFragment extends Fragment {
     public static final String ENDYEAR = "endYear";
 
     private static int mPage;
-    private static String mDestinationAirportCode;
-    private static String mOriginAirportCode;
-    private static String mEndDay;
-    private static String mEndMonth;
-    private static String mEndYear;
+    private static String destinationAirportCode;
+    private static String originAirportCode;
+    private static String endDay;
+    private static String endMonth;
+    private static String endYear;
 
-    private SwipeRefreshLayout mFlightSwipeRefreshLayout;
-    private static RecyclerView mFlightRecyclerView;
     private static InputTabFlightRVAdapter recyclerViewAdapter;
-    private static TextView mOriginTextView;
-    private static TextView mDestinationTextView;
+
+    @BindView(R.id.input_tab_flight_fragment_swipe_refresh_layout) SwipeRefreshLayout flightSwipeRefreshLayout;
+    @BindView(R.id.input_tab_flight_fragment_recyclerView) RecyclerView flightRecyclerView;
+    @BindView(R.id.input_tab_flight_origin_textView) TextView originTextView;
+    @BindView(R.id.input_tab_flight_destination_textView) TextView destinationTextView;
+
+    Unbinder unbinder;
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -80,6 +86,8 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
+
+        unbinder = ButterKnife.bind(this, view);
 
         initViews(view);
         getSharedPreferences();
@@ -109,12 +117,6 @@ public class InputFlightTabFragment extends Fragment {
     }
 
     private void initViews(View view){
-
-        mFlightSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_flight_fragment_swipe_refresh_layout);
-        mFlightRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_flight_fragment_recyclerView);
-        mOriginTextView = (TextView)view.findViewById(R.id.input_tab_flight_origin_textView);
-        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_flight_destination_textView);
-
         // Set Color of Icons
         ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
         int color = Color.parseColor("#BBFFFFFF");
@@ -122,30 +124,30 @@ public class InputFlightTabFragment extends Fragment {
 
         getSharedPreferences();
 
-        Timber.d("initViews: mOriginAirportCode " + mOriginAirportCode);
+        Timber.d("initViews: mOriginAirportCode " + originAirportCode);
 
-        mOriginTextView.setText(mOriginAirportCode);
-        mDestinationTextView.setText(mDestinationAirportCode);
+        originTextView.setText(originAirportCode);
+        destinationTextView.setText(destinationAirportCode);
     }
 
     private void getSharedPreferences(){
         // Set Text to views
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        mOriginAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "JFK");
-        mEndDay = sharedPref.getString(ENDDAY, "Default");
-        mEndMonth = sharedPref.getString(ENDMONTH, "Default");
-        mEndYear = sharedPref.getString(ENDYEAR, "Default");
+        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "JFK");
+        endDay = sharedPref.getString(ENDDAY, "Default");
+        endMonth = sharedPref.getString(ENDMONTH, "Default");
+        endYear = sharedPref.getString(ENDYEAR, "Default");
     }
 
     private void recyclerViewSetup(){
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
-        mFlightRecyclerView.setLayoutManager(linearLayoutManager);
-        mFlightRecyclerView.setHasFixedSize(true);
+        flightRecyclerView.setLayoutManager(linearLayoutManager);
+        flightRecyclerView.setHasFixedSize(true);
     }
 
     private void swipeFlightRefreshListener(){
-        mFlightSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        flightSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshFlightContent();
@@ -163,14 +165,14 @@ public class InputFlightTabFragment extends Fragment {
                 Bus bus = headingOutApplication.provideBus();
                 bus.register(this);
 
-                String date = mEndYear + "-" + mEndMonth + "-" + mEndDay; // yyyy-MM-dd
+                String date = endYear + "-" + endMonth + "-" + endDay; // yyyy-MM-dd
 
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-                ApiManager.getQPExpressApi(bus, googlePlacesApiKey, mOriginAirportCode, mDestinationAirportCode, date);
+                ApiManager.getQPExpressApi(bus, googlePlacesApiKey, originAirportCode, destinationAirportCode, date);
 
                 recyclerViewSetup();
-                mFlightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
-                mFlightSwipeRefreshLayout.setRefreshing(false);
+                flightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
+                flightSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
     }
@@ -181,12 +183,18 @@ public class InputFlightTabFragment extends Fragment {
         Timber.d("onResume: INPUT----FLIGHT-----TABFRAGMENT ===>>> resuming");
     }
 
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
     @Subscribe
     public void onFlightData(Flights flights){
         Timber.d("onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
 
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
-        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+        flightRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
 
@@ -210,7 +218,7 @@ public class InputFlightTabFragment extends Fragment {
 
 
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
-        mFlightRecyclerView.setAdapter(recyclerViewAdapter);
+        flightRecyclerView.setAdapter(recyclerViewAdapter);
     }
 
     private Flights returnFlightsDummyData(){
@@ -236,4 +244,5 @@ public class InputFlightTabFragment extends Fragment {
         return json;
     }
 }
+
 
