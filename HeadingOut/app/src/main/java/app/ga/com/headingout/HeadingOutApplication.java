@@ -4,9 +4,13 @@ import android.app.Application;
 
 import com.squareup.otto.Bus;
 
+import app.ga.com.headingout.inputfragment.DaggerNetComponent;
+import app.ga.com.headingout.inputfragment.NetComponent;
 import timber.log.Timber;
 
 public class HeadingOutApplication extends Application {
+
+    private NetComponent netComponent;
 
     Bus bus;
 
@@ -24,11 +28,17 @@ public class HeadingOutApplication extends Application {
         }
 
 
+        netComponent = DaggerNetComponent.create();
+
+
     }
 
     public Bus provideBus() {
         return bus;
     }
 
+    public NetComponent getNetComponent() {
+        return netComponent;
+    }
 
 }

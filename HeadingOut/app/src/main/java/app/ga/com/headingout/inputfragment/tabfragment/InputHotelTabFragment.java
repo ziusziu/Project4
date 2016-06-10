@@ -103,8 +103,7 @@ public class InputHotelTabFragment extends Fragment {
         progressBar = (ProgressBar) view.findViewById(R.id.input_tab_hotel_progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
-        netComponent = DaggerNetComponent.create();
-        netComponent.inject(this);
+        ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
         initViews(view);
 
