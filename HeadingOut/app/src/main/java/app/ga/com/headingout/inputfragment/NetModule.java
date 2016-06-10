@@ -29,17 +29,21 @@ public class NetModule {
         return client;
     }
 
+    @Provides @Singleton
+    Gson provideGson(){
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        return gsonBuilder.create();
+    }
+
 
     @Provides @Named("Hotwire") @Singleton
-    Retrofit provideRetrofit(OkHttpClient okHttpClient){
+    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.hotwire.com/v1/search/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
         return retrofit;
     }
-
-
-
+    
 }
