@@ -19,6 +19,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import javax.inject.Inject;
+
 import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.mainfragment.MainFragment;
 import app.ga.com.headingout.util.FragmentUtil;
