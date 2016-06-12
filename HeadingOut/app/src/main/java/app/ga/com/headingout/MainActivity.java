@@ -19,27 +19,29 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import javax.inject.Inject;
-
 import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.mainfragment.MainFragment;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, FragmentUtil {
 
-    private static Toolbar toolBar;
+    private static final String MAIN_FRAGMENT = "MainFragment";
+    private static final String INPUT_FRAGMENT = "InputFragment";
+    private static final String DETAIL_FRAGMENT = "DetailFragment";
+
     private static ActionBarDrawerToggle drawerToggle;
     private static FragmentManager fragmentManager;
     private static MainFragment mainFragment;
     private static InputFragment inputFragment;
     private static ActionBar actionBar;
 
-    private static final String MAIN_FRAGMENT = "MainFragment";
-    private static final String INPUT_FRAGMENT = "InputFragment";
-    private static final String DETAIL_FRAGMENT = "DetailFragment";
+    @BindView(R.id.home_nav_view) NavigationView navigationView;
+    @BindView(R.id.home_drawer_layout) DrawerLayout drawer;
+    @BindView(R.id.home_toolBar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,68 +52,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Utilities.hideKeyboard(this);
 
-        loadMainFragment();
         initActionBar();
         initNavDrawer();
+
+        loadMainFragment();
+
     }
 
-
-    /**
-     * Special Actions for ActionBar when DetailFragment is loaded
-     * ActionBarIcon is a return arrow and creates a new InputFragment
-     * @param fragmentName
-     */
-    @Override
-    public void setFragmentToolBar(String fragmentName) {
-        switch (fragmentName) {
-            case MAIN_FRAGMENT:
-                actionBar.setTitle("Search");
-                setActionBarIcon(R.drawable.ic_menu_24dp);
-                initNavDrawer();
-                break;
-            case INPUT_FRAGMENT:
-                actionBar.setTitle("Results");
-                setActionBarIcon(R.drawable.ic_menu_24dp);
-                initNavDrawer();
-                break;
-            case DETAIL_FRAGMENT:
-                drawerToggle.setDrawerIndicatorEnabled(false);
-                setActionBarIcon(R.drawable.ic_arrow_back_24dp);
-                actionBar.setTitle(fragmentName);
-                toolBar.setNavigationOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //TODO Fix MainFragment Icon becomes back arrow when Home clicked in InputFragment
-                        Timber.d("onClick: ActionBarArrow was clicked");
-                        setActionBarIcon(R.drawable.ic_menu_24dp);
-                        drawerToggle.setDrawerIndicatorEnabled(true);
-                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                        InputFragment inputFragment = new InputFragment();
-                        fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
-                        fragmentTransaction.commit();
-                    }
-                });
-                break;
-            default:
-                initNavDrawer();
-                setActionBarIcon(R.drawable.ic_menu_24dp);
-        }
+    private void initActionBar(){
+        setSupportActionBar(toolbar);
+        actionBar = getSupportActionBar();
+        actionBar.setTitle(MAIN_FRAGMENT);
     }
 
     /**
      * Initialize Navigation Drawer and ActionBarDrawerToggle for open drawers
      */
     private void initNavDrawer() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
         drawerToggle = new ActionBarDrawerToggle(this, drawer,
-                toolBar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
 
         drawer.addDrawerListener(drawerToggle);
         drawer.removeDrawerListener(drawerToggle);
         drawerToggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(getNavViewResource());
         navigationView.setNavigationItemSelectedListener(this);
+    }
+
+    /**
+     * Load MainFragment into container when Activity is Created
+     */
+    private void loadMainFragment() {
+        Timber.d("loadMainFragment: ===>>> Loading MainFragment in MainActivity");
+        mainFragment = new MainFragment();
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
+        fragmentTransaction.commit();
+    }
+
+    /**
+     * Changes the color of icon resource and sets it to the Action Bar
+     * @param iconResource
+     */
+    protected void setActionBarIcon(int iconResource) {
+        Timber.d("setActionBarIcon: ===>> MainActivity changing ActionBar Icon");
+        int color = Color.parseColor("#FFFFFF");
+        Drawable iconDrawable = ResourcesCompat.getDrawable(getResources(), iconResource, null);
+        iconDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        toolbar.setNavigationIcon(iconDrawable);
     }
 
     @Override
@@ -128,7 +117,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
         Timber.d("onBackPressed: ===>> MainActivity BackPressed");
-        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.home_fragment_container);
         String fragmentName = fragment.getClass().getSimpleName();
@@ -188,59 +176,55 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         fragmentTransaction.commit();
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(getDrawerLayoutResource());
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
 
 
-
-    private void initActionBar(){
-        toolBar = (Toolbar) findViewById(getToolBarResource());
-        setSupportActionBar(toolBar);
-        actionBar = getSupportActionBar();
-        actionBar.setTitle(MAIN_FRAGMENT);
-    }
-
     /**
-     * Load MainFragment into container when Activity is Created
+     * Special Actions for ActionBar when DetailFragment is loaded
+     * ActionBarIcon is a return arrow and creates a new InputFragment
+     * @param fragmentName
      */
-    private void loadMainFragment() {
-        Timber.d("loadMainFragment: ===>>> Loading MainFragment in MainActivity");
-        mainFragment = new MainFragment();
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.home_fragment_container, mainFragment);
-        fragmentTransaction.commit();
-    }
-
-    /**
-     * Changes the color of icon resource and sets it to the Action Bar
-     * @param iconResource
-     */
-    protected void setActionBarIcon(int iconResource) {
-        Timber.d("setActionBarIcon: ===>> MainActivity changing ActionBar Icon");
-        int color = Color.parseColor("#FFFFFF");
-        Drawable iconDrawable = ResourcesCompat.getDrawable(getResources(), iconResource, null);
-        iconDrawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        toolBar.setNavigationIcon(iconDrawable);
+    @Override
+    public void setFragmentToolBar(String fragmentName) {
+        switch (fragmentName) {
+            case MAIN_FRAGMENT:
+                actionBar.setTitle("Search");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+                initNavDrawer();
+                break;
+            case INPUT_FRAGMENT:
+                actionBar.setTitle("Results");
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+                initNavDrawer();
+                break;
+            case DETAIL_FRAGMENT:
+                drawerToggle.setDrawerIndicatorEnabled(false);
+                setActionBarIcon(R.drawable.ic_arrow_back_24dp);
+                actionBar.setTitle(fragmentName);
+                toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        //TODO Fix MainFragment Icon becomes back arrow when Home clicked in InputFragment
+                        Timber.d("onClick: ActionBarArrow was clicked");
+                        setActionBarIcon(R.drawable.ic_menu_24dp);
+                        drawerToggle.setDrawerIndicatorEnabled(true);
+                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                        InputFragment inputFragment = new InputFragment();
+                        fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
+                        fragmentTransaction.commit();
+                    }
+                });
+                break;
+            default:
+                initNavDrawer();
+                setActionBarIcon(R.drawable.ic_menu_24dp);
+        }
     }
 
     protected int getLayoutResource() {
         return R.layout.activity_main;
     }
-
-    protected int getDrawerLayoutResource() {
-        return R.id.home_drawer_layout;
-    }
-
-    protected int getToolBarResource() {
-        return R.id.home_toolBar;
-    }
-
-    protected int getNavViewResource() {
-        return R.id.home_nav_view;
-    }
-
 
 }

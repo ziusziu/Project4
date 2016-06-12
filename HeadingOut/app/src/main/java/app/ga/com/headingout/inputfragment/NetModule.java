@@ -1,5 +1,8 @@
 package app.ga.com.headingout.inputfragment;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -18,6 +21,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 @Module
 public class NetModule {
+
+
 
     @Provides @Singleton
     OkHttpClient provideOkHttpClient(){

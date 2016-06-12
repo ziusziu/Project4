@@ -17,6 +17,10 @@ public class Utilities {
     public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
     public static final String INTENT_FLIGHT_KEY = "locationTerms";
 
+
+
+
+
     /**
      * Hide the keyboard on activity load
      *
@@ -25,6 +29,9 @@ public class Utilities {
     public static void hideKeyboard(Activity activity){
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
+
+
+
 
     /**
      * Creates a list of Trips with default data for popular locations

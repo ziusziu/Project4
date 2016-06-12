@@ -103,7 +103,7 @@ public class InputWeatherTabFragment extends Fragment {
 
 
     private void initViews(View view){
-        
+
    //     mSpinner = (ProgressBar)view.findViewById(R.id.input_tab_weather_fragment_progressBar);
     }
 
