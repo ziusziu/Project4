@@ -4,6 +4,7 @@ import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import retrofit2.http.Url;
 
 /**
  * Created by samsiu on 5/7/16.

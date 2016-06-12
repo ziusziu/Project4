@@ -17,11 +17,21 @@ import android.widget.TextView;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
-import app.ga.com.headingout.inputfragment.ApiManager;
+import app.ga.com.headingout.inputfragment.providers.ForecastService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabWeatherRVAdapter;
 import app.ga.com.headingout.model.forecast.Weather;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 /**
@@ -29,27 +39,33 @@ import timber.log.Timber;
  */
 public class InputWeatherTabFragment extends Fragment {
     public static final String ARG_PAGE = "ARG_PAGE";
-
-    private SwipeRefreshLayout mWeatherSwipeRefreshLayout;
+    
 //    private ProgressBar mSpinner;
 
     private int mPage;
 
 
-    private static String mLatitude;
-    private static String mLongitude;
-    private static String mDestinationAirportCode;
+    private static String latitude;
+    private static String longitude;
+    private static String destinationAirportCode;
 
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String LATITUDE = "latitude";
     public static final String LONGITUDE = "longitude";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
-
-    private static RecyclerView mWeatherRecyclerView;
+    
     private InputTabWeatherRVAdapter recyclerViewAdapter;
-    private TextView mDestinationTextView;
-
+    
     private static String forecastApiKey;
+    
+    @BindView(R.id.input_tab_weather_fragment_swipe_refresh_layout) SwipeRefreshLayout weatherSwipeRefreshLayout;
+    @BindView(R.id.input_tab_weather_fragment_recyclerView) RecyclerView weatherRecyclerView;
+    @BindView(R.id.input_tab_weather_destination_textView) TextView destinationTextView;
+    
+    
+    private Weather weather;
+    Unbinder unbinder;
+    @Inject @Named("Forecast") Retrofit retrofit;
 
     public static InputWeatherTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -70,6 +86,11 @@ public class InputWeatherTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.input_tab_weather_fragment, container, false);
 
+        unbinder = ButterKnife.bind(this, view);
+
+
+        ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
+
         initViews(view);
         initRecyclerView();
         getSharedPreferences();
@@ -82,16 +103,14 @@ public class InputWeatherTabFragment extends Fragment {
 
 
     private void initViews(View view){
-        mWeatherSwipeRefreshLayout = (SwipeRefreshLayout)view.findViewById(R.id.input_tab_weather_fragment_swipe_refresh_layout);
-        mWeatherRecyclerView = (RecyclerView)view.findViewById(R.id.input_tab_weather_fragment_recyclerView);
-        mDestinationTextView = (TextView)view.findViewById(R.id.input_tab_weather_destination_textView);
+        
    //     mSpinner = (ProgressBar)view.findViewById(R.id.input_tab_weather_fragment_progressBar);
     }
 
     private void initRecyclerView(){
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mWeatherRecyclerView.setLayoutManager(gridLayoutManager);
-        mWeatherRecyclerView.setHasFixedSize(true);
+        weatherRecyclerView.setLayoutManager(gridLayoutManager);
+        weatherRecyclerView.setHasFixedSize(true);
     }
 
     private void registerOttoBus(){
@@ -108,16 +127,16 @@ public class InputWeatherTabFragment extends Fragment {
 
     private void getSharedPreferences(){
         SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        mLatitude = sharedPref.getString(LATITUDE, "Default");
-        mLongitude = sharedPref.getString(LONGITUDE, "Default");
-        mDestinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
+        latitude = sharedPref.getString(LATITUDE, "Default");
+        longitude = sharedPref.getString(LONGITUDE, "Default");
+        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
 
-        mDestinationTextView.setText(mDestinationAirportCode);
+        destinationTextView.setText(destinationAirportCode);
     }
 
 
     private void swipeWeatherRefreshListener(){
-        mWeatherSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        weatherSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshWeatherContent();
@@ -133,12 +152,40 @@ public class InputWeatherTabFragment extends Fragment {
                 Timber.d("run: ===>>> PULLING TO REFRESH Weather====");
 
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
-                Bus bus = createBus();
+                final Bus bus = createBus();
 
-                ApiManager.getWeatherApi(bus, forecastApiKey, mLatitude, mLongitude);
+                //ApiManager.getWeatherApi(bus, forecastApiKey, latitude, longitude);
+
+                String latLong = latitude+","+longitude;
+
+                ForecastService service = retrofit.create(ForecastService.class);
+                Call<Weather> call = service.getWeather(forecastApiKey, latLong);
+                call.enqueue(new Callback<Weather>() {
+                    @Override
+                    public void onResponse(Call<Weather> call, Response<Weather> response) {
+                        if (response.isSuccessful()) {
+                            weather = response.body();
+
+                            bus.post(weather);
+                            Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
+                            Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
+                            Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
+
+                        } else {
+                            Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Weather> call, Throwable t) {
+                        Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                    }
+                });
+
+                
                 //recyclerViewSetup();
-                mWeatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
-                mWeatherSwipeRefreshLayout.setRefreshing(false);
+                weatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
+                weatherSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
     }
@@ -159,9 +206,14 @@ public class InputWeatherTabFragment extends Fragment {
     public void onWeatherData(Weather weather){
         Timber.d("onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
         recyclerViewAdapter = new InputTabWeatherRVAdapter(weather, getContext());
-        mWeatherRecyclerView.setAdapter(recyclerViewAdapter);
+        weatherRecyclerView.setAdapter(recyclerViewAdapter);
    //     mSpinner.setVisibility(View.GONE);
 
     }
-
+    
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
+    }
 }

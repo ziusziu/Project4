@@ -35,9 +35,8 @@ public class NetModule {
         return gsonBuilder.create();
     }
 
-
     @Provides @Named("Hotwire") @Singleton
-    Retrofit provideRetrofit(Gson gson, OkHttpClient okHttpClient){
+    Retrofit provideHotwireRetrofit(Gson gson, OkHttpClient okHttpClient){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.hotwire.com/v1/search/")
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -46,4 +45,23 @@ public class NetModule {
         return retrofit;
     }
 
+    @Provides @Named("QPXExpress") @Singleton
+    Retrofit provideQPXExpressRetrofit(Gson gson, OkHttpClient okHttpClient){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://www.googleapis.com/qpxExpress/v1/trips/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
+
+    @Provides @Named("Forecast") @Singleton
+    Retrofit provideForecastRetrofit(Gson gson, OkHttpClient okHttpClient){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.forecast.io/forecast/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
 }

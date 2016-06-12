@@ -111,8 +111,8 @@ public class InputHotelTabFragment extends Fragment {
 
         unbinder = ButterKnife.bind(this, view);
 
+        // Dagger2
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
-
 
         registerOttoBus();
         getSharedPreferences();
@@ -182,6 +182,7 @@ public class InputHotelTabFragment extends Fragment {
                 String rooms = "1";
                 String adults = "2";
                 String children = "0";
+
 
 
                 HotwireService service = retrofit.create(HotwireService.class);
