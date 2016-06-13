@@ -29,6 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
 
@@ -48,14 +51,13 @@ import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import retrofit2.Retrofit;
 import timber.log.Timber;
 
 /**
  * Created by samsiu on 5/4/16.
  */
 public class InputFragment extends Fragment{
-
-
 
     // region View Declarations
     @BindView(R.id.input_tabLayout) TabLayout tabLayout;
@@ -94,6 +96,12 @@ public class InputFragment extends Fragment{
     private Bus bus;
     private Unbinder unbinder;
 
+    @Inject @Named("Hotwire") Retrofit retrofitHotwire;
+    @Inject @Named("QPXExpress") Retrofit retrofitQPXExpress;
+    @Inject @Named("Forecast") Retrofit retrofitForecast;
+    @Inject @Named("FlightStats") Retrofit retrofitFlightStats;
+
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,6 +113,7 @@ public class InputFragment extends Fragment{
         View view = inflater.inflate(R.layout.input_content, container, false);
 
         unbinder = ButterKnife.bind(this, view);
+        ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
         createBus();
 
@@ -155,33 +164,20 @@ public class InputFragment extends Fragment{
         Timber.d("SHARED PREFERENCES: OriginAirportCOde ====>>> " + originAirportCode);
     }
 
+
+//---------------------------------- Call API START ----------------------------------------//
+
+
 //TODO Make the api call from MainFragment
     /**
      * Use Shared Preferences to make api calls in order to populate fragments
      */
     private void makeApiCall(){
-
         Timber.d("====>>> makeApiCall() ");
 
-        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-        String startDate = startYear + "-" + startMonth + "-" + startDay;
-
-//TODO ApiManager needs to incorporate Dagger2
-        // Get Airport Data
-        ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
-                originAirportCode, destinationAirportCode,
-                startDate);
-
-        Timber.d("makeApiCall: latitude " + latitude);
-        // Get Weather Data
-        forecastApiKey = getResources().getString(R.string.forecast_api_key);
-        ApiManager.getWeatherApi(bus, forecastApiKey, latitude, longitude);
-
-        // API that returns lat, long from airportcode, then gets Hotel Data after location returned
-        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
-                destinationAirportCode, startYear, startMonth, startDay);
+        getFlightData();
+        getHotelData();
+        getForecastData();
 
         // API to search for airports near a specified lat long
 //        String distance = "5";
@@ -189,6 +185,32 @@ public class InputFragment extends Fragment{
 
     }
 
+    private void getFlightData(){
+        String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
+        String startDate = startYear + "-" + startMonth + "-" + startDay;
+        ApiManager.getQPExpressFlights(retrofitQPXExpress, bus, googlePlacesApiKey,
+                originAirportCode, destinationAirportCode,
+                startDate);
+    }
+
+    /**
+     * Hotels Search Requires a full city name and not airport code
+     * API that returns lat, long from airportcode, then gets Hotel Data after location returned
+     */
+    private void getHotelData(){
+        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+        ApiManager.getAirportLocation(retrofitFlightStats, bus, flightStatsApiKey, flightStatsAppId,
+                destinationAirportCode, startYear, startMonth, startDay);
+
+    }
+
+    private void getForecastData(){
+        forecastApiKey = getResources().getString(R.string.forecast_api_key);
+        ApiManager.getForecastWeather(retrofitForecast, bus, forecastApiKey, latitude, longitude);
+    }
+
+//---------------------------------- Call API END ----------------------------------------//
 
 // ---------------------------------- OTTO START --------------------------------------------- //
 
@@ -200,6 +222,28 @@ public class InputFragment extends Fragment{
     //   - InputFragment holds api data to plot on google maps
     // InputFragment then Produces them for the Fragments inside the PagerStateAdapter RecyclerView
     //--------------------------------------------------------------------------------------------
+    /**
+     * Uses airport code to find city (destination). Use destination to search hotels
+     * @param airport
+     */
+    @Subscribe
+    public void onAirportData(AirportData airport){
+        this.airport = airport;
+
+        Timber.d("onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
+        // Create destination in format "<city>,<state>" for HotwireSearch
+        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
+        destinationSharedPref = destination;
+
+        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
+        String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
+        String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
+
+        // Make API call for hotels after airport city name returned
+        ApiManager.getHotWireHotels(retrofitHotwire, bus, hotwireApiKey,
+                hotwireStartDate, hotwireEndDate, destination);
+    }
+
     @Subscribe
     public void onHotelData(HotWireHotels hotWireHotels) {
         this.hotWireHotels = hotWireHotels;
@@ -210,6 +254,8 @@ public class InputFragment extends Fragment{
             Timber.d("onHotelData: " + amenities.getName());
             //TODO put id into HashMap, for easy find
         }
+
+        setGoogleMapCameraPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
 
         // Get the api Lat, Longs and info for plotting google map markers
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
@@ -231,7 +277,6 @@ public class InputFragment extends Fragment{
             // Plot Marker on Google Maps
             plotGoogleMaps(latitude, longitude, hwRefNum, hwCurrency, hwPrice, hwRating);
         }
-        setGoogleMapCameraPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
 
     }
 
@@ -263,7 +308,7 @@ public class InputFragment extends Fragment{
 
     private void setGoogleMapCameraPosition(double latitude, double longitude){
         CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitude, longitude)).zoom(12).build();
+                .target(new LatLng(latitude, longitude)).zoom(10).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
     }
@@ -291,21 +336,6 @@ public class InputFragment extends Fragment{
     @Produce
     public Flights produceFlights(){
         return flights;
-    }
-
-    @Subscribe
-    public void onAirportData(AirportData airport){
-        this.airport = airport;
-
-        Timber.d("onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
-        // Create destination in format "<city>,<state>" for HotwireSearch
-        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
-        destinationSharedPref = destination;
-
-        String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
-        String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
-        String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
-        ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destinationSharedPref);
     }
 
     //TODO TESTING, Remove done, post adapter size from weather adapter

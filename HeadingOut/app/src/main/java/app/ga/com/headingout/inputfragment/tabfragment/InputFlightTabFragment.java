@@ -2,7 +2,6 @@ package app.ga.com.headingout.inputfragment.tabfragment;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -10,7 +9,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,7 +21,6 @@ import com.squareup.otto.Subscribe;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -32,41 +29,22 @@ import javax.inject.Named;
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.ApiManager;
-import app.ga.com.headingout.inputfragment.providers.GoogleQPExpressService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabFlightRVAdapter;
 import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Segment;
 import app.ga.com.headingout.model.flights.Slice;
 import app.ga.com.headingout.model.flights.TripOption;
-import app.ga.com.headingout.model.flights.postrequest.Passengers;
-import app.ga.com.headingout.model.flights.postrequest.PostSlice;
-import app.ga.com.headingout.model.flights.postrequest.Request;
-import app.ga.com.headingout.model.flights.postrequest.RequestJson;
+import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 /**
  * Created by samsiu on 4/29/16.
  */
 public class InputFlightTabFragment extends Fragment {
-
-    public static final String ARG_PAGE = "ARG_PAGE";
-    public static final String PLACESPREFERENCES = "placesPreferences";
-
-    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
-    public static final String ORIGINAIRPORTCODE = "originAirportCode";
-    public static final String ENDDAY = "endDay";
-    public static final String ENDMONTH = "endMonth";
-    public static final String ENDYEAR = "endYear";
 
     private static int page;
     private static String destinationAirportCode;
@@ -88,7 +66,7 @@ public class InputFlightTabFragment extends Fragment {
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt(Utilities.ARG_PAGE, page);
         InputFlightTabFragment fragment = new InputFlightTabFragment();
         fragment.setArguments(args);
         return fragment;
@@ -97,7 +75,7 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(Utilities.ARG_PAGE);
 
     }
 
@@ -107,19 +85,18 @@ public class InputFlightTabFragment extends Fragment {
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
 
         unbinder = ButterKnife.bind(this, view);
-
         // Dagger2
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        initViews(view);
-        getSharedPreferences();
-
         registerOttoBus();
 
+        getSharedPreferences();
+
+        initViews(view);
 
         recyclerViewSetup();
-        swipeFlightRefreshListener();
 
+        swipeFlightRefreshListener();
 
         //setRecyclerViewFlightsDummyData();
 
@@ -128,7 +105,7 @@ public class InputFlightTabFragment extends Fragment {
 
     private void registerOttoBus(){
         Bus bus = createBus();
-        bus.register(this);
+        bus.register(InputFlightTabFragment.this);
     }
 
     private Bus createBus(){
@@ -141,10 +118,9 @@ public class InputFlightTabFragment extends Fragment {
     private void initViews(View view){
         // Set Color of Icons
         ImageView mainAirplaneIcon = (ImageView)view.findViewById(R.id.input_tab_flight_planeIcon_ImageView);
-        int color = Color.parseColor("#BBFFFFFF");
+        //int color = Color.parseColor("#BBFFFFFF");
+        int color = Utilities.convertColorHexToResource("#BBFFFFFF");
         mainAirplaneIcon.setColorFilter(color);
-
-        getSharedPreferences();
 
         Timber.d("initViews: mOriginAirportCode " + originAirportCode);
 
@@ -154,12 +130,12 @@ public class InputFlightTabFragment extends Fragment {
 
     private void getSharedPreferences(){
         // Set Text to views
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        originAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "JFK");
-        endDay = sharedPref.getString(ENDDAY, "Default");
-        endMonth = sharedPref.getString(ENDMONTH, "Default");
-        endYear = sharedPref.getString(ENDYEAR, "Default");
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+        destinationAirportCode = sharedPref.getString(Utilities.DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = sharedPref.getString(Utilities.ORIGINAIRPORTCODE, "JFK");
+        endDay = sharedPref.getString(Utilities.ENDDAY, "Default");
+        endMonth = sharedPref.getString(Utilities.ENDMONTH, "Default");
+        endYear = sharedPref.getString(Utilities.ENDYEAR, "Default");
     }
 
     private void recyclerViewSetup(){
@@ -188,53 +164,8 @@ public class InputFlightTabFragment extends Fragment {
                 bus.register(this);
 
                 String date = endYear + "-" + endMonth + "-" + endDay; // yyyy-MM-dd
-
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
-                //ApiManager.getQPExpressApi(bus, googlePlacesApiKey, originAirportCode, destinationAirportCode, date);
-
-                int adultCount = 1;
-                int infantInLapCount = 0;
-                int infantInSeatCount = 0;
-                int childCount = 0;
-                int seniorCount = 0;
-                int solutions = 20;
-                boolean refundable = false;
-
-                Passengers passengers = new Passengers(adultCount,
-                        infantInLapCount,
-                        infantInSeatCount,
-                        childCount,
-                        seniorCount);
-                PostSlice postSlice = new PostSlice(originAirportCode, destinationAirportCode, date);
-                ArrayList<PostSlice> slice = new ArrayList<>();
-                slice.add(postSlice);
-                Request request = new Request(slice, passengers, solutions, refundable);
-                RequestJson requestJson = new RequestJson(request);
-
-
-                GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
-                Call<Flights> call = service.getFlights(googlePlacesApiKey, requestJson);
-                call.enqueue(new Callback<Flights>() {
-                    @Override
-                    public void onResponse(Call<Flights> call, Response<Flights> response) {
-                        if (response.isSuccessful()) {
-                            flights = response.body();
-                            Timber.d("onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
-                            Timber.d("onResponse: ====>>> RESPONSE BODY" + response.body().toString());
-
-                            bus.post(flights);
-
-                        } else {
-                            Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Flights> call, Throwable t) {
-                        Timber.d("onFailure: onFailure UNSUCCESSFUL");
-                    }
-                });
-
+                ApiManager.getQPExpressFlights(retrofit, bus, googlePlacesApiKey, originAirportCode, destinationAirportCode, date);
 
                 recyclerViewSetup();
                 flightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
@@ -284,7 +215,6 @@ public class InputFlightTabFragment extends Fragment {
                 }
             }
         }
-
 
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
         flightRecyclerView.setAdapter(recyclerViewAdapter);

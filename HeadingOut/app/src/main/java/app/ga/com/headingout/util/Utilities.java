@@ -13,9 +13,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.otto.Bus;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import app.ga.com.headingout.HeadingOutApplication;
+import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.TripDestination;
 import timber.log.Timber;
@@ -25,6 +29,7 @@ import timber.log.Timber;
  * Created by samsiu on 5/3/16.
  */
 public class Utilities {
+    public static final String ARG_PAGE = "ARG_PAGE";
     public static final String POSITION = "POSITION";
     public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
     private static final int FAB_COLOR = R.color.colorAccentDark;
@@ -45,6 +50,7 @@ public class Utilities {
     public static final String FLIGHTPOSITION = "flightPosition";
     public static final String HOTELPOSITION = "hotelPosition";
     public static final String WEATHERPOSITION = "weatherPosition";
+    public static final String DESTINATION = "destination";
     //endregion
 
 
@@ -127,7 +133,6 @@ public class Utilities {
         textView.setTypeface(style);
         layout.addView(textView);
     }
-
 
     /**
      * Creates a list of Trips with default data for popular locations

@@ -67,4 +67,14 @@ public class NetModule {
                 .build();
         return retrofit;
     }
+
+    @Provides @Named("FlightStats") @Singleton
+    Retrofit provideFlightStatsRetrofit(Gson gson, OkHttpClient okHttpClient){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://api.flightstats.com/flex/airports/rest/v1/json/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
 }

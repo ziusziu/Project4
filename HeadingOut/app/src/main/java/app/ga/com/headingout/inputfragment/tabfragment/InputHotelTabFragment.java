@@ -24,10 +24,12 @@ import javax.inject.Named;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
+import app.ga.com.headingout.inputfragment.ApiManager;
 import app.ga.com.headingout.inputfragment.providers.NetComponent;
 import app.ga.com.headingout.inputfragment.providers.HotwireService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -41,43 +43,23 @@ import timber.log.Timber;
  * Created by samsiu on 4/29/16.
  */
 public class InputHotelTabFragment extends Fragment {
-    public static final String ARG_PAGE = "ARG_PAGE";
 
     private int page;
     private InputTabHotelRVAdapter recyclerViewAdapter;
     private ProgressBar progressBar;
 
-
-    //region SharedPreferences Constants
-    public static final String PLACESPREFERENCES = "placesPreferences";
-    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
-    public static final String STARTDAY = "startDay";
-    public static final String STARTMONTH = "startMonth";
-    public static final String STARTYEAR = "startYear";
-    public static final String ENDDAY = "endDay";
-    public static final String ENDMONTH = "endMonth";
-    public static final String ENDYEAR = "endYear";
-    public static final String DESTINATION = "destination";
-    //endregion
     //region SharedPreferences Variables
-    private static String latitude;
-    private static String longitude;
     private static String startDay;
     private static String startMonth;
     private static String startYear;
     private static String endDay;
     private static String endMonth;
     private static String endYear;
-    private static String forecastApiKey;
     private static String destinationAirportCode;
     private static String originAirportCode;
     private static String destination;
     //endregion
 
-    private HotWireHotels hotels;
-    private NetComponent netComponent;
     @Inject @Named("Hotwire") Retrofit retrofit;
 
     @BindView(R.id.input_tab_hotel_fragment_swipe_refresh_layout) SwipeRefreshLayout hotelSwipeRefreshLayout;
@@ -88,7 +70,7 @@ public class InputHotelTabFragment extends Fragment {
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
-        args.putInt(ARG_PAGE, page);
+        args.putInt(Utilities.ARG_PAGE, page);
         InputHotelTabFragment fragment = new InputHotelTabFragment();
         fragment.setArguments(args);
         return fragment;
@@ -97,7 +79,7 @@ public class InputHotelTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        page = getArguments().getInt(ARG_PAGE);
+        page = getArguments().getInt(Utilities.ARG_PAGE);
     }
 
     @Nullable
@@ -114,24 +96,41 @@ public class InputHotelTabFragment extends Fragment {
         // Dagger2
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        registerOttoBus();
         getSharedPreferences();
 
+        registerOttoBus();
+
         recyclerViewSetup();
+
         swipeHotelRefreshListener();
 
         return view;
     }
 
-    private void registerOttoBus(){
-        Bus bus = createBus();
-        bus.register(this);
+
+    /**
+     * Get the Shared Preferences
+     */
+    private void getSharedPreferences(){
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+        startDay = sharedPref.getString(Utilities.STARTDAY, "Default");
+        startMonth = sharedPref.getString(Utilities.STARTMONTH, "Default");
+        startYear = sharedPref.getString(Utilities.STARTYEAR, "Default");
+        endDay = sharedPref.getString(Utilities.ENDDAY, "Default");
+        endMonth = sharedPref.getString(Utilities.ENDMONTH, "Default");
+        endYear = sharedPref.getString(Utilities.ENDYEAR, "Default");
+        destinationAirportCode = sharedPref.getString(Utilities.DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = "SFO";
+        destination = sharedPref.getString(Utilities.DESTINATION, "default");
+        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> " + startYear);
+
+        destinationTextView.setText(destinationAirportCode);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
+    private void registerOttoBus(){
+        Bus bus = createBus();
+        bus.register(InputHotelTabFragment.this);
     }
 
     private Bus createBus(){
@@ -171,79 +170,13 @@ public class InputHotelTabFragment extends Fragment {
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
                 String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
                 String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
-
-                Timber.d("run: ====>>>>>> Pull Down Refresh  " + destination);
-
-                //ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
-
-
-                String responseFormat = "json";
-                //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
-                String rooms = "1";
-                String adults = "2";
-                String children = "0";
-
-
-
-                HotwireService service = retrofit.create(HotwireService.class);
-                Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
-                        responseFormat,
-                        destination,
-                        rooms,
-                        adults,
-                        children,
-                        hotwireStartDate,
-                        hotwireEndDate);
-                call.enqueue(new Callback<HotWireHotels>() {
-                    @Override
-                    public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
-                        if (response.isSuccessful()) {
-                            hotels = response.body();
-
-                            bus.post(hotels);
-                            //inputTabsFragmentPagerAdapter.setHotels(hotels);
-                            // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
-
-                        } else {
-                            Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<HotWireHotels> call, Throwable t) {
-                        Timber.d("onFailure: onFailure UNSUCCESSFUL");
-                        t.printStackTrace();
-                    }
-                });
-
+                ApiManager.getHotWireHotels(retrofit, bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
 
                 //recyclerViewSetup();
                 hotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 hotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
-    }
-
-    /**
-     * Get the Shared Preferences
-     */
-    private void getSharedPreferences(){
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        latitude = sharedPref.getString(LATITUDE, "Default");
-        longitude = sharedPref.getString(LONGITUDE, "Default");
-        startDay = sharedPref.getString(STARTDAY, "Default");
-        startMonth = sharedPref.getString(STARTMONTH, "Default");
-        startYear = sharedPref.getString(STARTYEAR, "Default");
-        endDay = sharedPref.getString(ENDDAY, "Default");
-        endMonth = sharedPref.getString(ENDMONTH, "Default");
-        endYear = sharedPref.getString(ENDYEAR, "Default");
-        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        originAirportCode = "SFO";
-        destination = sharedPref.getString(DESTINATION, "default");
-        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> " + startYear);
-
-        destinationTextView.setText(destinationAirportCode);
     }
 
     /**
@@ -264,5 +197,12 @@ public class InputHotelTabFragment extends Fragment {
     public void onResume() {
         super.onResume();
         Timber.d("onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
+    }
+
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }

@@ -2,6 +2,7 @@ package app.ga.com.headingout.inputfragment.providers;
 
 import javax.inject.Singleton;
 
+import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.inputfragment.tabfragment.InputFlightTabFragment;
 import app.ga.com.headingout.inputfragment.tabfragment.InputHotelTabFragment;
 import app.ga.com.headingout.inputfragment.tabfragment.InputWeatherTabFragment;
@@ -18,5 +19,6 @@ public interface NetComponent {
     void inject(InputHotelTabFragment fragment);
     void inject(InputFlightTabFragment fragment);
     void inject(InputWeatherTabFragment fragment);
+    void inject(InputFragment fragment);
 
 }

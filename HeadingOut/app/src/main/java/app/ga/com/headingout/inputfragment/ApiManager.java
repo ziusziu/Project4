@@ -39,8 +39,8 @@ public class ApiManager {
     private static final String TAG = ApiManager.class.getSimpleName();
 
 
-    private static String mLatitude;
-    private static String mLongitude;
+    private static String latitude;
+    private static String longitude;
 
     private static final String FORECAST_API_URL = "https://api.forecast.io/forecast/";
     private static final String FLIGHTSTATS_API_URL = "https://api.flightstats.com/flex/airports/rest/v1/json/withinRadius/";
@@ -57,192 +57,9 @@ public class ApiManager {
     static AirportData airport;
 
 
-    // TODO change the input, Add StartDate, EndDate, State Code
-    public static void getHotWireApi(final Bus bus, String hotwireApiKey, String startDate, String endDate, String destination){
-
-        String responseFormat = "json";
-        //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
-        String rooms = "1";
-        String adults = "2";
-        String children = "0";
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(HOTWIRE_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())  // CHANGE TO XML CONVERTER
-                .client(client)
-                .build();
-
-        String url = "http://www.yahoo.com";
-
-        HotwireService service = retrofit.create(HotwireService.class);
-        Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
-                responseFormat,
-                destination,
-                rooms,
-                adults,
-                children,
-                startDate,
-                endDate);
-        call.enqueue(new Callback<HotWireHotels>() {
-            @Override
-            public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
-                if (response.isSuccessful()) {
-                    hotels = response.body();
-
-                    bus.post(hotels);
-                    //inputTabsFragmentPagerAdapter.setHotels(hotels);
-                    // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
-
-                } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<HotWireHotels> call, Throwable t) {
-                Timber.d("onFailure: onFailure UNSUCCESSFUL");
-                t.printStackTrace();
-            }
-        });
-
-    }
-
-    public static void getQPExpressApi(final Bus bus, String googlePlacesApiKey, String origin, String destination, String date){
-
-        int adultCount = 1;
-        int infantInLapCount = 0;
-        int infantInSeatCount = 0;
-        int childCount = 0;
-        int seniorCount = 0;
-        int solutions = 20;
-        boolean refundable = false;
-
-        Passengers passengers = new Passengers(adultCount,
-                infantInLapCount,
-                infantInSeatCount,
-                childCount,
-                seniorCount);
-        PostSlice postSlice = new PostSlice(origin, destination, date);
-        ArrayList<PostSlice> slice = new ArrayList<>();
-        slice.add(postSlice);
-        Request request = new Request(slice, passengers, solutions, refundable);
-        RequestJson requestJson = new RequestJson(request);
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        //TODO Only should be build once
-        retrofit = new Retrofit.Builder()
-                .baseUrl(GOOGLE_QPEXPRESS_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
-        Call<Flights> call = service.getFlights(googlePlacesApiKey, requestJson);
-        call.enqueue(new Callback<Flights>() {
-            @Override
-            public void onResponse(Call<Flights> call, Response<Flights> response) {
-                if (response.isSuccessful()) {
-                    flights = response.body();
-                    Timber.d("onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
-                    Timber.d("onResponse: ====>>> RESPONSE BODY" + response.body().toString());
-
-                    bus.post(flights);
-
-                } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Flights> call, Throwable t) {
-                Log.d(TAG, "onFailure: onFailure UNSUCCESSFUL");
-            }
-        });
-    }
-
-
-
-
-    public static void getWeatherApi(final Bus bus,String forecastApiKey, String mLatitude, String mLongitude){
-
-        String latLong = mLatitude+","+mLongitude;
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(FORECAST_API_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
-
-        ForecastService service = retrofit.create(ForecastService.class);
-        Call<Weather> call = service.getWeather(forecastApiKey, latLong);
-        call.enqueue(new Callback<Weather>() {
-            @Override
-            public void onResponse(Call<Weather> call, Response<Weather> response) {
-                if (response.isSuccessful()) {
-                    weather = response.body();
-
-
-                    bus.post(weather);
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
-
-
-
-                } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Weather> call, Throwable t) {
-                Timber.d("onFailure: onFailure UNSUCCESSFUL");
-            }
-        });
-    }
-
-
-
-
-
-
-
-
-
-
-
-    public static void getAirportLocation(final Bus bus, String flightStatsApiKey, String flightStatsAppId,
+    public static void getAirportLocation(Retrofit retrofit, final Bus bus, String flightStatsApiKey, String flightStatsAppId,
                                           String airportCode, String year, String month, String day){
         String codeType = "iata";
-
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BASIC);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .addInterceptor(logging)
-                .build();
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl(FLIGHTSTATS_API_LOCATION_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client)
-                .build();
 
         FlightStatsAirportLocationService service = retrofit.create(FlightStatsAirportLocationService.class);
         Call<AirportData> call = service.getAirportLocation(codeType, airportCode, year, month, day, flightStatsAppId, flightStatsApiKey);
@@ -265,6 +82,135 @@ public class ApiManager {
             }
         });
     }
+
+
+    public static void getHotWireHotels(Retrofit retrofit, final Bus bus, String hotwireApiKey, String startDate, String endDate, String destination) {
+
+        String responseFormat = "json";
+        //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
+        String rooms = "1";
+        String adults = "2";
+        String children = "0";
+
+        HotwireService service = retrofit.create(HotwireService.class);
+        Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
+                responseFormat,
+                destination,
+                rooms,
+                adults,
+                children,
+                startDate,
+                endDate);
+
+        call.enqueue(new Callback<HotWireHotels>() {
+            @Override
+            public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
+                if (response.isSuccessful()) {
+                    hotels = response.body();
+
+                    bus.post(hotels);
+                    //inputTabsFragmentPagerAdapter.setHotels(hotels);
+                    // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
+
+                } else {
+                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HotWireHotels> call, Throwable t) {
+                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                t.printStackTrace();
+            }
+        });
+    }
+
+
+    public static void getQPExpressFlights(Retrofit retrofit, final Bus bus, String googlePlacesApiKey, String origin, String destination, String date) {
+
+        int adultCount = 1;
+        int infantInLapCount = 0;
+        int infantInSeatCount = 0;
+        int childCount = 0;
+        int seniorCount = 0;
+        int solutions = 20;
+        boolean refundable = false;
+
+        Passengers passengers = new Passengers(adultCount,
+                infantInLapCount,
+                infantInSeatCount,
+                childCount,
+                seniorCount);
+        PostSlice postSlice = new PostSlice(origin, destination, date);
+        ArrayList<PostSlice> slice = new ArrayList<>();
+        slice.add(postSlice);
+        Request request = new Request(slice, passengers, solutions, refundable);
+        RequestJson requestJson = new RequestJson(request);
+
+
+        GoogleQPExpressService service = retrofit.create(GoogleQPExpressService.class);
+        Call<Flights> call = service.getFlights(googlePlacesApiKey, requestJson);
+        call.enqueue(new Callback<Flights>() {
+            @Override
+            public void onResponse(Call<Flights> call, Response<Flights> response) {
+                if (response.isSuccessful()) {
+                    flights = response.body();
+                    Timber.d("onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
+                    Timber.d("onResponse: ====>>> RESPONSE BODY" + response.body().toString());
+
+                    bus.post(flights);
+
+                } else {
+                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Flights> call, Throwable t) {
+                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+    }
+
+
+    public static void getForecastWeather(Retrofit retrofit, final Bus bus,String forecastApiKey, String latitude, String longitude) {
+
+        String latLong = latitude+","+longitude;
+
+        ForecastService service = retrofit.create(ForecastService.class);
+        Call<Weather> call = service.getWeather(forecastApiKey, latLong);
+        call.enqueue(new Callback<Weather>() {
+            @Override
+            public void onResponse(Call<Weather> call, Response<Weather> response) {
+                if (response.isSuccessful()) {
+                    weather = response.body();
+
+                    bus.post(weather);
+                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
+                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
+                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
+
+                } else {
+                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Weather> call, Throwable t) {
+                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+            }
+        });
+
+    }
+
+
+
+
+
+
+
+
+
 
     public static void getAirportsApi(final Bus bus,
                                       final String googlePlacesApiKey,
@@ -317,7 +263,7 @@ public class ApiManager {
                     Log.d(TAG, "onResponse: DESTINATION CODE ***" + tripDestination);
                     Log.d(TAG, "onResponse: StartDate *** "+ startDate);
 
-                    getQPExpressApi(bus, googlePlacesApiKey, origin, destination, date);
+                    //getQPExpressAPI(bus, googlePlacesApiKey, origin, destination, date);
 
 
                     Log.d(TAG, "getAirportsApi:  RESPONSE SUCCESSFUL *****  " + airports.getAirports().get(0).getName());
