@@ -19,6 +19,7 @@ import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.forecast.Weather;
+import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -28,14 +29,13 @@ import timber.log.Timber;
  */
 public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeatherRVAdapter.WeatherViewHolder> {
 
-    public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String WEATHERPOSITION = "weatherPosition";
 
     private static SharedPreferences sharedPref;
 
-    Weather weather;
-    Context mContext;
-    Bus bus;
+    private Weather weather;
+    private Context context;
+    private Bus bus;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
         @Nullable @BindView(R.id.input_tab_flight_fragment_cardView) CardView weatherCardView;
@@ -52,7 +52,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     public InputTabWeatherRVAdapter(Weather weather, Context context){
         this.weather = weather;
-        this.mContext = context;
+        this.context = context;
     }
 
     @Override
@@ -63,8 +63,11 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     @Override
     public WeatherViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_weather_cardview, parent, false);
+
         WeatherViewHolder weatherViewHolder = new WeatherViewHolder(view);
-        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+
+        sharedPref = parent.getContext().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+
         return weatherViewHolder;
     }
 
@@ -77,12 +80,12 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         double weatherMax = weather.getDaily().getData().get(position).getTemperatureMax();
         double weatherMin = weather.getDaily().getData().get(position).getTemperatureMin();
         double weatherAvg = (weatherMax + weatherMin) / 2;
+
         String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
 
         holder.weatherTimeTextView.setText(formattedTime);
         holder.weatherAvgTempTextView.setText(String.format("%.0f" + (char) 0x00B0, weatherAvg));
         holder.weatherSummaryTextView.setText(weather.getDaily().getData().get(position).getSummary());
-
 
 //        holder.weatherCardView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -93,6 +96,7 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 //            }
 //        });
 
+        // Testing
         bus = createBus();
         bus.post(size);
     }
@@ -104,8 +108,9 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 
     private Bus createBus(){
         // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)((MainActivity)mContext).getApplication();
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)((MainActivity) context).getApplication();
         Bus bus = headingOutApplication.provideBus();
+
         return bus;
     }
 

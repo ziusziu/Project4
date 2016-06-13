@@ -3,10 +3,15 @@ package app.ga.com.headingout.util;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
+import android.text.Layout;
+import android.util.TypedValue;
 import android.view.WindowManager;
 import android.widget.AutoCompleteTextView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,9 +100,33 @@ public class Utilities {
     }
 
 
+    public static TextView createTextView(Context context, String text){
+        TextView textView = new TextView(context);
+        textView.setText(text);
 
+        return textView;
+    }
 
+    public static void addNewTextViewToLayout(Context context, LinearLayout layout, String text){
+        TextView textView = new TextView(context);
+        textView.setText(text);
+        layout.addView(textView);
+    }
 
+    public static void addNewTextViewToLayout(Context context, LinearLayout layout, String text, int textSize){
+        TextView textView = new TextView(context);
+        textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        layout.addView(textView);
+    }
+
+    public static void addNewTextViewToLayout(Context context, LinearLayout layout, String text, int textSize, Typeface style){
+        TextView textView = new TextView(context);
+        textView.setText(text);
+        textView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, textSize);
+        textView.setTypeface(style);
+        layout.addView(textView);
+    }
 
 
     /**

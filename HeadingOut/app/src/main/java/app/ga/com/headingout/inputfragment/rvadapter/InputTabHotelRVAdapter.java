@@ -16,6 +16,7 @@ import java.util.ArrayList;
 
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -25,7 +26,6 @@ import timber.log.Timber;
  */
 public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRVAdapter.HotelViewHolder>{
 
-    public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String HOTELPOSITION = "hotelPosition";
 
     private static SharedPreferences sharedPref;
@@ -33,7 +33,7 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     public static Bundle hotelBundle;
     private static ArrayList<Integer> hotelPositions;
 
-    HotWireHotels hotels;
+    private HotWireHotels hotels;
 
     public static class HotelViewHolder extends RecyclerView.ViewHolder {
 
@@ -65,8 +65,11 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
     @Override
     public HotelViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_hotel_cardview, parent, false);
+
         HotelViewHolder HotelViewHolder = new HotelViewHolder(view);
-        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+
+        sharedPref = parent.getContext().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+
         return HotelViewHolder;
     }
 
@@ -78,8 +81,9 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
         holder.hotelNightsTextView.setText(" (" + hotels.getResult().get(position).getNights() + " Nights)");
         holder.hotelCurrencyCodeTextView.setText(hotels.getResult().get(position).getCurrencyCode());
         holder.hotelTotalPriceTextView.setText(hotels.getResult().get(position).getTotalPrice());
-        Timber.d("onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
         holder.hotelRatingBar.setRating(Float.parseFloat(hotels.getResult().get(position).getStarRating()));
+
+        Timber.d("onBindViewHolder:Star Rating " + hotels.getResult().get(position).getStarRating());
 
 //        holder.hotelCardView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -90,7 +94,6 @@ public class InputTabHotelRVAdapter extends RecyclerView.Adapter<InputTabHotelRV
 //                hotelBundle.putInt(HOTELPOSITION, position);
 //            }
 //        });
-
     }
 
     @Override

@@ -308,11 +308,11 @@ public class InputFragment extends Fragment{
         ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destinationSharedPref);
     }
 
-    //TODO REMOVE
+    //TODO TESTING, Remove done, post adapter size from weather adapter
     @Subscribe
     public void onSizeData(Integer size){
         this.size = size;
-        Timber.d("onSizeData: === Posting Data from adapter" + size);
+        Timber.d("onSizeData: === Posting Data from Weather adapter" + size);
     }
 
 // ---------------------------------- OTTO END --------------------------------------------- //

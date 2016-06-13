@@ -6,13 +6,10 @@ import android.graphics.Typeface;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.List;
@@ -21,9 +18,9 @@ import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.flights.Flights;
 import app.ga.com.headingout.model.flights.Leg;
 import app.ga.com.headingout.model.flights.Segment;
+import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import timber.log.Timber;
 
 /**
@@ -31,14 +28,11 @@ import timber.log.Timber;
  */
 public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlightRVAdapter.FlightViewHolder>{
 
-    public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String FLIGHTPOSITION = "flightPosition";
 
     private static SharedPreferences sharedPref;
 
-    Flights flights;
-
-    private static Unbinder unbinder;
+    private Flights flights;
 
     public static class FlightViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,9 +43,8 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
         FlightViewHolder(View itemView) {
             super(itemView);
-            unbinder = ButterKnife.bind(this, itemView);
+            ButterKnife.bind(this, itemView);
         }
-
     }
 
     public InputTabFlightRVAdapter(Flights flights){
@@ -67,7 +60,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     public FlightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_flight_cardview, parent, false);
         FlightViewHolder flightViewHolder = new FlightViewHolder(view);
-        sharedPref = parent.getContext().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
+        sharedPref = parent.getContext().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
         return flightViewHolder;
     }
 
@@ -77,7 +70,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         holder.flightSaleTotalTextView.setText(flights.getTrips().getTripOption().get(position).getSaleTotal());
 
         int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
-        String durationString = convertMinToHours(duration);
+        String durationString = Utilities.convertMinToHours(duration);
         Timber.d("onCreateView: hours " + durationString);
 
         holder.flightDurationTextView.setText(durationString);
@@ -92,13 +85,11 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
             }
         });
 
-
         appendFlightData(holder, listSegment);
-
     }
 
     /**
-     * Programmatically add Flight Data to cardviews
+     * Programmatically add Flight Data to cardviews with TextViews
      * @param holder
      * @param listSegment
      */
@@ -109,94 +100,80 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
         holder.flightCardsLinearLayout.removeAllViews();
 
         for(Segment segment: listSegment){
-            LinearLayout segmentLinearLayout = new LinearLayout(context);
-            segmentLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-            TextView segmentFlightCarrierTextView = new TextView(context);
-            segmentFlightCarrierTextView.setText(segment.getFlight().getCarrier());
-            segmentFlightCarrierTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-            segmentFlightCarrierTextView.setTypeface(Typeface.DEFAULT_BOLD);
-            segmentLinearLayout.addView(segmentFlightCarrierTextView);
-
-            TextView segmentFlightNumberTextView = new TextView(context);
-            segmentFlightNumberTextView.setText(segment.getFlight().getNumber());
-            segmentFlightNumberTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-            segmentLinearLayout.addView(segmentFlightNumberTextView);
-
-            TextView segmentCabinTextView = new TextView(context);
-            segmentCabinTextView.setText(" (" + segment.getCabin() + ")");
-            segmentCabinTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 18);
-            segmentLinearLayout.addView(segmentCabinTextView);
-
-            TextView segmentDurationTextView = new TextView(context);
-            String segmentDuration = convertMinToHours(segment.getDuration());
-            segmentDurationTextView.setText(" " + segmentDuration);
-            segmentLinearLayout.addView(segmentDurationTextView);
-
-            holder.flightCardsLinearLayout.addView(segmentLinearLayout);
+            setCardViewSegment(context, holder, segment);
 
             listLeg = segment.getLeg();
+
             for(Leg leg: listLeg){
-
-                LinearLayout legDepartingLinearLayout = new LinearLayout(context);
-                legDepartingLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                TextView departingTextView = new TextView(context);
-                departingTextView.setText("Departing: ");
-                departingTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                departingTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                legDepartingLinearLayout.addView(departingTextView);
-
-                TextView legDepartureTimeTextView = new TextView(context);
-                legDepartureTimeTextView.setText(leg.getDepartureTime().substring(0, leg.getDepartureTime().length()-6));
-                legDepartingLinearLayout.addView(legDepartureTimeTextView);
-                holder.flightCardsLinearLayout.addView(legDepartingLinearLayout);
-
-
-                LinearLayout legArrivingLinearLayout = new LinearLayout(context);
-                legArrivingLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                TextView arrivingTextView = new TextView(context);
-                arrivingTextView.setText("Arriving: ");
-                arrivingTextView.setTypeface(Typeface.DEFAULT_BOLD);
-                arrivingTextView.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 15);
-                legArrivingLinearLayout.addView(arrivingTextView);
-
-                TextView legArrivalTimeTextView = new TextView(context);
-                legArrivalTimeTextView.setText(leg.getArrivalTime().substring(0, leg.getArrivalTime().length()-6));
-                legArrivingLinearLayout.addView(legArrivalTimeTextView);
-
-                holder.flightCardsLinearLayout.addView(legArrivingLinearLayout);
-
+                setCardViewLegDeparting(context, holder, leg);
+                setCardViewLegArriving(context, holder, leg);
             }
 
             if(segment.getConnectionDuration() != 0 ){
-                TextView segmentConnectionTimeTextView = new TextView(context);
-                String connectionDurationString = convertMinToHours(segment.getConnectionDuration());
-                segmentConnectionTimeTextView.setText("Connection Time: " + connectionDurationString);
-                holder.flightCardsLinearLayout.addView(segmentConnectionTimeTextView);
+                setCardViewSegmentDuration(context, holder, segment);
             }
         }
     }
 
+    private void setCardViewSegment(Context context, FlightViewHolder holder, Segment segment){
+        LinearLayout segmentLinearLayout = new LinearLayout(context);
+        segmentLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        String carrierText = segment.getFlight().getCarrier();
+        Utilities.addNewTextViewToLayout(context, segmentLinearLayout, carrierText, 18, Typeface.DEFAULT_BOLD);
+
+        String flightNumber = segment.getFlight().getNumber();
+        Utilities.addNewTextViewToLayout(context, segmentLinearLayout, flightNumber, 18);
+
+        String cabin = " (" + segment.getCabin() + ")";
+        Utilities.addNewTextViewToLayout(context, segmentLinearLayout, cabin, 18);
+
+        String segmentDuration = " " + Utilities.convertMinToHours(segment.getDuration());
+        Utilities.addNewTextViewToLayout(context, segmentLinearLayout, segmentDuration);
+
+        holder.flightCardsLinearLayout.addView(segmentLinearLayout);
+    }
+
+    private void setCardViewLegDeparting(Context context, FlightViewHolder holder, Leg leg){
+        LinearLayout legDepartingLinearLayout = new LinearLayout(context);
+        legDepartingLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        Utilities.addNewTextViewToLayout(context, legDepartingLinearLayout, "Departing: ", 15, Typeface.DEFAULT_BOLD);
+
+        String legDepartureTime = leg.getDepartureTime().substring(0, leg.getDepartureTime().length()-6);
+        Utilities.addNewTextViewToLayout(context, legDepartingLinearLayout, legDepartureTime);
+
+        holder.flightCardsLinearLayout.addView(legDepartingLinearLayout);
+    }
+
+
+    private void setCardViewLegArriving(Context context, FlightViewHolder holder, Leg leg){
+        LinearLayout legArrivingLinearLayout = new LinearLayout(context);
+        legArrivingLinearLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+        Utilities.addNewTextViewToLayout(context, legArrivingLinearLayout, "Arriving: ", 15, Typeface.DEFAULT_BOLD);
+
+        String legArrivalTime = leg.getArrivalTime().substring(0, leg.getArrivalTime().length()-6);
+        Utilities.addNewTextViewToLayout(context, legArrivingLinearLayout, legArrivalTime);
+
+        holder.flightCardsLinearLayout.addView(legArrivingLinearLayout);
+    }
+
+    private void setCardViewSegmentDuration(Context context, FlightViewHolder holder, Segment segment){
+        TextView segmentConnectionTimeTextView = new TextView(context);
+
+        String connectionDurationString = Utilities.convertMinToHours(segment.getConnectionDuration());
+
+        segmentConnectionTimeTextView.setText("Connection Time: " + connectionDurationString);
+
+        holder.flightCardsLinearLayout.addView(segmentConnectionTimeTextView);
+    }
 
     @Override
     public int getItemCount() {
         return flights.getTrips().getTripOption().size();
     }
 
-    /**
-     * Converts minutes to a string in format "HH hours mm mins"
-     * @param duration
-     * @return
-     */
-    private String convertMinToHours(int duration){
-        Long longVal = new Long(duration);
-        int hours = (int) longVal.longValue() / 60;
-        int mins = (int) longVal.longValue() - (hours * 60);
-        String durationString = hours + " hours " + mins + " mins ";
-        Timber.d("onCreateView: hours " + durationString);
-        return durationString;
-    }
 
 }
