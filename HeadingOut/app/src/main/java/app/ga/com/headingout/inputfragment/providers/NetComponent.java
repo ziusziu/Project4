@@ -1,10 +1,11 @@
-package app.ga.com.headingout.inputfragment;
+package app.ga.com.headingout.inputfragment.providers;
 
 import javax.inject.Singleton;
 
 import app.ga.com.headingout.inputfragment.tabfragment.InputFlightTabFragment;
 import app.ga.com.headingout.inputfragment.tabfragment.InputHotelTabFragment;
 import app.ga.com.headingout.inputfragment.tabfragment.InputWeatherTabFragment;
+
 import dagger.Component;
 
 /**

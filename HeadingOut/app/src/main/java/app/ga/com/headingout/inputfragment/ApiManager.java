@@ -82,13 +82,13 @@ public class ApiManager {
 
         HotwireService service = retrofit.create(HotwireService.class);
         Call<HotWireHotels> call = service.getHotels(hotwireApiKey,
-                                                        responseFormat,
-                                                        destination,
-                                                        rooms,
-                                                        adults,
-                                                        children,
-                                                        startDate,
-                                                        endDate);
+                responseFormat,
+                destination,
+                rooms,
+                adults,
+                children,
+                startDate,
+                endDate);
         call.enqueue(new Callback<HotWireHotels>() {
             @Override
             public void onResponse(Call<HotWireHotels> call, Response<HotWireHotels> response) {
@@ -308,7 +308,7 @@ public class ApiManager {
                     boolean refundable = false;
 
 
-         //           Log.d(TAG, "onResponse: APICALLER CityCode " + airports.getAirports().get(0).getCityCode());
+                    //           Log.d(TAG, "onResponse: APICALLER CityCode " + airports.getAirports().get(0).getCityCode());
 
                     String origin = "SFO";
                     String destination = tripDestination;//airports.getAirports().get(0).getCityCode();

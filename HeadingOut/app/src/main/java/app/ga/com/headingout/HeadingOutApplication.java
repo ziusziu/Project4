@@ -4,8 +4,8 @@ import android.app.Application;
 
 import com.squareup.otto.Bus;
 
-import app.ga.com.headingout.inputfragment.DaggerNetComponent;
-import app.ga.com.headingout.inputfragment.NetComponent;
+import app.ga.com.headingout.inputfragment.providers.DaggerNetComponent;
+import app.ga.com.headingout.inputfragment.providers.NetComponent;
 import timber.log.Timber;
 
 public class HeadingOutApplication extends Application {

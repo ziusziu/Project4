@@ -37,6 +37,9 @@ public class Utilities {
     public static final String ENDDAY = "endDay";
     public static final String ENDMONTH = "endMonth";
     public static final String ENDYEAR = "endYear";
+    public static final String FLIGHTPOSITION = "flightPosition";
+    public static final String HOTELPOSITION = "hotelPosition";
+    public static final String WEATHERPOSITION = "weatherPosition";
     //endregion
 
 
@@ -77,6 +80,19 @@ public class Utilities {
         return false;
     }
 
+    /**
+     * Converts minutes to a string in format "HH hours mm mins"
+     * @param duration
+     * @return
+     */
+    public static String convertMinToHours(int duration){
+        Long longVal = new Long(duration);
+        int hours = (int) longVal.longValue() / 60;
+        int mins = (int) longVal.longValue() - (hours * 60);
+        String durationString = hours + " hours " + mins + " mins ";
+        Timber.d("onCreateView: hours " + durationString);
+        return durationString;
+    }
 
 
 

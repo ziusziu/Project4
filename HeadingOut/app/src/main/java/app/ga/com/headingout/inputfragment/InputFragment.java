@@ -3,7 +3,6 @@ package app.ga.com.headingout.inputfragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -56,30 +55,14 @@ import timber.log.Timber;
  */
 public class InputFragment extends Fragment{
 
-    @BindView(R.id.input_continue_fab) FloatingActionButton inputContinueFabButton;
+
 
     // region View Declarations
-    private static TabLayout tabLayout;
-    private static ViewPager viewPager;
-    public static InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter;
+    @BindView(R.id.input_tabLayout) TabLayout tabLayout;
+    @BindView(R.id.input_viewPager) ViewPager viewPager;
+    @BindView(R.id.input_continue_fab) FloatingActionButton inputContinueFabButton;
     //endregion
-    //region SharedPreferences Constants
-    public static final String PLACESPREFERENCES = "placesPreferences";
-    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
-    public static final String ORIGINAIRPORTCODE = "originAirportCode";
-    public static final String LATITUDE = "latitude";
-    public static final String LONGITUDE = "longitude";
-    public static final String STARTDAY = "startDay";
-    public static final String STARTMONTH = "startMonth";
-    public static final String STARTYEAR = "startYear";
-    public static final String ENDDAY = "endDay";
-    public static final String ENDMONTH = "endMonth";
-    public static final String ENDYEAR = "endYear";
-    public static final String DESTINATION = "destination";
-    public static final String FLIGHTPOSITION = "flightPosition";
-    public static final String HOTELPOSITION = "hotelPosition";
-    public static final String WEATHERPOSITION = "weatherPosition";
-    //endregion
+
     //region SharedPreferences Variables
     private static String latitude;
     private static String longitude;
@@ -97,6 +80,7 @@ public class InputFragment extends Fragment{
     private static int hotelPosition;
     private static int weatherPosition;
     //endregion
+
     //region API Objects
     private MapView mapView;
     private GoogleMap googleMap;
@@ -117,34 +101,72 @@ public class InputFragment extends Fragment{
             int tabPagePosition = savedInstanceState.getInt(Utilities.POSITION);
             viewPager.setCurrentItem(tabPagePosition);
         }
+
         View view = inflater.inflate(R.layout.input_content, container, false);
 
         unbinder = ButterKnife.bind(this, view);
 
         createBus();
 
-        initViewPager(view);
-        initFab();
-        initGoogleMaps(view, savedInstanceState);
-
         getSharedPreferences();
 
-        onFabContinueButtonClick();
-
         makeApiCall();
+
+        setViewProperties(view);
+
+        initGoogleMaps(view, savedInstanceState);
+
+        setShareFABListener();
 
         return view;
     }
 
 
+    /**
+     * Create an Otto event bus
+     */
+    private void createBus(){
+        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
+        bus = headingOutApplication.provideBus();
+        bus.register(this);
+    }
+
+    /**
+     * Get the Shared Preferences
+     */
+    private void getSharedPreferences(){
+
+        SharedPreferences sharedPref = getActivity().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+        latitude = sharedPref.getString(Utilities.LATITUDE, "Default");
+        longitude = sharedPref.getString(Utilities.LONGITUDE, "Default");
+        startDay = sharedPref.getString(Utilities.STARTDAY, "Default");
+        startMonth = sharedPref.getString(Utilities.STARTMONTH, "Default");
+        startYear = sharedPref.getString(Utilities.STARTYEAR, "Default");
+        endDay = sharedPref.getString(Utilities.ENDDAY, "Default");
+        endMonth = sharedPref.getString(Utilities.ENDMONTH, "Default");
+        endYear = sharedPref.getString(Utilities.ENDYEAR, "Default");
+        flightPosition = sharedPref.getInt(Utilities.FLIGHTPOSITION, 0);
+        hotelPosition = sharedPref.getInt(Utilities.HOTELPOSITION, 0);
+        weatherPosition = sharedPref.getInt(Utilities.WEATHERPOSITION, 0);
+
+        destinationAirportCode = sharedPref.getString(Utilities.DESTINATIONAIRPORTCODE, "JFK");
+        originAirportCode = sharedPref.getString(Utilities.ORIGINAIRPORTCODE, "SFO");
+
+        Timber.d("SHARED PREFERENCES: OriginAirportCOde ====>>> " + originAirportCode);
+    }
+
+//TODO Make the api call from MainFragment
+    /**
+     * Use Shared Preferences to make api calls in order to populate fragments
+     */
     private void makeApiCall(){
 
-        Timber.d("onCreateView: ====>>> InputFragment - makeApiCall");
+        Timber.d("====>>> makeApiCall() ");
 
         String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
         String startDate = startYear + "-" + startMonth + "-" + startDay;
 
-
+//TODO ApiManager needs to incorporate Dagger2
         // Get Airport Data
         ApiManager.getQPExpressApi(bus, googlePlacesApiKey,
                 originAirportCode, destinationAirportCode,
@@ -155,23 +177,24 @@ public class InputFragment extends Fragment{
         forecastApiKey = getResources().getString(R.string.forecast_api_key);
         ApiManager.getWeatherApi(bus, forecastApiKey, latitude, longitude);
 
-
         // API that returns lat, long from airportcode, then gets Hotel Data after location returned
         String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
         String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
         ApiManager.getAirportLocation(bus, flightStatsApiKey, flightStatsAppId,
                 destinationAirportCode, startYear, startMonth, startDay);
 
-
-          // API to search for airports near a specified lat long
+        // API to search for airports near a specified lat long
 //        String distance = "5";
 //        ApiManager.getAirportsApi(bus, googlePlacesApiKey, mLatitude, mLongitude, distance, flightStatsApiKey, flightStatsAppId, startDate, mDestinationAirportCode);
 
     }
 
 
+// ---------------------------------- OTTO START --------------------------------------------- //
+
     //--------------------------------------------------------------------------------------------
-    // ApiManger Posts Data Objects to Event Bus, after response is received after Retrofit API call
+    // ApiManger Posts Data Objects to Event Bus, response is received after Retrofit API call
+    //
     // InputFragment Subscribes to Objects
     //   - InputFragment holds api data for the case when AdapterFragments are not created
     //   - InputFragment holds api data to plot on google maps
@@ -181,13 +204,14 @@ public class InputFragment extends Fragment{
     public void onHotelData(HotWireHotels hotWireHotels) {
         this.hotWireHotels = hotWireHotels;
 
+        //TODO Add amenities to markers
         List<HWAmenities> hwAmenities = hotWireHotels.getMetaData().getHotelMetaData().getAmenities();
         for(HWAmenities amenities: hwAmenities){
             Timber.d("onHotelData: " + amenities.getName());
             //TODO put id into HashMap, for easy find
         }
 
-        // Gets the api Lat, Longs and info for markers
+        // Get the api Lat, Longs and info for plotting google map markers
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
         for(int position = 0; position < hwNeighborHoods.size(); position++){
             Timber.d("onHotelData: " + hwNeighborHoods.get(position).getName());
@@ -204,10 +228,10 @@ public class InputFragment extends Fragment{
             String hwPrice = hotWireHotels.getResult().get(position).getTotalPrice();
             String hwRating = hotWireHotels.getResult().get(position).getStarRating();
 
-
             // Plot Marker on Google Maps
             plotGoogleMaps(latitude, longitude, hwRefNum, hwCurrency, hwPrice, hwRating);
         }
+        setGoogleMapCameraPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
 
     }
 
@@ -235,13 +259,14 @@ public class InputFragment extends Fragment{
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
         googleMap.addMarker(marker);
+    }
+
+    private void setGoogleMapCameraPosition(double latitude, double longitude){
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude)).zoom(12).build();
         googleMap.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
-
     }
-
 
     @Produce
     public HotWireHotels produceHotwireHotels() {
@@ -283,6 +308,31 @@ public class InputFragment extends Fragment{
         ApiManager.getHotWireApi(bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destinationSharedPref);
     }
 
+    //TODO REMOVE
+    @Subscribe
+    public void onSizeData(Integer size){
+        this.size = size;
+        Timber.d("onSizeData: === Posting Data from adapter" + size);
+    }
+
+// ---------------------------------- OTTO END --------------------------------------------- //
+
+    /**
+     * Set the views of FabButton, TabLayout and initialize FragmentStatePagerAdapter.
+     * @param view
+     */
+    private void setViewProperties(View view){
+        Utilities.setFabButton(getActivity(), inputContinueFabButton, R.drawable.ic_share_24dp);
+
+        InputTabsFragmentPagerAdapter inputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
+
+        viewPager.setAdapter(inputTabsFragmentPagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
+        //mTabLayout.setScrollbarFadingEnabled(true);
+
+        // adapter.setMyValue()
+    }
 
     /**
      * Store FragmentPagerAdapter tab position to outState Bundle
@@ -294,55 +344,8 @@ public class InputFragment extends Fragment{
         outState.putInt(Utilities.POSITION, tabLayout.getSelectedTabPosition());
     }
 
-    /**
-     * Initialize FragmentStatePagerAdapter
-     * @param view
-     */
-    private void initViewPager(View view){
-        viewPager = (ViewPager)view.findViewById(R.id.input_viewPager);
-        inputTabsFragmentPagerAdapter = new InputTabsFragmentPagerAdapter(getActivity().getSupportFragmentManager());
-        viewPager.setAdapter(inputTabsFragmentPagerAdapter);
-        tabLayout = (TabLayout)view.findViewById(R.id.input_tabLayout);
-        tabLayout.setupWithViewPager(viewPager);
-        //mTabLayout.setScrollbarFadingEnabled(true);
 
-        // adapter.setMyValue()
-    }
-
-    /**
-     * Get the Shared Preferences
-     */
-    private void getSharedPreferences(){
-
-        SharedPreferences sharedPref = getActivity().getSharedPreferences(PLACESPREFERENCES, Context.MODE_PRIVATE);
-        latitude = sharedPref.getString(LATITUDE, "Default");
-        longitude = sharedPref.getString(LONGITUDE, "Default");
-        startDay = sharedPref.getString(STARTDAY, "Default");
-        startMonth = sharedPref.getString(STARTMONTH, "Default");
-        startYear = sharedPref.getString(STARTYEAR, "Default");
-        endDay = sharedPref.getString(ENDDAY, "Default");
-        endMonth = sharedPref.getString(ENDMONTH, "Default");
-        endYear = sharedPref.getString(ENDYEAR, "Default");
-        flightPosition = sharedPref.getInt(FLIGHTPOSITION, 0);
-        hotelPosition = sharedPref.getInt(HOTELPOSITION, 0);
-        weatherPosition = sharedPref.getInt(WEATHERPOSITION, 0);
-
-        destinationAirportCode = sharedPref.getString(DESTINATIONAIRPORTCODE, "JFK");
-        originAirportCode = sharedPref.getString(ORIGINAIRPORTCODE, "SFO");
-
-        Timber.d("INPUT FRAGMENT CREATED======>>>>>>>> Origin SharedPref " + originAirportCode);
-
-    }
-
-    /**
-     * Create an Otto event bus
-     */
-    private void createBus(){
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        bus = headingOutApplication.provideBus();
-        bus.register(this);
-    }
-
+//TODO Convert MapView to MapFragment, MapView will be deprecated
     /**
      * Initialize Google Maps
      * @param view
@@ -361,183 +364,210 @@ public class InputFragment extends Fragment{
         }
     }
 
-    @Override
-    public void onDestroyView() {
-        Timber.d("INPUTFRAGMENT View Destroyed");
-        bus.unregister(this);
-        super.onDestroyView();
-        unbinder.unbind();
-    }
+//---------------------------------- FAB Share Button START -----------------------------------//
 
     /**
-     * Initizlize FAB Button
+     * Creates a Share Modal with data from models
      */
-    private void initFab(){
-        setFabIconColor(inputContinueFabButton, Utilities.FAB_BUTTON_COLOR);
-    }
-
-    /**
-     * Set the color of FAB Button
-     * @param searchFab
-     * @param fabColor
-     */
-    protected static void setFabIconColor(FloatingActionButton searchFab, String fabColor) {
-        int color = Color.parseColor(fabColor);
-        //searchFab.setImageResource(R.drawable.ic_arrow_forward_24dp);
-        searchFab.setImageResource(R.drawable.ic_share_24dp);
-        searchFab.setColorFilter(color);
-    }
-
-    /**
-     * Switch to Detail Fragment when FAB button clicked
-     */
-    private void onFabContinueButtonClick() {
+    private void setShareFABListener() {
         inputContinueFabButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String flightDescription = "FLIGHT";
-                String flightTotalCost = "Price: " + flights.getTrips().getTripOption().get(flightPosition).getSaleTotal();
-                int duration = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getDuration();
-                String flightDuration = "Total Duration: " + convertMinToHours(duration);
-
-                List<Leg> listLeg;
-                List<Segment> listSegment = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getSegment();
-                String flightStops = "Stops: " + String.valueOf(listSegment.size() - 1);
-
-                flightDescription = flightDescription + "\n" +
-                        flightTotalCost + "\n" +
-                        flightDuration + "\n" +
-                        flightStops + "\n";
-
-                String flightSegmentDescription = "";
-                for (Segment segment : listSegment) {
-                    String flightCarrier = segment.getFlight().getCarrier();
-                    String flightNumber = segment.getFlight().getNumber();
-                    String flightInfo = "Flight: " + flightCarrier + flightNumber;
-                    String flightCabin = "Cabin: " + segment.getCabin();
-                    String segmentDuration = "Flight Duration: " + convertMinToHours(segment.getDuration());
-                    listLeg = segment.getLeg();
-                    String departureTime = "";
-                    String arrivalTime = "";
-                    String origin = "";
-                    String originTerminal = "";
-                    String destination = "";
-                    String destinationTerminal = "";
-                    for (Leg leg : listLeg) {
-                        origin = "Departing From: " + leg.getOrigin();
-                        originTerminal = "Departing Terminal: " + leg.getOriginTerminal();
-                        departureTime = "Departing: " + leg.getDepartureTime().substring(0, leg.getDepartureTime().length() - 6);
-                        destination = "Arriving To: " + leg.getDestination();
-                        destinationTerminal = "Arriving Terminal: " + leg.getDestinationTerminal();
-                        arrivalTime = "Arriving: " + leg.getArrivalTime().substring(0, leg.getArrivalTime().length() - 6);
-                    }
-
-                    String connectionDuration = "";
-                    if (segment.getConnectionDuration() != 0) {
-                        connectionDuration = "Connection Time: " + convertMinToHours(segment.getConnectionDuration());
-                    }
-
-                    flightSegmentDescription = flightSegmentDescription + "\n" +
-                            flightInfo + "\n" +
-                            flightCabin + "\n" +
-                            segmentDuration + "\n" +
-                            origin + "\n" +
-                            originTerminal + "\n" +
-                            departureTime + "\n" +
-                            destination + "\n" +
-                            destinationTerminal + "\n" +
-                            arrivalTime + "\n" +
-                            "\n" + connectionDuration + "\n";
-
-                }
-
-                flightDescription = flightDescription + flightSegmentDescription;
-
-                String hotelDescription = "HOTWIRE_HOTEL ";
-                HWResult result = hotWireHotels.getResult().get(hotelPosition);
-                String destination = "Destination: " + destinationSharedPref;
-                String hwRefNumber = "HotWire Reference: " + result.getHWRefNumber();
-                String hwStartDate = "Check In: " + result.getCheckInDate();
-                String hwEndDate = "Check Out: " + result.getCheckOutDate();
-                String hwNights = "Nights: " + result.getNights();
-                String hwCurrency = result.getCurrencyCode();
-                String hwPrice = result.getTotalPrice();
-                String price = "Price: " + hwCurrency + hwPrice;
-                String hwLink = "DeepLink: " + result.getDeepLink();
-                hotelDescription = hotelDescription + "\n" +
-                        destination + "\n" +
-                        hwRefNumber + "\n" +
-                        hwStartDate + "\n" +
-                        hwEndDate + "\n" +
-                        hwNights + "\n" +
-                        price + "\n" +
-                        hwLink + "\n";
-
-
-                String weatherDescription = "WEATHER ";
-                WeatherInfoDaily weatherDaily = weather.getDaily().getData().get(weatherPosition);
-
-                int time = weatherDaily.getTime();
-                String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
-
-                String weatherTime = "Date: " + formattedTime;
-                String weatherSummary = "Summary: " + weatherDaily.getSummary();
-
-                String weatherHumidity = "Humidity: " + String.valueOf(weatherDaily.getHumidity());
-                String weatherDewPoint = "Dew Point: " + String.valueOf(weatherDaily.getDewPoint());
-                String weatherOzone = "Ozone: " + String.valueOf(weatherDaily.getOzone());
-
-
-                String weatherSunRise = "Sunrise: " + String.valueOf(weatherDaily.getSunriseTime());
-                String weatherSunSet = "Sunset: " + String.valueOf(weatherDaily.getSunsetTime());
-
-                String weatherPrecipIntensity = "Precipitation Intensity: " + String.valueOf(weatherDaily.getPrecipIntensity());
-                String weatherPrecipProbability = "Precipitation Probability: " + String.valueOf(weatherDaily.getPrecipProbability());
-
-                String weatherTempMax = "Temperature Max: " + String.valueOf(weatherDaily.getApparentTemperatureMax());
-                String weatherTempMaxTime = "Temperature Max Time: " + String.valueOf(weatherDaily.getApparentTemperatureMaxTime());
-
-                String weatherTempMin = "Temperature Min: " + String.valueOf(weatherDaily.getApparentTemperatureMin());
-                String weatherTempMinTime = "Temperature Min Time: " + String.valueOf(weatherDaily.getApparentTemperatureMinTime());
-
-                weatherDescription = weatherDescription + "\n" +
-                        weatherTime + "\n" +
-                        weatherSummary + "\n" +
-                        weatherHumidity + "\n" +
-                        weatherDewPoint + "\n" +
-                        //                                    weatherOzone + "\n" +
-                        //weatherSunRise + "\n" +
-                        //weatherSunSet + "\n" +
-                        //                                    weatherPrecipIntensity + "\n" +
-                        //                                    weatherPrecipProbability + "\n" +
-                        weatherTempMax + "\n" +
-                        //                                   weatherTempMaxTime + "\n" +
-                        weatherTempMin + "\n" +
-                        //                                   weatherTempMinTime + "\n";
-                        "";
-
-
                 String startDate = startMonth + "/" + startDay + "/" + startYear;
                 String endDate = endMonth + "/" + endDay + "/" + endYear;
 
-                String startDescription = "Hello,\nBelow are your trip details: \n";
-                String endDescription = "Sincerely, \n HeadingOut Team";
-
-                String description = startDescription + "\n" +
-                        flightDescription + "\n" +
-                        hotelDescription + "\n" +
-                        weatherDescription + "\n" +
-                        endDescription;
                 String title = "HeadingOut: " + originAirportCode + " | " + startDate + " to " + endDate;
                 String location = destinationSharedPref;
-                Intent intent = new Intent(Intent.ACTION_SEND);
-                intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, description);
-                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title + ": " + location);
+                String description = getBodyDescription();
 
-                v.getContext().startActivity(Intent.createChooser(intent, "Share to"));
+                setShareIntent(v, title, location, description);
+            }
+        });
+    }
 
+    private String getBodyDescription(){
+        String startDescription = "Hello,\nBelow are your trip details: \n";
+
+        String flightDescription = getFlightDescription();
+        String hotelDescription = getHotelDescription();
+        String weatherDescription = getWeatherDescription();
+
+        String endDescription = "Sincerely, \n HeadingOut Team";
+
+        String description = startDescription + "\n" +
+                flightDescription + "\n" +
+                hotelDescription + "\n" +
+                weatherDescription + "\n" +
+                endDescription;
+
+        return description;
+
+    }
+
+    private void setShareIntent(View v, String title, String location, String description){
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, description);
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, title + ": " + location);
+
+        v.getContext().startActivity(Intent.createChooser(intent, "Share to"));
+    }
+
+    /**
+     * Parse Flight Model to get data
+     * Segment describes origin A to destination B. Legs represents all the stops between A and B
+     * @return
+     */
+    private String getFlightDescription(){
+        String flightDescription = "FLIGHT";
+        String flightTotalCost = "Price: " + flights.getTrips().getTripOption().get(flightPosition).getSaleTotal();
+        int duration = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getDuration();
+        String flightDuration = "Total Duration: " + Utilities.convertMinToHours(duration);
+
+        List<Leg> listLeg;
+        List<Segment> listSegment = flights.getTrips().getTripOption().get(flightPosition).getSlice().get(0).getSegment();
+        String flightStops = "Stops: " + String.valueOf(listSegment.size() - 1);
+
+        flightDescription = flightDescription + "\n" +
+                flightTotalCost + "\n" +
+                flightDuration + "\n" +
+                flightStops + "\n";
+
+        String flightSegmentDescription = "";
+        for (Segment segment : listSegment) {
+            String flightCarrier = segment.getFlight().getCarrier();
+            String flightNumber = segment.getFlight().getNumber();
+            String flightInfo = "Flight: " + flightCarrier + flightNumber;
+            String flightCabin = "Cabin: " + segment.getCabin();
+            String segmentDuration = "Flight Duration: " + Utilities.convertMinToHours(segment.getDuration());
+            listLeg = segment.getLeg();
+            String departureTime = "";
+            String arrivalTime = "";
+            String origin = "";
+            String originTerminal = "";
+            String destination = "";
+            String destinationTerminal = "";
+
+            for (Leg leg : listLeg) {
+                origin = "Departing From: " + leg.getOrigin();
+                originTerminal = "Departing Terminal: " + leg.getOriginTerminal();
+                departureTime = "Departing: " + leg.getDepartureTime().substring(0, leg.getDepartureTime().length() - 6);
+                destination = "Arriving To: " + leg.getDestination();
+                destinationTerminal = "Arriving Terminal: " + leg.getDestinationTerminal();
+                arrivalTime = "Arriving: " + leg.getArrivalTime().substring(0, leg.getArrivalTime().length() - 6);
+            }
+
+            String connectionDuration = "";
+            if (segment.getConnectionDuration() != 0) {
+                connectionDuration = "Connection Time: " + Utilities.convertMinToHours(segment.getConnectionDuration());
+            }
+
+            flightSegmentDescription = flightSegmentDescription + "\n" +
+                    flightInfo + "\n" +
+                    flightCabin + "\n" +
+                    segmentDuration + "\n" +
+                    origin + "\n" +
+                    originTerminal + "\n" +
+                    departureTime + "\n" +
+                    destination + "\n" +
+                    destinationTerminal + "\n" +
+                    arrivalTime + "\n" +
+                    "\n" + connectionDuration + "\n";
+
+        }
+
+        flightDescription = flightDescription + flightSegmentDescription;
+
+        return flightDescription;
+    }
+
+    /**
+     * Parse Hotel Model to get data
+     * @return
+     */
+    private String getHotelDescription(){
+        HWResult result = hotWireHotels.getResult().get(hotelPosition);
+
+        String hotelDescription = "HOTWIRE_HOTEL ";
+        String destination = "Destination: " + destinationSharedPref;
+        String hwRefNumber = "HotWire Reference: " + result.getHWRefNumber();
+        String hwStartDate = "Check In: " + result.getCheckInDate();
+        String hwEndDate = "Check Out: " + result.getCheckOutDate();
+        String hwNights = "Nights: " + result.getNights();
+        String hwCurrency = result.getCurrencyCode();
+        String hwPrice = result.getTotalPrice();
+        String price = "Price: " + hwCurrency + hwPrice;
+        String hwLink = "DeepLink: " + result.getDeepLink();
+
+        hotelDescription = hotelDescription + "\n" +
+                destination + "\n" +
+                hwRefNumber + "\n" +
+                hwStartDate + "\n" +
+                hwEndDate + "\n" +
+                hwNights + "\n" +
+                price + "\n" +
+                hwLink + "\n";
+
+        return hotelDescription;
+    }
+
+    /**
+     * Parse weather model to get data
+     * @return
+     */
+    private String getWeatherDescription(){
+
+        String weatherDescription = "WEATHER ";
+        WeatherInfoDaily weatherDaily = weather.getDaily().getData().get(weatherPosition);
+
+        int time = weatherDaily.getTime();
+        String formattedTime = new SimpleDateFormat("MM/dd/yyyy").format(new Date(time * 1000L));
+
+        String weatherTime = "Date: " + formattedTime;
+        String weatherSummary = "Summary: " + weatherDaily.getSummary();
+
+        String weatherHumidity = "Humidity: " + String.valueOf(weatherDaily.getHumidity());
+        String weatherDewPoint = "Dew Point: " + String.valueOf(weatherDaily.getDewPoint());
+        String weatherOzone = "Ozone: " + String.valueOf(weatherDaily.getOzone());
+
+
+        String weatherSunRise = "Sunrise: " + String.valueOf(weatherDaily.getSunriseTime());
+        String weatherSunSet = "Sunset: " + String.valueOf(weatherDaily.getSunsetTime());
+
+        String weatherPrecipIntensity = "Precipitation Intensity: " + String.valueOf(weatherDaily.getPrecipIntensity());
+        String weatherPrecipProbability = "Precipitation Probability: " + String.valueOf(weatherDaily.getPrecipProbability());
+
+        String weatherTempMax = "Temperature Max: " + String.valueOf(weatherDaily.getApparentTemperatureMax());
+        String weatherTempMaxTime = "Temperature Max Time: " + String.valueOf(weatherDaily.getApparentTemperatureMaxTime());
+
+        String weatherTempMin = "Temperature Min: " + String.valueOf(weatherDaily.getApparentTemperatureMin());
+        String weatherTempMinTime = "Temperature Min Time: " + String.valueOf(weatherDaily.getApparentTemperatureMinTime());
+
+        weatherDescription = weatherDescription + "\n" +
+                weatherTime + "\n" +
+                weatherSummary + "\n" +
+                weatherHumidity + "\n" +
+                weatherDewPoint + "\n" +
+                //                                    weatherOzone + "\n" +
+                //weatherSunRise + "\n" +
+                //weatherSunSet + "\n" +
+                //                                    weatherPrecipIntensity + "\n" +
+                //                                    weatherPrecipProbability + "\n" +
+                weatherTempMax + "\n" +
+                //                                   weatherTempMaxTime + "\n" +
+                weatherTempMin + "\n" +
+                //                                   weatherTempMinTime + "\n";
+                "";
+
+        return weatherDescription;
+    }
+
+
+//---------------------------------- FAB Share Button END -----------------------------------//
+
+
+    public void setDetailFragment(){
 //                DetailFragment detailFragment = new DetailFragment();
 //                detailFragment.setArguments(InputTabHotelRVAdapter.hotelBundle);
 //
@@ -545,9 +575,8 @@ public class InputFragment extends Fragment{
 //                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 //                fragmentTransaction.replace(R.id.home_fragment_container, detailFragment).addToBackStack(null);
 //                fragmentTransaction.commit();
-            }
-        });
     }
+
 
     @Override
     public void onResume() {
@@ -569,31 +598,18 @@ public class InputFragment extends Fragment{
     }
 
     @Override
+    public void onDestroyView() {
+        Timber.d("INPUTFRAGMENT ====>>> View Destroyed");
+        bus.unregister(this);
+        super.onDestroyView();
+        unbinder.unbind();
+    }
+
+    @Override
     public void onPause() {
         Timber.d("onPause: ==>> InputFragment OnPause");
         super.onPause();
         mapView.onPause();
     }
 
-    //TODO REMOVE
-    @Subscribe
-    public void onSizeData(Integer size){
-        this.size = size;
-        Timber.d("onSizeData: === Posting Data from adapter" + size);
-    }
-
-
-    /**
-     * Converts minutes to a string in format "HH hours mm mins"
-     * @param duration
-     * @return
-     */
-    private String convertMinToHours(int duration){
-        Long longVal = new Long(duration);
-        int hours = (int) longVal.longValue() / 60;
-        int mins = (int) longVal.longValue() - (hours * 60);
-        String durationString = hours + " hours " + mins + " mins ";
-        Timber.d("onCreateView: hours " + durationString);
-        return durationString;
-    }
 }

@@ -24,7 +24,7 @@ import javax.inject.Named;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
-import app.ga.com.headingout.inputfragment.NetComponent;
+import app.ga.com.headingout.inputfragment.providers.NetComponent;
 import app.ga.com.headingout.inputfragment.providers.HotwireService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
