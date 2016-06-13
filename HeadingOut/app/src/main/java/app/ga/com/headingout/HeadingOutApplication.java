@@ -2,10 +2,12 @@ package app.ga.com.headingout;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Bus;
 
 import app.ga.com.headingout.inputfragment.providers.DaggerNetComponent;
 import app.ga.com.headingout.inputfragment.providers.NetComponent;
+import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
 public class HeadingOutApplication extends Application {
@@ -20,6 +22,7 @@ public class HeadingOutApplication extends Application {
      */
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
 
         bus = new Bus();
 
