@@ -189,14 +189,10 @@ public class InputFlightTabFragment extends Fragment {
     @Subscribe
     public void onFlightData(Flights flights){
         Timber.d("onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
-
+//TODO Fixbug where flightRecyclerView is null after second pull down
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
         flightRecyclerView.setAdapter(recyclerViewAdapter);
     }
-
-
-
-
 
     private void setRecyclerViewFlightsDummyData(){
         Flights flights = returnFlightsDummyData();

@@ -90,6 +90,9 @@ public class MainFragment extends Fragment implements
      * Change the color of Resources
      */
     private void setViewProperties(){
+        mainStartDateEditText.setKeyListener(null);
+        mainEndDateEditText.setKeyListener(null);
+
         int color = ContextCompat.getColor(getActivity(), R.color.colorAccent);
         calendarImageView.setImageResource(R.drawable.calendar);
         calendarImageView.setColorFilter(color);
