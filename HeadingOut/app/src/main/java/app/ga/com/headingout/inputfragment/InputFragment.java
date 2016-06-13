@@ -12,6 +12,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -255,8 +256,6 @@ public class InputFragment extends Fragment{
             //TODO put id into HashMap, for easy find
         }
 
-        setGoogleMapCameraPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
-
         // Get the api Lat, Longs and info for plotting google map markers
         List<HWNeighborhoods> hwNeighborHoods = hotWireHotels.getMetaData().getHotelMetaData().getNeighborhoods();
         for(int position = 0; position < hwNeighborHoods.size(); position++){
@@ -267,6 +266,10 @@ public class InputFragment extends Fragment{
             String[] centroidList = centroid.split(",", 2);
             double latitude = Double.parseDouble(centroidList[0]);
             double longitude = Double.parseDouble(centroidList[1]);
+
+            if (position == 0) {
+                setGoogleMapCameraPosition(latitude, longitude);
+            }
 
             // Pull Hotel Reference Number Data
             String hwRefNum = hotWireHotels.getResult().get(position).getHWRefNumber();
@@ -642,4 +645,17 @@ public class InputFragment extends Fragment{
         mapView.onPause();
     }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        hideFragmentKeyboard();
+    }
+
+    private void hideFragmentKeyboard(){
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity()
+                .getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+    }
+
 }
+

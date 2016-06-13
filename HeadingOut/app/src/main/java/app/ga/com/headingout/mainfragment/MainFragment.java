@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.model.TripDestination;
@@ -110,7 +111,8 @@ public class MainFragment extends Fragment implements
             public void onClick(View v) {
                 saveSharedPreferences();
 
-                if(!Utilities.isTextViewEmpty(destinationAutoCompleteTextView)){
+                // Check textView
+                if(!isTextViewValid(destinationAutoCompleteTextView)){
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                     InputFragment inputFragment = new InputFragment();
                     fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
@@ -121,10 +123,29 @@ public class MainFragment extends Fragment implements
     }
 
     /**
+     * Check the Text Input
+     * @param textView
+     * @return
+     */
+    public static boolean isTextViewValid(AutoCompleteTextView textView){
+        String location = textView.getText().toString();
+        if (location.isEmpty()) {
+            textView.setError("Please Input an Airport Code");
+            return true;
+        }else if(location.length() != 3){
+            textView.setError("Please Input a 3 Character Airport Code");
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
      * Store objects to shared preferences
      */
     private void saveSharedPreferences(){
         originAirportCode = originAutoCompleteTextView.getText().toString();
+        destinationAirportCode = destinationAutoCompleteTextView.getText().toString();
 
         SharedPreferences sharedPref = getActivity()
                 .getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);

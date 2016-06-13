@@ -31,7 +31,6 @@ import timber.log.Timber;
 public class Utilities {
     public static final String ARG_PAGE = "ARG_PAGE";
     public static final String POSITION = "POSITION";
-    public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
     private static final int FAB_COLOR = R.color.colorAccentDark;
     public static final String INTENT_FLIGHT_KEY = "locationTerms";
 
@@ -85,7 +84,7 @@ public class Utilities {
     public static boolean isTextViewEmpty(AutoCompleteTextView textView){
         String location = textView.getText().toString();
         if (location.isEmpty()) {
-            textView.setError("Please input a location");
+            textView.setError("Please Complete Field");
             return true;
         }
         return false;
