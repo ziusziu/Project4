@@ -43,6 +43,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @BindView(R.id.home_drawer_layout) DrawerLayout drawer;
     @BindView(R.id.home_toolBar) Toolbar toolbar;
 
+    //TODO Butterknife icons
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -180,8 +182,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+//TODO Currently not using DetailFragment
     /**
+     * FragmentUtil is an interface that uses setFragmentToolBar() to return
+     * a FragmentName when the fragment goes to OnResume(). When the Fragment is
+     * resumed, the actionBar title and icons are set.
+     *
      * Special Actions for ActionBar when DetailFragment is loaded
      * ActionBarIcon is a return arrow and creates a new InputFragment
      * @param fragmentName
@@ -192,12 +198,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case MAIN_FRAGMENT:
                 actionBar.setTitle("Search");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
-                initNavDrawer();
                 break;
             case INPUT_FRAGMENT:
                 actionBar.setTitle("Results");
                 setActionBarIcon(R.drawable.ic_menu_24dp);
-                initNavDrawer();
                 break;
             case DETAIL_FRAGMENT:
                 drawerToggle.setDrawerIndicatorEnabled(false);

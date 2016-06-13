@@ -117,16 +117,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
-        <Button
-            android:id="@+id/main_addLocation_button"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:backgroundTint="@color/colorAccent"
-            android:textColor="@color/colorAccentDark"
-            android:layout_gravity="center_horizontal"
-            android:visibility="gone"
-            android:text="Go!"/>
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -143,7 +133,7 @@
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
-        android:id="@+id/main_goButton_fab"
+        android:id="@+id/main_searchButton_fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"

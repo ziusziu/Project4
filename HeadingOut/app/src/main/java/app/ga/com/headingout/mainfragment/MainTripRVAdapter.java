@@ -24,12 +24,12 @@ import timber.log.Timber;
  */
 public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.TripViewHolder>{
 
-    private final List<TripDestination> tripList;
-    private final OnMainCardViewClickListener listener;
+    private List<TripDestination> tripList;
+    private OnMainCardViewClickListener clickListener;
     private static Context context;
 
     /**
-     * Create listener that returns TripDestination object on click
+     * Create a listener that returns TripDestination object on cardview click
      */
     public interface OnMainCardViewClickListener{
         void onMainCardViewClick(TripDestination tripDestination);
@@ -46,9 +46,9 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
         }
     }
 
-    public MainTripRVAdapter(List<TripDestination> tripList, OnMainCardViewClickListener listener){
+    public MainTripRVAdapter(List<TripDestination> tripList, OnMainCardViewClickListener clickListener){
         this.tripList = tripList;
-        this.listener = listener;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -70,23 +70,39 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
      * @param position
      */
     @Override
-    public void onBindViewHolder(TripViewHolder holder, final int position) {
+    public void onBindViewHolder(TripViewHolder holder, int position) {
         holder.tripNameTextView.setText(tripList.get(position).getLocation());
         holder.tripOriginImageView.setVisibility(View.VISIBLE);
 
+        int defaultImage = R.mipmap.ic_headingout;
+        int imageWidth = 500;
+        int imageLength = 350;
+        loadPicassoImage(holder, position, imageWidth, imageLength, defaultImage);
+
+        setCardViewClickListener(holder, position);
+    }
+
+    private void loadPicassoImage(TripViewHolder holder, int position, int width, int length, int image){
         Picasso.with(context)
                 .load(tripList.get(position).getUrl())  // Load image from URL
-                .placeholder(R.mipmap.ic_headingout)    // PlaceHolder Image
-                .resize(500,350)                        // Resize Image
+                .placeholder(image)                     // PlaceHolder Image
+                .resize(width,length)                   // Resize Image
                 .into(holder.tripOriginImageView);      // Load image to view
+    }
 
-        //When cardView is clicked send use interface to send TripDestination object to MainFragment
+    /**
+     * When cardView is clicked, use interface to send TripDestination object to MainFragment
+     *
+     * @param holder
+     * @param position
+     */
+    private void setCardViewClickListener(TripViewHolder holder, final int position){
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Timber.d("onClick: CARD CLICKED NUMBER ===>> " + position);
                 //Gets the TripDestination at position and sends to MainFragment
-                listener.onMainCardViewClick(tripList.get(position));
+                clickListener.onMainCardViewClick(tripList.get(position));
             }
         });
     }
@@ -95,5 +111,4 @@ public class MainTripRVAdapter extends RecyclerView.Adapter<MainTripRVAdapter.Tr
     public int getItemCount() {
         return tripList.size();
     }
-
 }

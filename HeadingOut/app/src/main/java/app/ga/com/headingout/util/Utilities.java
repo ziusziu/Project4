@@ -1,12 +1,19 @@
 package app.ga.com.headingout.util;
 
 import android.app.Activity;
+import android.content.Context;
+import android.graphics.Color;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.view.WindowManager;
+import android.widget.AutoCompleteTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import app.ga.com.headingout.R;
 import app.ga.com.headingout.model.TripDestination;
+import timber.log.Timber;
 
 
 /**
@@ -15,11 +22,27 @@ import app.ga.com.headingout.model.TripDestination;
 public class Utilities {
     public static final String POSITION = "POSITION";
     public static final String FAB_BUTTON_COLOR = "#00C853"; //"#558B2F"
+    private static final int FAB_COLOR = R.color.colorAccentDark;
     public static final String INTENT_FLIGHT_KEY = "locationTerms";
 
+    //region SharedPreferences Constants
+    public static final String PLACESPREFERENCES = "placesPreferences";
+    public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";
+    public static final String ORIGINAIRPORTCODE = "originAirportCode";
+    public static final String LATITUDE = "latitude";
+    public static final String LONGITUDE = "longitude";
+    public static final String STARTDAY = "startDay";
+    public static final String STARTMONTH = "startMonth";
+    public static final String STARTYEAR = "startYear";
+    public static final String ENDDAY = "endDay";
+    public static final String ENDMONTH = "endMonth";
+    public static final String ENDYEAR = "endYear";
+    //endregion
 
 
-
+    public static int convertColorHexToResource(String hexColor){
+        return Color.parseColor(hexColor);
+    }
 
     /**
      * Hide the keyboard on activity load
@@ -29,6 +52,34 @@ public class Utilities {
     public static void hideKeyboard(Activity activity){
         activity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
     }
+
+    /**
+     * Set the color and image of FAB Button
+     * @param searchFab
+     */
+    public static void setFabButton(Context context, FloatingActionButton searchFab, int icon) {
+        int color = ContextCompat.getColor(context, FAB_COLOR);
+
+        searchFab.setImageResource(icon);
+        searchFab.setColorFilter(color);
+    }
+
+    /**
+     * Ensure there is a destination in textView
+     * @param textView
+     */
+    public static boolean isTextViewEmpty(AutoCompleteTextView textView){
+        String location = textView.getText().toString();
+        if (location.isEmpty()) {
+            textView.setError("Please input a location");
+            return true;
+        }
+        return false;
+    }
+
+
+
+
 
 
 

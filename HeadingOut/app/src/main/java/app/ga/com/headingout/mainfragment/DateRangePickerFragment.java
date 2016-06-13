@@ -1,4 +1,4 @@
-package app.ga.com.headingout.inputfragment;
+package app.ga.com.headingout.mainfragment;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -39,14 +39,18 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
         // Required empty public constructor
     }
 
-    public static DateRangePickerFragment newInstance(OnDateRangeSelectedListener callback, boolean is24HourMode) {
+    public static DateRangePickerFragment newInstance(OnDateRangeSelectedListener callback,
+                                                      boolean is24HourMode) {
+
         DateRangePickerFragment dateRangePickerFragment = new DateRangePickerFragment();
         dateRangePickerFragment.initialize(callback, is24HourMode);
+
         return dateRangePickerFragment;
     }
 
     public void initialize(OnDateRangeSelectedListener callback,
                            boolean is24HourMode) {
+
         onDateRangeSelectedListener = callback;
         this.is24HourMode = is24HourMode;
     }
@@ -60,33 +64,47 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
      * @return
      */
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.date_range_picker, container, false);
         unbinder = ButterKnife.bind(this, view);
 
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+
         butSetDateRange.setOnClickListener(this);
+
         tabHost.findViewById(R.id.tabHost);
         tabHost.setup();
+
         TabHost.TabSpec startDatePage = tabHost.newTabSpec("start");
         startDatePage.setContent(R.id.start_date_group);
         startDatePage.setIndicator(getString(R.string.title_tab_start_date));
+
         TabHost.TabSpec endDatePage = tabHost.newTabSpec("end");
         endDatePage.setContent(R.id.end_date_group);
         endDatePage.setIndicator(getString(R.string.ttile_tab_end_date));
+
         tabHost.addTab(startDatePage);
         tabHost.addTab(endDatePage);
-        return view;
 
+        return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (getDialog() == null)
+
+        if (getDialog() == null){
             return;
-        getDialog().getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        }
+
+        getDialog()
+                .getWindow()
+                .setLayout(WindowManager.LayoutParams.MATCH_PARENT,
+                            WindowManager.LayoutParams.WRAP_CONTENT
+                        );
     }
 
 
@@ -101,15 +119,26 @@ public class DateRangePickerFragment extends DialogFragment implements View.OnCl
     @Override
     public void onClick(View v) {
         dismiss();
-        onDateRangeSelectedListener.onDateRangeSelected(startDatePicker.getDayOfMonth(),startDatePicker.getMonth(),startDatePicker.getYear(),
-                endDatePicker.getDayOfMonth(),endDatePicker.getMonth(),endDatePicker.getYear());
+        onDateRangeSelectedListener.onDateRangeSelected(startDatePicker.getDayOfMonth(),
+                                                    startDatePicker.getMonth(),
+                                                    startDatePicker.getYear(),
+                                                    endDatePicker.getDayOfMonth(),
+                                                    endDatePicker.getMonth(),
+                                                    endDatePicker.getYear()
+                                                    );
     }
 
     /**
      * Interface to pass dates out of fragment
      */
     public interface OnDateRangeSelectedListener {
-        void onDateRangeSelected(int startDay, int startMonth, int startYear, int endDay, int endMonth, int endYear);
+        void onDateRangeSelected(int startDay,
+                                 int startMonth,
+                                 int startYear,
+                                 int endDay,
+                                 int endMonth,
+                                 int endYear
+                                );
     }
 
     @Override

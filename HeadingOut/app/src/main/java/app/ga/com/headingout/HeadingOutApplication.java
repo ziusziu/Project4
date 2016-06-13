@@ -12,6 +12,7 @@ public class HeadingOutApplication extends Application {
 
     private NetComponent netComponent;
 
+    //TODO Inject Bus with Dagger2
     Bus bus;
 
     /**
@@ -27,10 +28,7 @@ public class HeadingOutApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-
         netComponent = DaggerNetComponent.create();
-
-
     }
 
     public Bus provideBus() {
