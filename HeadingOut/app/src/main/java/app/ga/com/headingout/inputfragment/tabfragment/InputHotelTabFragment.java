@@ -25,17 +25,12 @@ import javax.inject.Named;
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.ApiManager;
-import app.ga.com.headingout.inputfragment.providers.NetComponent;
-import app.ga.com.headingout.inputfragment.providers.HotwireService;
 import app.ga.com.headingout.inputfragment.rvadapter.InputTabHotelRVAdapter;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
 import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import timber.log.Timber;
 

@@ -1,7 +1,5 @@
-package app.ga.com.headingout.inputfragment.providers;
+package app.ga.com.headingout.util;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

@@ -1,4 +1,4 @@
-package app.ga.com.headingout.inputfragment.providers;
+package app.ga.com.headingout.util;
 
 import javax.inject.Singleton;
 
@@ -13,7 +13,7 @@ import dagger.Component;
  * Created by samsiu on 6/10/16.
  */
 @Singleton
-@Component(modules={NetModule.class})
+@Component(modules={NetModule.class, BusModule.class})
 public interface NetComponent {
 
     void inject(InputHotelTabFragment fragment);

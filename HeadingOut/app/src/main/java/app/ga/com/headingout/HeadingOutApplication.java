@@ -5,8 +5,8 @@ import android.app.Application;
 import com.crashlytics.android.Crashlytics;
 import com.squareup.otto.Bus;
 
-import app.ga.com.headingout.inputfragment.providers.DaggerNetComponent;
-import app.ga.com.headingout.inputfragment.providers.NetComponent;
+import app.ga.com.headingout.util.DaggerNetComponent;
+import app.ga.com.headingout.util.NetComponent;
 import io.fabric.sdk.android.Fabric;
 import timber.log.Timber;
 
