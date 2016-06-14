@@ -55,13 +55,15 @@ public class InputHotelTabFragment extends Fragment {
     private static String destination;
     //endregion
 
-    @Inject @Named("Hotwire") Retrofit retrofit;
+
 
     @BindView(R.id.input_tab_hotel_fragment_swipe_refresh_layout) SwipeRefreshLayout hotelSwipeRefreshLayout;
     @BindView(R.id.input_tab_hotel_fragment_recyclerView) RecyclerView hotelRecyclerView;
     @BindView(R.id.input_tab_hotel_destination_textView) TextView destinationTextView;
 
     Unbinder unbinder;
+    @Inject @Named("Hotwire") Retrofit retrofit;
+    @Inject Bus bus;
 
     public static InputHotelTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -91,7 +93,7 @@ public class InputHotelTabFragment extends Fragment {
         // Dagger2
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        getSharedPreferences();
+        //getSharedPreferences();
 
         registerOttoBus();
 
@@ -124,15 +126,7 @@ public class InputHotelTabFragment extends Fragment {
     }
 
     private void registerOttoBus(){
-        Bus bus = createBus();
         bus.register(InputHotelTabFragment.this);
-    }
-
-    private Bus createBus(){
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
-        return bus;
     }
 
     private void recyclerViewSetup(){
@@ -145,7 +139,7 @@ public class InputHotelTabFragment extends Fragment {
         hotelSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshFlightContent();
+                refreshHotelContent();
             }
         });
     }
@@ -153,14 +147,12 @@ public class InputHotelTabFragment extends Fragment {
     /**
      * Pull down to refresh will make new API call
      */
-    private void refreshFlightContent(){
+    private void refreshHotelContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Timber.d("run: ===>>> PULLING TO REFRESH Hotels====");
-
-                HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
-                final Bus bus = headingOutApplication.provideBus();
+                getSharedPreferences();
+                Timber.d("run: ===>>> PULLING TO REFRESH Hotels==== Destination: " + destination);
 
                 String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
                 String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;
@@ -191,7 +183,9 @@ public class InputHotelTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Timber.d("onResume: INPUT=----HOTEL---TABFRAGMENT ===>>> resuming");
+        Timber.d("InputHotelTabFragment ===>>> resuming");
+        getSharedPreferences();
+
     }
 
 

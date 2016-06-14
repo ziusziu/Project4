@@ -52,6 +52,7 @@ public class InputWeatherTabFragment extends Fragment {
     private static String forecastApiKey;
     Unbinder unbinder;
     @Inject @Named("Forecast") Retrofit retrofit;
+    @Inject Bus bus;
 
     public static InputWeatherTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -89,15 +90,7 @@ public class InputWeatherTabFragment extends Fragment {
 
     // TODO Inject bus with Dagger2
     private void registerOttoBus(){
-        Bus bus = createBus();
         bus.register(InputWeatherTabFragment.this);
-    }
-
-    private Bus createBus(){
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
-        return bus;
     }
 
     private void initRecyclerView(){
@@ -130,10 +123,10 @@ public class InputWeatherTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Timber.d("run: ===>>> PULLING TO REFRESH Weather====");
+                getSharedPreferences();
+                Timber.d("run: ===>>> PULLING TO REFRESH Weather==== Destination: " + destinationAirportCode);
 
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
-                final Bus bus = createBus();
                 ApiManager.getForecastWeather(retrofit, bus, forecastApiKey, latitude, longitude);
                 
                 //recyclerViewSetup();
@@ -158,9 +151,10 @@ public class InputWeatherTabFragment extends Fragment {
     @Subscribe
     public void onWeatherData(Weather weather){
         Timber.d("onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
-        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather, getContext());
+        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather);
         weatherRecyclerView.setAdapter(recyclerViewAdapter);
    //     mSpinner.setVisibility(View.GONE);
+
 
     }
     

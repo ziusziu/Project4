@@ -86,6 +86,7 @@ public class ApiManager {
 
     public static void getHotWireHotels(Retrofit retrofit, final Bus bus, String hotwireApiKey, String startDate, String endDate, String destination) {
 
+        Timber.d("getHotWireHotels API Call: Destination: " + destination);
         String responseFormat = "json";
         //String destination = "San%20Francisco,%20Ca."; //Only having city input is okay
         String rooms = "1";

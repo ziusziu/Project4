@@ -94,13 +94,13 @@ public class InputFragment extends Fragment{
     //endregion
 
     private int size;
-    private Bus bus;
     private Unbinder unbinder;
 
     @Inject @Named("Hotwire") Retrofit retrofitHotwire;
     @Inject @Named("QPXExpress") Retrofit retrofitQPXExpress;
     @Inject @Named("Forecast") Retrofit retrofitForecast;
     @Inject @Named("FlightStats") Retrofit retrofitFlightStats;
+    @Inject Bus bus;
 
 
     @Nullable
@@ -116,7 +116,7 @@ public class InputFragment extends Fragment{
         unbinder = ButterKnife.bind(this, view);
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        createBus();
+        registerOttoBus();
 
         getSharedPreferences();
 
@@ -135,9 +135,7 @@ public class InputFragment extends Fragment{
     /**
      * Create an Otto event bus
      */
-    private void createBus(){
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        bus = headingOutApplication.provideBus();
+    private void registerOttoBus(){
         bus.register(this);
     }
 
@@ -235,6 +233,12 @@ public class InputFragment extends Fragment{
         // Create destination in format "<city>,<state>" for HotwireSearch
         String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
         destinationSharedPref = destination;
+
+        SharedPreferences sharedPref = getActivity()
+                .getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(Utilities.DESTINATION, destinationSharedPref);
+        editor.apply();
 
         String hotwireApiKey = getResources().getString(R.string.hotwire_api_key);
         String hotwireStartDate = startMonth + "/" + startDay + "/" + startYear;

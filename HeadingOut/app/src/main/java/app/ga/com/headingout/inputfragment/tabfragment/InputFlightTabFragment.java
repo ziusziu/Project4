@@ -63,6 +63,7 @@ public class InputFlightTabFragment extends Fragment {
     private Flights flights;
     @Inject @Named("QPXExpress") Retrofit retrofit;
     Unbinder unbinder;
+    @Inject Bus bus;
 
     public static InputFlightTabFragment newInstance(int page){
         Bundle args = new Bundle();
@@ -104,15 +105,7 @@ public class InputFlightTabFragment extends Fragment {
     }
 
     private void registerOttoBus(){
-        Bus bus = createBus();
         bus.register(InputFlightTabFragment.this);
-    }
-
-    private Bus createBus(){
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)getActivity().getApplication();
-        Bus bus = headingOutApplication.provideBus();
-        return bus;
     }
 
     private void initViews(View view){
@@ -157,11 +150,8 @@ public class InputFlightTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                Timber.d("run: ===>>> PULLING TO REFRESH FLIGHTS====");
-
-                HeadingOutApplication headingOutApplication = (HeadingOutApplication) getActivity().getApplication();
-                final Bus bus = headingOutApplication.provideBus();
-                bus.register(this);
+                getSharedPreferences();
+                Timber.d("run: ===>>> PULLING TO REFRESH FLIGHTS==== Destination: " + destinationAirportCode);
 
                 String date = endYear + "-" + endMonth + "-" + endDay; // yyyy-MM-dd
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);

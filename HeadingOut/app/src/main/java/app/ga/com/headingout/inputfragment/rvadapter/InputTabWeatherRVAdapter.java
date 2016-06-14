@@ -15,9 +15,12 @@ import com.squareup.otto.Bus;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
+import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.model.forecast.Weather;
 import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
@@ -34,8 +37,6 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
     private static SharedPreferences sharedPref;
 
     private Weather weather;
-    private Context context;
-    private Bus bus;
 
     public static class WeatherViewHolder extends RecyclerView.ViewHolder {
         @Nullable @BindView(R.id.input_tab_flight_fragment_cardView) CardView weatherCardView;
@@ -50,9 +51,8 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         }
     }
 
-    public InputTabWeatherRVAdapter(Weather weather, Context context){
+    public InputTabWeatherRVAdapter(Weather weather){
         this.weather = weather;
-        this.context = context;
     }
 
     @Override
@@ -95,10 +95,6 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
 //                editor.apply();
 //            }
 //        });
-
-        // Testing
-        bus = createBus();
-        bus.post(size);
     }
 
     @Override
@@ -106,12 +102,5 @@ public class InputTabWeatherRVAdapter extends RecyclerView.Adapter<InputTabWeath
         return weather.getDaily().getData().size();
     }
 
-    private Bus createBus(){
-        // Register for bus events
-        HeadingOutApplication headingOutApplication = (HeadingOutApplication)((MainActivity) context).getApplication();
-        Bus bus = headingOutApplication.provideBus();
-
-        return bus;
-    }
 
 }
