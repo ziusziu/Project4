@@ -5,5 +5,6 @@ package app.ga.com.headingout;
  */
 public interface TestStrings {
 
-    String EXPECTED_SUM = "789";
+    String CARDVIEW_ITEM = "LAX";
+    String DESTINATION_ERROR_TEXT = "Please Input an Airport Code";
 }
