@@ -76,6 +76,7 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("InputFlightTabFragment: onCreate");
         page = getArguments().getInt(Utilities.ARG_PAGE);
 
     }
@@ -83,6 +84,7 @@ public class InputFlightTabFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("InputFlightTabFragment: onCreateView");
         View view = inflater.inflate(R.layout.input_tab_flight_fragment, container, false);
 
         unbinder = ButterKnife.bind(this, view);
@@ -115,7 +117,9 @@ public class InputFlightTabFragment extends Fragment {
         int color = Utilities.convertColorHexToResource("#BBFFFFFF");
         mainAirplaneIcon.setColorFilter(color);
 
-        Timber.d("initViews: mOriginAirportCode " + originAirportCode);
+        Timber.d("InputFlightTabFragment: initViews: mOriginAirportCode " + originAirportCode);
+
+        flightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
 
         originTextView.setText(originAirportCode);
         destinationTextView.setText(destinationAirportCode);
@@ -132,6 +136,7 @@ public class InputFlightTabFragment extends Fragment {
     }
 
     private void recyclerViewSetup(){
+        Timber.d("InputFlightTabFragment: recyclerViewSetup");
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getActivity());
         flightRecyclerView.setLayoutManager(linearLayoutManager);
         flightRecyclerView.setHasFixedSize(true);
@@ -146,19 +151,17 @@ public class InputFlightTabFragment extends Fragment {
         });
     }
 
+
     private void refreshFlightContent(){
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getSharedPreferences();
                 Timber.d("run: ===>>> PULLING TO REFRESH FLIGHTS==== Destination: " + destinationAirportCode);
 
                 String date = endYear + "-" + endMonth + "-" + endDay; // yyyy-MM-dd
                 String googlePlacesApiKey = getResources().getString(R.string.google_places_key);
                 ApiManager.getQPExpressFlights(retrofit, bus, googlePlacesApiKey, originAirportCode, destinationAirportCode, date);
 
-                recyclerViewSetup();
-                flightSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 flightSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -173,15 +176,20 @@ public class InputFlightTabFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        Timber.d("InputFlightTabFragment: onDestroyView");
         unbinder.unbind();
     }
 
     @Subscribe
     public void onFlightData(Flights flights){
         Timber.d("onFlightData: SUBSCRIBE  PRICING==> " + flights.getTrips().getTripOption().get(0).getPricing());
-//TODO Fixbug where flightRecyclerView is null after second pull down
+
         recyclerViewAdapter = new InputTabFlightRVAdapter(flights);
-        flightRecyclerView.setAdapter(recyclerViewAdapter);
+
+        if(flightRecyclerView != null){
+            Timber.d("RecyclerView is null");
+            flightRecyclerView.setAdapter(recyclerViewAdapter);
+        }
     }
 
     private void setRecyclerViewFlightsDummyData(){

@@ -652,6 +652,7 @@ public class InputFragment extends Fragment{
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        Timber.d("onActivityCreated: INPUT----FRAGMENT--- INPUTFRAGMENT ===>>>> onActivityCreated");
         hideFragmentKeyboard();
     }
 

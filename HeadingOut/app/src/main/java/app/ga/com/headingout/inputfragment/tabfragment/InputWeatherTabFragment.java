@@ -65,12 +65,14 @@ public class InputWeatherTabFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.d("onCreate: INPUT----WEATHER--- TABFRAGMENT ===>>>> onCreate");
         page = getArguments().getInt(Utilities.ARG_PAGE);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Timber.d("onCreateView: INPUT----WEATHER--- TABFRAGMENT ===>>>> onCreateView");
         View view = inflater.inflate(R.layout.input_tab_weather_fragment, container, false);
 
         unbinder = ButterKnife.bind(this, view);
@@ -88,7 +90,6 @@ public class InputWeatherTabFragment extends Fragment {
         return view;
     }
 
-    // TODO Inject bus with Dagger2
     private void registerOttoBus(){
         bus.register(InputWeatherTabFragment.this);
     }
@@ -97,6 +98,8 @@ public class InputWeatherTabFragment extends Fragment {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(getActivity(), 2);
         weatherRecyclerView.setLayoutManager(gridLayoutManager);
         weatherRecyclerView.setHasFixedSize(true);
+
+        weatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
     }
 
     private void getSharedPreferences(){
@@ -123,14 +126,13 @@ public class InputWeatherTabFragment extends Fragment {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                getSharedPreferences();
                 Timber.d("run: ===>>> PULLING TO REFRESH Weather==== Destination: " + destinationAirportCode);
 
                 forecastApiKey = getResources().getString(R.string.forecast_api_key);
                 ApiManager.getForecastWeather(retrofit, bus, forecastApiKey, latitude, longitude);
                 
                 //recyclerViewSetup();
-                weatherSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
+
                 weatherSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -151,10 +153,15 @@ public class InputWeatherTabFragment extends Fragment {
     @Subscribe
     public void onWeatherData(Weather weather){
         Timber.d("onWeatherData: WEATHER DATA daily Size ==>> " + weather.getDaily().getData().size());
-        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather);
-        weatherRecyclerView.setAdapter(recyclerViewAdapter);
-   //     mSpinner.setVisibility(View.GONE);
 
+        recyclerViewAdapter = new InputTabWeatherRVAdapter(weather);
+
+        if(weatherRecyclerView != null){
+            Timber.d("RecyclerView is null");
+            weatherRecyclerView.setAdapter(recyclerViewAdapter);
+        }
+
+        //     mSpinner.setVisibility(View.GONE);
 
     }
     
@@ -162,5 +169,30 @@ public class InputWeatherTabFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+        Timber.d("onDestroyView: INPUT----WEATHER--- TABFRAGMENT ===>>>> onDestroyView");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Timber.d("onStart: INPUT----WEATHER--- TABFRAGMENT ===>>>> onStart");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        Timber.d("onPause: INPUT----WEATHER--- TABFRAGMENT ===>>>> onPause");
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Timber.d("onStop: INPUT----WEATHER--- TABFRAGMENT ===>>>> onStop");
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        Timber.d("onDetach: INPUT----WEATHER--- TABFRAGMENT ===>>>> onDetach");
     }
 }

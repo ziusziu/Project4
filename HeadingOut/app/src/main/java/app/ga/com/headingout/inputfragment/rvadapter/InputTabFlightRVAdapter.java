@@ -54,10 +54,12 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
+        Timber.d("Flight RV Adapter: onAttachedToRecyclerView");
     }
 
     @Override
     public FlightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        Timber.d("Flight RV Adapter: onCreateViewHolder");
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.input_tab_flight_cardview, parent, false);
         FlightViewHolder flightViewHolder = new FlightViewHolder(view);
         sharedPref = parent.getContext().getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
@@ -67,6 +69,7 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
 
     @Override
     public void onBindViewHolder(FlightViewHolder holder, final int position) {
+        Timber.d("Flight RV Adapter: onBindViewHolder");
         holder.flightSaleTotalTextView.setText(flights.getTrips().getTripOption().get(position).getSaleTotal());
 
         int duration = flights.getTrips().getTripOption().get(position).getSlice().get(0).getDuration();
@@ -173,6 +176,26 @@ public class InputTabFlightRVAdapter extends RecyclerView.Adapter<InputTabFlight
     @Override
     public int getItemCount() {
         return flights.getTrips().getTripOption().size();
+    }
+
+
+    @Override
+    public void onViewAttachedToWindow(FlightViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        Timber.d("Flight RV Adapter: onViewAttachedToWinder");
+
+    }
+
+    @Override
+    public void onViewDetachedFromWindow(FlightViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        Timber.d("Flight RV Adapter: onViewDetachedFromWindow");
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        super.onDetachedFromRecyclerView(recyclerView);
+        Timber.d("Flight RV Adapter: onDetachedFromRecyclerView");
     }
 
 

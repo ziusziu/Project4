@@ -99,6 +99,8 @@ public class InputHotelTabFragment extends Fragment {
 
         recyclerViewSetup();
 
+        hotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
+
         swipeHotelRefreshListener();
 
         return view;
@@ -159,8 +161,6 @@ public class InputHotelTabFragment extends Fragment {
                 String hotwireEndDate = endMonth + "/" + endDay + "/" + endYear;
                 ApiManager.getHotWireHotels(retrofit, bus, hotwireApiKey, hotwireStartDate, hotwireEndDate, destination);
 
-                //recyclerViewSetup();
-                hotelSwipeRefreshLayout.setColorSchemeResources(R.color.colorPrimaryLight, R.color.colorAccent, R.color.colorAccentDark);
                 hotelSwipeRefreshLayout.setRefreshing(false);
             }
         }, 0);
@@ -176,7 +176,12 @@ public class InputHotelTabFragment extends Fragment {
 
         progressBar.setVisibility(View.GONE);
         recyclerViewAdapter = new InputTabHotelRVAdapter(hotWireHotels);
-        hotelRecyclerView.setAdapter(recyclerViewAdapter);
+
+        if(hotelRecyclerView != null){
+            Timber.d("RecyclerView is null");
+            hotelRecyclerView.setAdapter(recyclerViewAdapter);
+        }
+
 
     }
 
