@@ -26,9 +26,60 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class MainActivityTest {
 
 
+
+
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule =
-        new ActivityTestRule(MainActivity.class);
+    public ActivityTestRule<MainActivity> activityRule =
+        new ActivityTestRule<MainActivity>(MainActivity.class);
+
+
+    @Test
+    public void checkCalendarIconDisplayed(){
+        onView(withId(R.id.main_calendar_imageView))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkStartDateEditTextDisplayed(){
+        onView(withId(R.id.main_startDate_editText))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkEndDateEditTextDisplayed(){
+        onView(withId(R.id.main_endDate_editText))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkOriginAutoCompleteTextDisplayed(){
+        onView(withId(R.id.main_origin_autocomplete_textView))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkDestinationAutoCompleteTextDisplayed(){
+        onView(withId(R.id.main_destination_autocomplete_textView))
+                .check(matches(isDisplayed()));
+    }
+
+    @Test
+    public void checkDestinationRecyclerViewDisplayed(){
+        onView(withId(R.id.main_destination_recyclerView))
+                .check(matches(isDisplayed()));
+    }
+
+
+
+    @Test
+    public void checkFabDisplayed(){
+        onView(withId(R.id.main_searchButton_fab))
+                .check(matches(isDisplayed()));
+    }
+
+
+
+
 
 
     @Test
@@ -36,12 +87,6 @@ public class MainActivityTest {
         onView(withId(R.id.main_trip_item_cardView)).perform(click());
         onView(withId(R.id.main_destination_autocomplete_textView))
                 .check(matches(withText(TestStrings.CARDVIEW_ITEM)));//R.id.main_card_tripItem_textView)));
-    }
-
-    @Test
-    public void checkFabDisplayed(){
-        onView(withId(R.id.main_searchButton_fab))
-                .check(matches(isDisplayed()));
     }
 
     @Test

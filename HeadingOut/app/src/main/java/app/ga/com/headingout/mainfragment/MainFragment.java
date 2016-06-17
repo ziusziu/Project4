@@ -24,7 +24,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.R;
 import app.ga.com.headingout.inputfragment.InputFragment;
 import app.ga.com.headingout.model.TripDestination;
@@ -112,7 +111,7 @@ public class MainFragment extends Fragment implements
                 saveSharedPreferences();
 
                 // Check textView
-                if(!isTextViewValid(destinationAutoCompleteTextView)){
+                if(isTextViewValid(destinationAutoCompleteTextView) || isTextViewValid(originAutoCompleteTextView)){
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                     InputFragment inputFragment = new InputFragment();
                     fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
@@ -128,15 +127,16 @@ public class MainFragment extends Fragment implements
      * @return
      */
     public static boolean isTextViewValid(AutoCompleteTextView textView){
+        //TODO Handle error with airport code (EX: ABC, try{} catch{return to mainFragment with toast})
         String location = textView.getText().toString();
         if (location.isEmpty()) {
             textView.setError("Please Input an Airport Code");
-            return true;
+            return false;
         }else if(location.length() != 3){
             textView.setError("Please Input a 3 Character Airport Code");
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
 

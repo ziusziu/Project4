@@ -1,11 +1,14 @@
 package app.ga.com.headingout.inputfragment;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.squareup.otto.Bus;
 
 import java.util.ArrayList;
 
+import app.ga.com.headingout.HeadingOutApplication;
+import app.ga.com.headingout.MainActivity;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -38,7 +41,6 @@ public class ApiManager {
 
     private static final String TAG = ApiManager.class.getSimpleName();
 
-
     private static String latitude;
     private static String longitude;
 
@@ -68,8 +70,14 @@ public class ApiManager {
             public void onResponse(Call<AirportData> call, Response<AirportData> response) {
                 if (response.isSuccessful()) {
                     airport = response.body();
-                    Log.d(TAG, "onResponse: OnSuccessAirportData " + airport.getAirport().getCity());
-                    bus.post(airport);
+
+                    try {
+                        Log.d(TAG, "onResponse: OnSuccessAirportData " + airport.getAirport().getCity());
+                        bus.post(airport);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Timber.d("NO AIRPORT LOCATION DATA");
+                    }
 
                 } else {
                     Log.d(TAG, "getAirportsApi:  RESPONSE UNSUCCESSFUL IN onResponse()  ==  " + response);
@@ -109,22 +117,35 @@ public class ApiManager {
                 if (response.isSuccessful()) {
                     hotels = response.body();
 
-                    bus.post(hotels);
-                    //inputTabsFragmentPagerAdapter.setHotels(hotels);
-                    // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
+                    try {
+
+
+                        Timber.d("Hotel Tab Fragment Errors: " + hotels.getErrors().getErrors());
+                        if (hotels.getResult().get(0).getHWRefNumber() == null) {
+                            Timber.d("Hotel result, item 0 is NULL");
+                        }
+
+                        bus.post(hotels);
+                        //inputTabsFragmentPagerAdapter.setHotels(hotels);
+                        // inputTabsFragmentPagerAdapter.notifyDataSetChanged();
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Timber.d("NO HOTEL DATA");
+                    }
 
                 } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                    Timber.d("Hotel - onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<HotWireHotels> call, Throwable t) {
-                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                Timber.d("HotWire - onFailure: onFailure UNSUCCESSFUL");
                 t.printStackTrace();
             }
         });
     }
+
 
 
     public static void getQPExpressFlights(Retrofit retrofit, final Bus bus, String googlePlacesApiKey, String origin, String destination, String date) {
@@ -159,16 +180,23 @@ public class ApiManager {
                     Timber.d("onResponse: ===>>>" + flights.getTrips().getTripOption().get(0).getSlice().get(0).getSegment().get(0).getCabin());
                     Timber.d("onResponse: ====>>> RESPONSE BODY" + response.body().toString());
 
-                    bus.post(flights);
+                    try {
+
+                        bus.post(flights);
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Timber.d("NO FLIGHTS DATA");
+
+                    }
 
                 } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                    Timber.d("QPXExpress - onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<Flights> call, Throwable t) {
-                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                Timber.d("QPXEXPRESS - onFailure: onFailure UNSUCCESSFUL");
             }
         });
     }
@@ -176,6 +204,11 @@ public class ApiManager {
 
     public static void getForecastWeather(Retrofit retrofit, final Bus bus,String forecastApiKey, String latitude, String longitude) {
 
+        Timber.d("PRINT LATITUDE AND LONGITUDE " + latitude + " " + longitude);
+        if(latitude.equals("0.0") & longitude.equals("0.0")){
+            latitude = "Nothing";
+            longitude = "Nothing";
+        }
         String latLong = latitude+","+longitude;
 
         ForecastService service = retrofit.create(ForecastService.class);
@@ -186,19 +219,24 @@ public class ApiManager {
                 if (response.isSuccessful()) {
                     weather = response.body();
 
-                    bus.post(weather);
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
-                    Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
+                    try {
+                        bus.post(weather);
+                        Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getTimezone());
+                        Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getHourly().getData().get(0).getApparentTemperature());
+                        Timber.d("onResponse: RESPONSE SUCCESSFUL *****  " + weather.getDaily().getData().get(0).getOzone());
+                    }catch(Exception e){
+                        e.printStackTrace();
+                        Timber.d("NO WEATHER DATA");
+                    }
 
                 } else {
-                    Timber.d("onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
+                    Timber.d("Weather - onResponse: RESPONSE UNSUCCESSFUL IN onResponse()    " + response);
                 }
             }
 
             @Override
             public void onFailure(Call<Weather> call, Throwable t) {
-                Timber.d("onFailure: onFailure UNSUCCESSFUL");
+                Timber.d("Weather - onFailure: onFailure UNSUCCESSFUL");
             }
         });
 

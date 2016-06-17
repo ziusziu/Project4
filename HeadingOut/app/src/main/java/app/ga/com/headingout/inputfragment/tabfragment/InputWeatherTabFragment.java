@@ -41,6 +41,7 @@ public class InputWeatherTabFragment extends Fragment {
     private static String latitude;
     private static String longitude;
     private static String destinationAirportCode;
+    private static String destination;
     private int page;
 
     private InputTabWeatherRVAdapter recyclerViewAdapter;
@@ -107,8 +108,10 @@ public class InputWeatherTabFragment extends Fragment {
         latitude = sharedPref.getString(Utilities.LATITUDE, "Default");
         longitude = sharedPref.getString(Utilities.LONGITUDE, "Default");
         destinationAirportCode = sharedPref.getString(Utilities.DESTINATIONAIRPORTCODE, "JFK");
+        destination = sharedPref.getString(Utilities.DESTINATION, "Unknown Destination");
 
-        destinationTextView.setText(destinationAirportCode);
+
+        destinationTextView.setText(destination);
     }
 
 
