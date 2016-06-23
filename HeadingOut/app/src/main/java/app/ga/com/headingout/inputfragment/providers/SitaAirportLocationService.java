@@ -1,7 +1,9 @@
 package app.ga.com.headingout.inputfragment.providers;
 
 import app.ga.com.headingout.model.airports.AirportData;
+import app.ga.com.headingout.model.sitaairports.AirportResponse;
 import app.ga.com.headingout.model.sitaairports.SitaAirportData;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -14,8 +16,8 @@ public interface SitaAirportLocationService {
 
     //"https://airport.api.aero/airport/<AirportCode>?user_key=<key>"
     @GET("{airportCode}/?")
-    Call<SitaAirportData> getSitaAirportLocation(@Path("airportCode") String key,
-                                                 @Query("user_key") String appKey
+    Call<ResponseBody> getSitaAirportLocation(@Path("airportCode") String key,
+                                              @Query("user_key") String appKey
     );
 
 

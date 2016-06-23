@@ -3,13 +3,19 @@ package app.ga.com.headingout.inputfragment;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.squareup.otto.Bus;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import app.ga.com.headingout.HeadingOutApplication;
 import app.ga.com.headingout.MainActivity;
+import app.ga.com.headingout.inputfragment.providers.SitaAirportLocationService;
+import app.ga.com.headingout.model.sitaairports.AirportResponse;
+import app.ga.com.headingout.model.sitaairports.SitaAirportData;
 import okhttp3.OkHttpClient;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,6 +56,7 @@ public class ApiManager {
     private static final String GOOGLE_HOTELS_API_URL = "https://www.googleapis.com/travelpartner/v1.2/";
     private static final String GOOGLE_QPEXPRESS_API_URL = "https://www.googleapis.com/qpxExpress/v1/trips/";
     private static final String HOTWIRE_API_URL = "http://api.hotwire.com/v1/search/";
+    private static final String SITA_API_LOCATION_URL = "https://airport.api.aero/airport/";
     static Weather weather;
     static Airports airports;
     static HotWireHotels hotels;
@@ -57,6 +64,7 @@ public class ApiManager {
     static Flights flights;
     static TestHotels testHotels;
     static AirportData airport;
+    static SitaAirportData sitaAirport;
 
 
     public static void getAirportLocation(Retrofit retrofit, final Bus bus, String flightStatsApiKey, String flightStatsAppId,
@@ -91,6 +99,68 @@ public class ApiManager {
         });
     }
 
+    public static void getSitaAirportLocation(Retrofit retrofit, final Bus bus, String sitaApiKey,
+                                          String airportCode){
+        SitaAirportLocationService service = retrofit.create(SitaAirportLocationService.class);
+        Timber.d("SITA RETOFIT SERVICE CREATED");
+
+        Call<ResponseBody> call = service.getSitaAirportLocation(airportCode, sitaApiKey);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                try {
+                    String parsedResponse = response.body().string().replace("callback(","").replace(")","");
+                    Timber.d("SITA AIRPORT RESPONSEBODY: " +parsedResponse);
+
+                    Gson gson = new Gson();
+                    SitaAirportData sitaAirportData = gson.fromJson(parsedResponse, SitaAirportData.class);
+                    Timber.d("SITA RETURNED DATA: mills "+sitaAirportData.getProcessingDurationMillis());
+                    Timber.d("SITA RETURNED DATA: mills "+sitaAirportData.getAirports().get(0).getCity());
+
+                    bus.post(sitaAirportData);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+
+
+
+//        Call<SitaAirportData> call = service.getSitaAirportLocation(airportCode, sitaApiKey);
+//        call.enqueue(new Callback<SitaAirportData>() {
+//            @Override
+//            public void onResponse(Call<SitaAirportData> call, Response<SitaAirportData> response) {
+//                if (response.isSuccessful()) {
+//                    sitaAirport = response.body();
+//
+//                    try {
+//                        Timber.d("onResponse: OnSuccessSitaAirportData " + sitaAirport.getAirline());
+//                        Timber.d("onResponse: OnSuccessSitaAirportData " + sitaAirport.getErrorMessage());
+//                        bus.post(sitaAirport);
+//                    }catch(Exception e){
+//                        e.printStackTrace();
+//                        Timber.d("NO AIRPORT LOCATION DATA");
+//                    }
+//
+//                } else {
+//                    Timber.d("getAirportsApi:  RESPONSE UNSUCCESSFUL IN onResponse()  ==  " + response);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<SitaAirportData> call, Throwable t) {
+//                Timber.d("onFailure: onFailure UNSUCCESSFUL: SITA AIRPORT");
+//                t.printStackTrace();
+//            }
+//        });
+    }
+
 
     public static void getHotWireHotels(Retrofit retrofit, final Bus bus, String hotwireApiKey, String startDate, String endDate, String destination) {
 
@@ -120,7 +190,7 @@ public class ApiManager {
                     try {
 
 
-                        Timber.d("Hotel Tab Fragment Errors: " + hotels.getErrors().getErrors());
+//                        Timber.d("Hotel Tab Fragment Errors: " + hotels.getErrors().getErrors());
                         if (hotels.getResult().get(0).getHWRefNumber() == null) {
                             Timber.d("Hotel result, item 0 is NULL");
                         }

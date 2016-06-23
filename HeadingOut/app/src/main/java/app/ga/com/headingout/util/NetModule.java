@@ -4,15 +4,22 @@ package app.ga.com.headingout.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
+
 import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
+import timber.log.Timber;
 
 /**
  * Created by samsiu on 6/10/16.
@@ -30,9 +37,11 @@ public class NetModule {
         return client;
     }
 
+
     @Provides @Singleton
     Gson provideGson(){
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        GsonBuilder gsonBuilder = new GsonBuilder()
+                .setLenient();
         return gsonBuilder.create();
     }
 
@@ -70,9 +79,20 @@ public class NetModule {
     Retrofit provideFlightStatsRetrofit(Gson gson, OkHttpClient okHttpClient){
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.flightstats.com/flex/airports/rest/v1/json/")
-                .addConverterFactory(GsonConverterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .client(okHttpClient)
                 .build();
         return retrofit;
     }
+
+    @Provides @Named("Sita") @Singleton
+    Retrofit provideSitaRetrofit(Gson gson, OkHttpClient okHttpClient){
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://airport.api.aero/airport/")
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(okHttpClient)
+                .build();
+        return retrofit;
+    }
+
 }

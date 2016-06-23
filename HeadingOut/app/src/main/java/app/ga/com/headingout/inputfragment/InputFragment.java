@@ -47,6 +47,10 @@ import app.ga.com.headingout.model.hotels.HWAmenities;
 import app.ga.com.headingout.model.hotels.HWNeighborhoods;
 import app.ga.com.headingout.model.hotels.HWResult;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
+import app.ga.com.headingout.model.sitaairports.AirportResponse;
+import app.ga.com.headingout.model.sitaairports.SitaAirport;
+import app.ga.com.headingout.model.sitaairports.SitaAirportData;
+import app.ga.com.headingout.model.sitaairports.SitaAirports;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
@@ -91,6 +95,7 @@ public class InputFragment extends Fragment{
     private Weather weather;
     private Flights flights;
     private AirportData airport;
+    private SitaAirportData sitaAirport;
     //endregion
 
     private int size;
@@ -100,6 +105,7 @@ public class InputFragment extends Fragment{
     @Inject @Named("QPXExpress") Retrofit retrofitQPXExpress;
     @Inject @Named("Forecast") Retrofit retrofitForecast;
     @Inject @Named("FlightStats") Retrofit retrofitFlightStats;
+    @Inject @Named("Sita") Retrofit retrofitSita;
     @Inject Bus bus;
 
 
@@ -193,14 +199,21 @@ public class InputFragment extends Fragment{
     }
 
     /**
-     * Hotels Search Requires a full city name and not airport code
-     * API that returns lat, long from airportcode, then gets Hotel Data after location returned
+     * Hotels Search Requires a Latitude and Longitude
+     * API returns lat, long from airportcode, then gets Hotel Data after location returned
      */
     private void getHotelData(){
-        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
-        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
-        ApiManager.getAirportLocation(retrofitFlightStats, bus, flightStatsApiKey, flightStatsAppId,
-                destinationAirportCode, startYear, startMonth, startDay);
+        Timber.d("getHotelData is invoked");
+
+        String sitaApiKey = getResources().getString(R.string.sita_api_key);
+        ApiManager.getSitaAirportLocation(retrofitSita, bus, sitaApiKey,destinationAirportCode);
+
+
+
+//        String flightStatsApiKey = getResources().getString(R.string.flightStats_api_key);
+//        String flightStatsAppId = getResources().getString(R.string.flightStats_app_id);
+//        ApiManager.getAirportLocation(retrofitFlightStats, bus, flightStatsApiKey, flightStatsAppId,
+//                destinationAirportCode, startYear, startMonth, startDay);
 
     }
 
@@ -226,12 +239,19 @@ public class InputFragment extends Fragment{
      * @param airport
      */
     @Subscribe
-    public void onAirportData(AirportData airport){
-        this.airport = airport;
+    public void onSitaAirportData(SitaAirportData airport){
+//        this.airport = airport;
+//
+//        Timber.d("onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
+//        // Create destination in format "<city>,<state>" for HotwireSearch
+//        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
+//
 
-        Timber.d("onAirportData: ===>>> OnAirportDataReturned   " + airport.getAirport().getCity());
-        // Create destination in format "<city>,<state>" for HotwireSearch
-        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
+        this.sitaAirport = airport;
+        Timber.d("onAirportData: ===>>> OnSitaAirportDataReturned   " + airport.getAirports().get(0).getCity());
+        latitude = Double.toString(airport.getAirports().get(0).getLat());
+        longitude = Double.toString(airport.getAirports().get(0).getLng());
+        String destination = latitude+","+longitude;
         destinationSharedPref = destination;
 
         SharedPreferences sharedPref = getActivity()
