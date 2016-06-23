@@ -81,6 +81,7 @@
                 android:ems="10"
                 android:hint="Origin"
                 android:text="SFO"
+                android:inputType="textCapCharacters"
                 android:textColorHint="@color/colorPrimaryLight"/>
 
         </LinearLayout>

@@ -111,7 +111,7 @@ public class MainFragment extends Fragment implements
                 saveSharedPreferences();
 
                 // Check textView
-                if(isTextViewValid(destinationAutoCompleteTextView) || isTextViewValid(originAutoCompleteTextView)){
+                if(isTextViewValid(destinationAutoCompleteTextView) & isTextViewValid(originAutoCompleteTextView)){
                     FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
                     InputFragment inputFragment = new InputFragment();
                     fragmentTransaction.replace(R.id.home_fragment_container, inputFragment);
@@ -147,6 +147,7 @@ public class MainFragment extends Fragment implements
         originAirportCode = originAutoCompleteTextView.getText().toString();
         destinationAirportCode = destinationAutoCompleteTextView.getText().toString();
 
+        Timber.d("saveSharedPreferences: Origin is " + originAirportCode + " Destination is " + destinationAirportCode);
         SharedPreferences sharedPref = getActivity()
                 .getSharedPreferences(Utilities.PLACESPREFERENCES, Context.MODE_PRIVATE);
 
