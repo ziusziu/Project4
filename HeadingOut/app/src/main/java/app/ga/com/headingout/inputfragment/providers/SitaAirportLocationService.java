@@ -1,8 +1,5 @@
 package app.ga.com.headingout.inputfragment.providers;
 
-import app.ga.com.headingout.model.airports.AirportData;
-import app.ga.com.headingout.model.sitaairports.AirportResponse;
-import app.ga.com.headingout.model.sitaairports.SitaAirportData;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;

@@ -80,8 +80,6 @@ public class InputWeatherTabFragment extends Fragment {
 
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        getSharedPreferences();
-
         registerOttoBus();
 
         initRecyclerView();
@@ -144,6 +142,8 @@ public class InputWeatherTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        getSharedPreferences();
+        Timber.d("Weather Fragment onResume: Destination: " + destination);
         Timber.d("onResume: INPUT------WEATHER----TABFRAGMENT ===>>> resuming");
     }
 

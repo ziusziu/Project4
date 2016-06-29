@@ -93,8 +93,6 @@ public class InputHotelTabFragment extends Fragment {
         // Dagger2
         ((HeadingOutApplication)getActivity().getApplication()).getNetComponent().inject(this);
 
-        //getSharedPreferences();
-
         registerOttoBus();
 
         recyclerViewSetup();

@@ -1,7 +1,5 @@
 package app.ga.com.headingout.model.sitaairports;
 
-import org.simpleframework.xml.Attribute;
-
 /**
  * Created by samsiu on 6/22/16.
  */

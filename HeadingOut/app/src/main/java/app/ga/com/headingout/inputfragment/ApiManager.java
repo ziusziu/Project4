@@ -1,7 +1,6 @@
 package app.ga.com.headingout.inputfragment;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.squareup.otto.Bus;
@@ -9,10 +8,7 @@ import com.squareup.otto.Bus;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import app.ga.com.headingout.HeadingOutApplication;
-import app.ga.com.headingout.MainActivity;
 import app.ga.com.headingout.inputfragment.providers.SitaAirportLocationService;
-import app.ga.com.headingout.model.sitaairports.AirportResponse;
 import app.ga.com.headingout.model.sitaairports.SitaAirportData;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -129,36 +125,6 @@ public class ApiManager {
                 t.printStackTrace();
             }
         });
-
-
-
-//        Call<SitaAirportData> call = service.getSitaAirportLocation(airportCode, sitaApiKey);
-//        call.enqueue(new Callback<SitaAirportData>() {
-//            @Override
-//            public void onResponse(Call<SitaAirportData> call, Response<SitaAirportData> response) {
-//                if (response.isSuccessful()) {
-//                    sitaAirport = response.body();
-//
-//                    try {
-//                        Timber.d("onResponse: OnSuccessSitaAirportData " + sitaAirport.getAirline());
-//                        Timber.d("onResponse: OnSuccessSitaAirportData " + sitaAirport.getErrorMessage());
-//                        bus.post(sitaAirport);
-//                    }catch(Exception e){
-//                        e.printStackTrace();
-//                        Timber.d("NO AIRPORT LOCATION DATA");
-//                    }
-//
-//                } else {
-//                    Timber.d("getAirportsApi:  RESPONSE UNSUCCESSFUL IN onResponse()  ==  " + response);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<SitaAirportData> call, Throwable t) {
-//                Timber.d("onFailure: onFailure UNSUCCESSFUL: SITA AIRPORT");
-//                t.printStackTrace();
-//            }
-//        });
     }
 
 

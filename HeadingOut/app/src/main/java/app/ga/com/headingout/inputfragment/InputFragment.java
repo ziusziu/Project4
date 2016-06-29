@@ -47,10 +47,7 @@ import app.ga.com.headingout.model.hotels.HWAmenities;
 import app.ga.com.headingout.model.hotels.HWNeighborhoods;
 import app.ga.com.headingout.model.hotels.HWResult;
 import app.ga.com.headingout.model.hotels.HotWireHotels;
-import app.ga.com.headingout.model.sitaairports.AirportResponse;
-import app.ga.com.headingout.model.sitaairports.SitaAirport;
 import app.ga.com.headingout.model.sitaairports.SitaAirportData;
-import app.ga.com.headingout.model.sitaairports.SitaAirports;
 import app.ga.com.headingout.util.FragmentUtil;
 import app.ga.com.headingout.util.Utilities;
 import butterknife.BindView;
@@ -182,7 +179,6 @@ public class InputFragment extends Fragment{
 
         getFlightData();
         getHotelData();
-        getForecastData();
 
         // API to search for airports near a specified lat long
 //        String distance = "5";
@@ -247,7 +243,7 @@ public class InputFragment extends Fragment{
 //        String destination = airport.getAirport().getCity()+","+airport.getAirport().getStateCode();
 //
 
-        this.sitaAirport = airport;
+        sitaAirport = airport;
         Timber.d("onAirportData: ===>>> OnSitaAirportDataReturned   " + airport.getAirports().get(0).getCity());
         latitude = Double.toString(airport.getAirports().get(0).getLat());
         longitude = Double.toString(airport.getAirports().get(0).getLng());
@@ -267,6 +263,10 @@ public class InputFragment extends Fragment{
         // Make API call for hotels after airport city name returned
         ApiManager.getHotWireHotels(retrofitHotwire, bus, hotwireApiKey,
                 hotwireStartDate, hotwireEndDate, destination);
+
+        // Have to wait for lat long returned before accessing weather api
+        getForecastData();
+
     }
 
     @Subscribe
