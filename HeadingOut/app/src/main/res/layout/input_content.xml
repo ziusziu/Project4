@@ -16,12 +16,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-
-            <com.google.android.gms.maps.MapView
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/input_fragment_mapView"
+            <fragment xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="200dp" />
+                android:layout_height="200dp"
+                android:id="@+id/input_fragment_map"
+                class="com.google.android.gms.maps.SupportMapFragment"/>
 
         </FrameLayout>
 

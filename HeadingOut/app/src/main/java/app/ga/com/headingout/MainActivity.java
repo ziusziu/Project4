@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         loadMainFragment();
 
+        Timber.d("Number of Cores: " + Utilities.NUMBER_OF_CORES);
     }
 
     private void initActionBar(){

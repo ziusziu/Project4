@@ -34,6 +34,8 @@ public class Utilities {
     private static final int FAB_COLOR = R.color.colorAccentDark;
     public static final String INTENT_FLIGHT_KEY = "locationTerms";
 
+    public static final int NUMBER_OF_CORES = Runtime.getRuntime().availableProcessors();
+
     //region SharedPreferences Constants
     public static final String PLACESPREFERENCES = "placesPreferences";
     public static final String DESTINATIONAIRPORTCODE = "destinationAirportCode";

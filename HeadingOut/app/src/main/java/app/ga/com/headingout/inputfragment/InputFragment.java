@@ -16,8 +16,9 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
@@ -59,7 +60,7 @@ import timber.log.Timber;
 /**
  * Created by samsiu on 5/4/16.
  */
-public class InputFragment extends Fragment{
+public class InputFragment extends Fragment implements OnMapReadyCallback{
 
     // region View Declarations
     @BindView(R.id.input_tabLayout) TabLayout tabLayout;
@@ -86,8 +87,7 @@ public class InputFragment extends Fragment{
     //endregion
 
     //region API Objects
-    private MapView mapView;
-    private GoogleMap googleMap;
+    private GoogleMap map;
     private HotWireHotels hotWireHotels;
     private Weather weather;
     private Flights flights;
@@ -330,13 +330,21 @@ public class InputFragment extends Fragment{
         marker.icon(BitmapDescriptorFactory
                 .defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
 
-        googleMap.addMarker(marker);
+        map.addMarker(marker);
     }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        map = googleMap;
+
+        setGoogleMapCameraPosition(Double.parseDouble(latitude), Double.parseDouble(longitude));
+    }
+
 
     private void setGoogleMapCameraPosition(double latitude, double longitude){
         CameraPosition cameraPosition = new CameraPosition.Builder()
                 .target(new LatLng(latitude, longitude)).zoom(10).build();
-        googleMap.animateCamera(CameraUpdateFactory
+        map.animateCamera(CameraUpdateFactory
                 .newCameraPosition(cameraPosition));
     }
 
@@ -409,10 +417,8 @@ public class InputFragment extends Fragment{
      * @param savedInstanceState
      */
     private void initGoogleMaps(View view, Bundle savedInstanceState){
-        mapView = (MapView) view.findViewById(R.id.input_fragment_mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.onResume();// needed to get the map to display immediately
-        googleMap = mapView.getMap();
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.input_fragment_map);
+        mapFragment.getMapAsync(this);
 
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
@@ -643,7 +649,6 @@ public class InputFragment extends Fragment{
 
         Timber.d("onResume: ===>>>>  InputFragment On RESUME");
 
-        mapView.onResume();
     }
 
 
@@ -651,7 +656,6 @@ public class InputFragment extends Fragment{
     public void onDestroy() {
         Timber.d("onDestroy: ==>> InputFragment OnDestroy");
         super.onDestroy();
-        mapView.onDestroy();
     }
 
     @Override
@@ -666,7 +670,6 @@ public class InputFragment extends Fragment{
     public void onPause() {
         Timber.d("onPause: ==>> InputFragment OnPause");
         super.onPause();
-        mapView.onPause();
     }
 
     @Override
