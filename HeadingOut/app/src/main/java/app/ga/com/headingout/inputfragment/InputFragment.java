@@ -127,7 +127,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
 
         setViewProperties(view);
 
-        initGoogleMaps(view, savedInstanceState);
+        initGoogleMaps();
 
         setShareFABListener();
 
@@ -291,10 +291,6 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
             double latitude = Double.parseDouble(centroidList[0]);
             double longitude = Double.parseDouble(centroidList[1]);
 
-            if (position == 0) {
-                setGoogleMapCameraPosition(latitude, longitude);
-            }
-
             // Pull Hotel Reference Number Data
             String hwRefNum = hotWireHotels.getResult().get(position).getHWRefNumber();
             String hwCurrency = hotWireHotels.getResult().get(position).getCurrencyCode();
@@ -373,7 +369,7 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         return flights;
     }
 
-    //TODO TESTING, Remove done, post adapter size from weather adapter
+    //TODO: FOR TESTING, Remove done, post adapter size from weather adapter
     @Subscribe
     public void onSizeData(Integer size){
         this.size = size;
@@ -409,22 +405,12 @@ public class InputFragment extends Fragment implements OnMapReadyCallback{
         outState.putInt(Utilities.POSITION, tabLayout.getSelectedTabPosition());
     }
 
-
-//TODO Convert MapView to MapFragment, MapView will be deprecated
     /**
      * Initialize Google Maps
-     * @param view
-     * @param savedInstanceState
      */
-    private void initGoogleMaps(View view, Bundle savedInstanceState){
+    private void initGoogleMaps(){
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.input_fragment_map);
         mapFragment.getMapAsync(this);
-
-        try {
-            MapsInitializer.initialize(getActivity().getApplicationContext());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
 //---------------------------------- FAB Share Button START -----------------------------------//
